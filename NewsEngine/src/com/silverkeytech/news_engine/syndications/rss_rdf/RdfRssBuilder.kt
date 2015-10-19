@@ -32,10 +32,6 @@ public class RdfRssBuilder(){
         }
 
         public var item: ItemBuilder = ItemBuilder(Item())
-            get() = $item
-            set(value) {
-                $item = value
-            }
 
         public fun setTitle(title: String) {
             rdf.channel.title = title
