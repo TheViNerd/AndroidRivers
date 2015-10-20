@@ -20,7 +20,7 @@ package com.silverkeytech.news_engine.syndications.rss;
 
 import com.silverkeytech.news_engine.syndications.ParsedDateFormat;
 import com.silverkeytech.news_engine.syndications.RssDate;
-import com.silverkeytech.news_engine.syndications.SyndicationsPackage;
+import com.silverkeytech.news_engine.syndications.UtilsKt;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -45,10 +45,10 @@ public class Item {
     public HashMap<String, String> extensions = new HashMap<String, String>();
 
     public RssDate getPubDate() {
-        return SyndicationsPackage.parseDate(pubDate);
+        return UtilsKt.parseDate(pubDate);
     }
 
     public Date getPubDateInFormat(ParsedDateFormat status) {
-        return SyndicationsPackage.getDateInFormat(status, pubDate);
+        return UtilsKt.getDateInFormat(status, pubDate);
     }
 }
