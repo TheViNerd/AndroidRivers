@@ -21,7 +21,7 @@ package com.silverkeytech.news_engine.syndications
 import java.util.Date
 import java.util.HashMap
 
-public data class SyndicationFeedItem(){
+public class SyndicationFeedItem {
     public var title: String? = null
     public var description: String? = null
     public var link: String? = null

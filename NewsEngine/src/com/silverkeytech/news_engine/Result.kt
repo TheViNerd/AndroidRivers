@@ -20,15 +20,15 @@ package com.silverkeytech.news_engine
 public class None(){
 }
 
-public data class Result<T: Any>(p1: T?, p2: Exception? = null){
+public class Result<T: Any>(p1: T?, p2: Exception? = null){
     companion object{
         //return True result
-        fun right<T: Any>(value: T?): Result<T> {
+        fun <T: Any> right(value: T?): Result<T> {
             return Result<T>(value)
         }
 
         //return false result
-        fun wrong<T: Any>(exception: Exception?): Result<T> {
+        fun <T: Any> wrong(exception: Exception?): Result<T> {
             return Result<T>(null, exception)
         }
     }
