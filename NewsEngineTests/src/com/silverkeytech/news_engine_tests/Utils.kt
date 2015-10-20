@@ -38,7 +38,7 @@ fun downloadAtomFeed(url: String): Result<Feed>{
             downloadedContent = request.body()!!
         }
         catch(e: HttpRequestException){
-            var ex = e.getCause()
+            var ex = e.cause
             return Result.wrong(ex)
         }
 
@@ -70,7 +70,7 @@ fun downloadSingleFeed(url: String, filter: SyndicationFilter? = null): Result<S
             downloadedContent = request.body()!!
         }
         catch(e: HttpRequestException){
-            var ex = e.getCause()
+            var ex = e.cause
             return Result.wrong(ex)
         }
 
