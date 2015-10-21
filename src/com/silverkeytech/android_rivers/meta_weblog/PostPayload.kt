@@ -4,7 +4,7 @@ import java.util.HashMap
 
 //ref http://codex.wordpress.org/XML-RPC_MetaWeblog_API#metaWeblog.newPost
 
-public data class PostPayload{
+public class PostPayload {
     public var title: String? = null
     public var description: String? = null
     public var post_type: String? = "post"
