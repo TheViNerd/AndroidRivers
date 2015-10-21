@@ -74,7 +74,7 @@ public class DownloadBookmarksAsync(it: Context, ignoreCache: Boolean): AsyncTas
                     req = httpGet(url[0]!!).body()
                 }
                 catch(e: HttpRequestException){
-                    var ex = e.getCause()
+                    var ex = e.cause
                     return Result.wrong(ex)
                 }
 

@@ -145,7 +145,7 @@ public class ImportOpmlSubscriptionListService: IntentService("ImportOpmlSubscri
             updateText("OPML subscription list import is completed")
         }
         catch(e: HttpRequestException){
-            Log.d(TAG, "Error in importing ${e.getCause()}")
+            Log.d(TAG, "Error in importing ${e.cause}")
             updateText("There is a problem in completing OPML subscription import")
         }
     }
@@ -170,7 +170,7 @@ public class ImportOpmlSubscriptionListService: IntentService("ImportOpmlSubscri
             }
         }
         catch(e: Exception){
-            Log.d(TAG, "Error in trying to save outline ${e.getCause()}")
+            Log.d(TAG, "Error in trying to save outline ${e.cause}")
         }
     }
 }

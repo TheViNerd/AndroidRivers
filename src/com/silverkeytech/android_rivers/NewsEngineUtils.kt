@@ -44,7 +44,7 @@ fun downloadSingleFeed(url: String, filter: SyndicationFilter? = null): Result<S
             downloadedContent = request.body()!!
         }
         catch(e: HttpRequestException){
-            var ex = e.getCause()
+            var ex = e.cause
             return Result.wrong(ex)
         }
 
@@ -119,7 +119,7 @@ fun downloadSingleRiver(url: String): Result<River> {
         req = httpGet(url).body()
     }
     catch(e: HttpRequestException){
-        val ex = e.getCause()
+        val ex = e.cause
         return Result.wrong(ex)
     }
 
@@ -131,7 +131,7 @@ fun downloadSingleRiver(url: String): Result<River> {
     }
     catch(e: Exception)
     {
-        Log.d("downloadSingleRiver", "${e.getMessage()} ${e.getCause()?.getMessage()}")
+        Log.d("downloadSingleRiver", "${e.getMessage()} ${e.cause?.getMessage()}")
         return Result.wrong(e)
     }
 }

@@ -144,7 +144,7 @@ public class DownloadAllRiversService(): IntentService("DownloadAllRiversService
                         successful = true
                     }
                     catch(e: HttpRequestException){
-                        val ex = e.getCause()
+                        val ex = e.cause
                         Log.d(TAG, "Error while trying to download $url with error message ${ex?.getMessage()}")
 
                         updateText("Problem downloading $title ")
