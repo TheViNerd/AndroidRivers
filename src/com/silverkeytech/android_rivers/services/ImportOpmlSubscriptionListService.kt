@@ -103,7 +103,7 @@ public class ImportOpmlSubscriptionListService: IntentService("ImportOpmlSubscri
         updateText("Downloading subscription list")
         notify()
 
-        var progress: Int
+        var progress = 0
 
         fun traverseOutline(outline: Outline?, process: (Outline?) -> Unit) {
             if (outline != null){

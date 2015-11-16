@@ -82,7 +82,7 @@ public class RiverContentRenderer(val context: Activity, val language: String){
         var adapter = object : ArrayAdapter<RiverItemMeta>(context, R.layout.news_item, sortedNewsItems) {
             public override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 var currentView = convertView
-                var holder: ViewHolder?
+                var holder: ViewHolder? = null
 
                 var currentNewsItem = sortedNewsItems[position]
                 var news = currentNewsItem.item.toString()?.trim()

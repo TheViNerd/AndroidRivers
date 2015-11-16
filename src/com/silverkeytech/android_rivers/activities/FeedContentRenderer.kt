@@ -77,7 +77,7 @@ public class FeedContentRenderer(val context: Activity, val language: String){
         var adapter = object : ArrayAdapter<SyndicationFeedItem>(context, R.layout.news_item, feedItems) {
             public override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 var currentView = convertView
-                var holder: ViewHolder?
+                var holder: ViewHolder? = null
 
                 val currentNewsItem = feedItems[position]
                 val news = currentNewsItem.toString().trim()
