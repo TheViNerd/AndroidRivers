@@ -53,10 +53,10 @@ fun accumulateList(list: Vector<RiverItemMeta>, feed: SyndicationFeed) {
 }
 
 fun sortRiverItemMeta(newsItems: List<RiverItemMeta>): List<RiverItemMeta> {
-    var sortedNewsItems = newsItems.filter { x -> x.item.isPublicationDate()!! }.sortedWith(
+    var sortedNewsItems = newsItems.filter { x -> x.item.isPublicationDate!! }.sortedWith(
             comparator { p1: RiverItemMeta, p2: RiverItemMeta ->
-                val date1 = p1.item.getPublicationDate()
-                val date2 = p2.item.getPublicationDate()
+                val date1 = p1.item.publicationDate
+                val date2 = p2.item.publicationDate
 
                 if (date1 != null && date2 != null) {
                     date1.compareTo(date2) * -1
@@ -80,10 +80,10 @@ fun eliminateDuplicates(newsItems: List<RiverItemMeta>): List<RiverItemMeta> {
 
     val list = ArrayList<RiverItemMeta>()
 
-    var comparisonItem = newsItems.get(0)
+    var comparisonItem = newsItems[0]
 
-    for(i in 1..(newsItems.size() - 1)){
-        val currentItem = newsItems.get(i)
+    for(i in 1..(newsItems.size - 1)){
+        val currentItem = newsItems[i]
         if (comparisonItem.item.title != currentItem.item.title ||
             comparisonItem.item.pubDate != currentItem.item.pubDate){
             list.add(comparisonItem)
@@ -112,7 +112,7 @@ fun River.getSortedNewsItems(): List<RiverItemMeta> {
     }
 
     val sortedNewsItems = sortRiverItemMeta(newsItems)
-    log("GetSortedNews", "Sorted News Items Orig ${sortedNewsItems.size()}")
+    log("GetSortedNews", "Sorted News Items Orig ${sortedNewsItems.size}")
     val withoutDuplicates = eliminateDuplicates(sortedNewsItems)
     log("GetSortedNews", "Sorted News Items After Duplication Elimination ${withoutDuplicates.size()}")
     return withoutDuplicates

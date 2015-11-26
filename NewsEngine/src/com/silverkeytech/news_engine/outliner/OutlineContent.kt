@@ -32,7 +32,7 @@ public enum class OutlineType{
 
 public data class OutlineContent (var level: Int, var text: String): Serializable
 {
-    private var bag: HashMap<String, String> = HashMap<String, String>()
+    private var bag: HashMap<String, String> = hashMapOf()
 
     public fun putAttribute(key: String, obj: String) {
         bag.put(key, obj)
