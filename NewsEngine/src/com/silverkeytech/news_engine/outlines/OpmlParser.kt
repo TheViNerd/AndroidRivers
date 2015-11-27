@@ -28,11 +28,11 @@ import com.silverkeytech.news_engine.log
 
 public class OpmlParser {
     companion object {
-        public val TAG: String = javaClass<OpmlParser>().getSimpleName()
+        public val TAG: String = OpmlParser::class.java.simpleName
     }
 
     public fun parse(input: InputStream, rss: OpmlBuilder) {
-        var items = arrayListOf<DefaultRule<OpmlBuilder>>(headTitle, headDateCreated, headDateModified, headOwnerName, headOwnerEmail)
+        var items = arrayListOf(headTitle, headDateCreated, headDateModified, headOwnerName, headOwnerEmail)
         for (i in 0..15) {
             items.add(outlineTag(i))
             items.add(outlineAttributes(i))
@@ -70,7 +70,7 @@ fun outlineTag(level: Int): DefaultRule<OpmlBuilder> {
     for (i in 0..level)
         path += "/outline"
 
-    return tagRule<OpmlBuilder>(path, { isStartTag, opml ->
+    return tagRule(path, { isStartTag, opml ->
         if (isStartTag) {
             opml.body.startLevel(level)
         } else {
@@ -88,7 +88,7 @@ fun outlineAttributes(level: Int): DefaultRule<OpmlBuilder> {
     for (i in 0..level)
         path += "/outline"
 
-    return attributeRule<OpmlBuilder>(path, { attrName, attrValue, opml ->
+    return attributeRule(path, { attrName, attrValue, opml ->
         when(attrName) {
             "text" -> opml.body.setText(attrValue)
             "url" -> opml.body.setUrl(attrValue)

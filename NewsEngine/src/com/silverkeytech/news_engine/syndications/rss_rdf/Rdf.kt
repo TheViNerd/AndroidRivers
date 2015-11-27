@@ -22,5 +22,5 @@ import java.util.ArrayList
 
 public class Rdf(){
     public var channel: Channel = Channel()
-    public var item: ArrayList<Item> = ArrayList<Item>()
+    public var item: ArrayList<Item> = ArrayList()
 }

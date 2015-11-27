@@ -32,7 +32,7 @@ public fun parseDate(date: String?): RssDate {
             return RssDate(ParsedDateFormat.ISO8601_NOMS, DateHelper.parseISO8601NoMilliseconds(date.replace("Z$".toRegex(), "+0000")))
         }
         catch (e: Exception) {
-            log("RdfRssItem", "Error parsing " + date + " in ISO8601_NOMS Modified Z")
+            log("RdfRssItem", "Error parsing $date in ISO8601_NOMS Modified Z")
         }
 
     }
@@ -42,7 +42,7 @@ public fun parseDate(date: String?): RssDate {
         return RssDate(ParsedDateFormat.RFC822, DateHelper.parseRFC822(date))
     }
     catch (e: Exception) {
-        log("RdfRssItem", "Error parsing " + date + " in RFC822")
+        log("RdfRssItem", "Error parsing $date in RFC822")
     }
 
     try
@@ -50,7 +50,7 @@ public fun parseDate(date: String?): RssDate {
         return RssDate(ParsedDateFormat.ISO8601_NOMS, DateHelper.parseISO8601NoMilliseconds(date))
     }
     catch (e: Exception) {
-        log("RdfRssItem", "Error parsing " + date + " in ISO8601_NOMS")
+        log("RdfRssItem", "Error parsing $date in ISO8601_NOMS")
     }
 
     try
@@ -58,7 +58,7 @@ public fun parseDate(date: String?): RssDate {
         return RssDate(ParsedDateFormat.ISO8601_NOMS_NO_TZ, DateHelper.parse(DateHelper.ISO8601_NOMS_NO_TZ, date))
     }
     catch (e: Exception) {
-        log("RdfRssItem", "Error parsing " + date + " in ISO8601_NOMS_GENERAL_TZ")
+        log("RdfRssItem", "Error parsing $date in ISO8601_NOMS_GENERAL_TZ")
     }
 
     try
@@ -66,7 +66,7 @@ public fun parseDate(date: String?): RssDate {
         return RssDate(ParsedDateFormat.NO_SPACES, DateHelper.parse(DateHelper.NO_SPACES, date))
     }
     catch (e: Exception) {
-        log("RdfRssItem", "Error parsing " + date + " in NO_SPACES")
+        log("RdfRssItem", "Error parsing $date in NO_SPACES")
     }
 
     return RssDate(ParsedDateFormat.UNKNOWN, null)

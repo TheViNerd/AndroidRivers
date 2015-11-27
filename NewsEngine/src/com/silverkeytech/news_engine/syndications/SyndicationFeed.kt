@@ -34,7 +34,7 @@ public data class SyndicationFeed(public val rss: Rss?, public val atom: Feed?, 
     public var language: String = ""
     public var link: String = ""
     public var feedType: SyndicationFeedType = SyndicationFeedType.NONE
-    public var items: ArrayList<SyndicationFeedItem> = ArrayList<SyndicationFeedItem>()
+    public var items: ArrayList<SyndicationFeedItem> = ArrayList()
     public var isDateParseable: Boolean = false
 
     public fun hasLink(): Boolean {
@@ -50,11 +50,11 @@ public data class SyndicationFeed(public val rss: Rss?, public val atom: Feed?, 
     fun transformRss()
     {
         if (rss != null){
-            val (parseable, dateFormat) = verifyRssFeedForDateFitness(rss!!)
+            val (parseable, dateFormat) = verifyRssFeedForDateFitness(rss)
             isDateParseable = parseable
 
             log(TAG, "isDateParseable is $isDateParseable with date format $dateFormat")
-            val channel = rss!!.channel
+            val channel = rss.channel
             if (channel != null){
                 title = if (channel.title.isNullOrEmpty()) "" else channel.title!!
                 language = if (channel.language.isNullOrEmpty()) "" else channel.language!!
@@ -113,14 +113,14 @@ public data class SyndicationFeed(public val rss: Rss?, public val atom: Feed?, 
 
     fun transformAtom() {
         if (atom != null){
-            isDateParseable = verifyAtomFeedForDateFitness(atom!!)
+            isDateParseable = verifyAtomFeedForDateFitness(atom)
             log(TAG, "isDateParseable is $isDateParseable")
-            log(TAG, "Title is ${atom!!.title}}")
-            title = if (atom!!.title.isNullOrEmpty()) "" else atom!!.title!!
+            log(TAG, "Title is ${atom.title}}")
+            title = if (atom.title.isNullOrEmpty()) "" else atom.title!!
 
             //look for rel='alternate' which contains the url to itself
-            if (atom!!.link != null && atom!!.link!!.count() > 0){
-                val l = atom!!.link!!.filter { it.rel == "alternate" }
+            if (atom.link != null && atom.link!!.count() > 0){
+                val l = atom.link!!.filter { it.rel == "alternate" }
 
                 if (l.size() == 1 && !l.get(0).href.isNullOrEmpty())
                     link = l.get(0).href!!
@@ -131,7 +131,7 @@ public data class SyndicationFeed(public val rss: Rss?, public val atom: Feed?, 
             var itemCounter = 0
             val maxSize = filter?.maximumSize
 
-            for(i in atom!!.entry!!){
+            for(i in atom.entry!!){
                 itemCounter++
 
                 //stop processing if there's a limit on how many items to be processed
@@ -196,18 +196,18 @@ public data class SyndicationFeed(public val rss: Rss?, public val atom: Feed?, 
 
     public fun transformRdf() {
         if (rdf != null){
-            val (parseable, dateFormat) = verifyRdfFeedForDateFitness(rdf!!)
+            val (parseable, dateFormat) = verifyRdfFeedForDateFitness(rdf)
             isDateParseable = parseable
 
-            title = if (rdf!!.channel.title.isNullOrBlank()) "" else rdf!!.channel.title!!
-            link = if (rdf!!.channel.link.isNullOrBlank()) "" else rdf!!.channel.link!!
+            title = if (rdf.channel.title.isNullOrBlank()) "" else rdf.channel.title!!
+            link = if (rdf.channel.link.isNullOrBlank()) "" else rdf.channel.link!!
             feedType = SyndicationFeedType.RDF
 
             var itemCounter = 0
             val maxSize = filter?.maximumSize
             val oldestDate = filter?.oldestDate
 
-            for(i in rdf!!.item){
+            for(i in rdf.item){
                 itemCounter++
 
                 //stop processing if there's a limit on how many items to be processed
