@@ -136,7 +136,7 @@ public class ImportOpmlSubscriptionListService: IntentService("ImportOpmlSubscri
                 traverseOutline(it, { otl ->
                     saveOutline(otl!!)
                     progress++
-                    val soFar = (progress * 100) div totalOutlinesToBeProcessed
+                    val soFar = (progress * 100).div(totalOutlinesToBeProcessed)
                     updateProgress(soFar)
                     notify()
                 })

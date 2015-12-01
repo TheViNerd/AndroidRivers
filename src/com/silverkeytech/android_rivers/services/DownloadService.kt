@@ -146,7 +146,7 @@ public class DownloadService(): IntentService("DownloadService"){
                 while (count != -1){
                     total += count
                     oldProgress = progress
-                    progress = (total.toInt() * 100) div fileLength
+                    progress = (total.toInt() * 100).div(fileLength)
                     Log.d(TAG, "Download progress ($total * 100) / $fileLength $progress")
 
                     if (progress != oldProgress){

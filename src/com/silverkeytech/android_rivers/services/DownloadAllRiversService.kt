@@ -127,7 +127,7 @@ public class DownloadAllRiversService(): IntentService("DownloadAllRiversService
                 var successful = false
 
                 //take care of notification
-                progress = (riverNumber * 100) div riverTotal
+                progress = (riverNumber * 100).div(riverTotal)
 
                 val title = targetTitles?.get(riverNumber)
 

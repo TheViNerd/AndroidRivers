@@ -166,10 +166,10 @@ fun isModernAndroid(): Boolean {
     return Build.VERSION.SDK_INT >= 14 //Build.VERSION_CODES.ICE_CREAM_SANDWICH
 }
 
-fun Dialog?.findView<T : View>(id : Int) : T{
+fun <T : View> Dialog?.findView(id : Int) : T{
     return this!!.findViewById(id) as T
 }
 
-fun View?.findView<T : View>(id : Int) : T{
+fun <T : View> View?.findView(id : Int) : T{
     return this!!.findViewById(id) as T
 }

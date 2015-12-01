@@ -54,7 +54,7 @@ public fun Activity.getStandardDialogBackgroundColor(): Int {
         */
 }
 
-public fun Activity?.findView<T: View>(id: Int): T {
+public fun <T: View> Activity?.findView(id: Int): T {
     if (this == null)
         throw Exception("Activity cannot be null");
 

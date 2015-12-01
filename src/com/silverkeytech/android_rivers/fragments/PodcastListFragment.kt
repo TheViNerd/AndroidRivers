@@ -69,7 +69,7 @@ import com.silverkeytech.android_rivers.findView
 
 public class PodcastListFragment(): MainListFragment() {
     companion object {
-        public val TAG: String = javaClass<PodcastListFragment>().getSimpleName()
+        public val TAG: String = PodcastListFragment::class.java.simpleName
     }
 
     var lastEnteredUrl: String? = ""
@@ -308,7 +308,7 @@ public class PodcastListFragment(): MainListFragment() {
     }
 
     fun doBindService() {
-        val i = Intent(getActivity()!!, javaClass<PodcastPlayerService>())
+        val i = Intent(getActivity()!!, PodcastPlayerService::class.java)
         getActivity()!!.bindService(i, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
@@ -388,7 +388,7 @@ public class PodcastListFragment(): MainListFragment() {
                     }
 
                     if (duration != null && pos != null){
-                        val positionAtPlayer = (progress * duration) div 100
+                        val positionAtPlayer = (progress * duration).div(100)
                         progressText.setText("$progress")
                         player!!.seekToPosition(positionAtPlayer)
                         player!!.resumeMusic()
@@ -420,5 +420,5 @@ public class PodcastListFragment(): MainListFragment() {
 }
 
 fun calculateProgress(current: Int, total: Int): Int {
-    return (current * 100) div total
+    return (current * 100).div(total)
 }
