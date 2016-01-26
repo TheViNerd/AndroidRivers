@@ -41,7 +41,7 @@ import com.silverkeytech.android_rivers.addBookmarkOption
 public class FeedActivity(): ListActivity(), WithVisualModificationPanel
 {
     companion object {
-        public val TAG: String = javaClass<FeedActivity>().getSimpleName()
+        public val TAG: String = FeedActivity::class.java.getSimpleName()
     }
 
     var feedUrl: String = ""
@@ -76,7 +76,7 @@ public class FeedActivity(): ListActivity(), WithVisualModificationPanel
             if (res.isTrue()){
                 var feed = res.value!!
                 feedDateIsParseable = feed.isDateParseable
-                Log.d(TAG, "$feedUrl is parseable = $feedDateIsParseable with items ${feed.items.size()}")
+                Log.d(TAG, "$feedUrl is parseable = $feedDateIsParseable with items ${feed.items.size}")
                 if (!feed.language.isNullOrBlank()){
                     Log.d(TAG, "Obtained feed language is ${feed.language}")
                     feedLanguage = feed.language
@@ -84,7 +84,7 @@ public class FeedActivity(): ListActivity(), WithVisualModificationPanel
                 FeedContentRenderer(this, feedLanguage)
                         .handleNewsListing(android.R.id.list, feedName, feedUrl, feed.items)
             }else{
-                toastee("Error ${res.exception?.getMessage()}", Duration.LONG)
+                toastee("Error ${res.exception?.message}", Duration.LONG)
             }
         }
                 .execute(feedUrl)

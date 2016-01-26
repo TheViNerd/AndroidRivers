@@ -1,9 +1,9 @@
 
 package com.silverkeytech.news_engine_tests
 
-import org.junit.Test
-import org.junit.Assert
 import com.silverkeytech.news_engine.transformXmlToRdfRss
+import org.junit.Assert
+import org.junit.Test
 
 public class RdfRssTest{
     @Test
@@ -11,8 +11,8 @@ public class RdfRssTest{
         val download = downloadSingleFeed("http://bloomington.craigslist.org/apa/index.rss")
         Assert.assertTrue("Download must be true", download.isTrue())
         val feed = download.value!!
-        plog("Size of download ${feed.items.size()}")
-        Assert.assertTrue(feed.items.size() > 0)
+        plog("Size of download ${feed.items.size}")
+        Assert.assertTrue(feed.items.size > 0)
         plog("Is date parseable ${feed.isDateParseable}")
         plog("Date of first item ${feed.items.get(0).pubDate}")
     }
@@ -20,7 +20,7 @@ public class RdfRssTest{
     @Test
     public fun testUNDPJobs(){
         val rawXml = downloadRawFeed("http://jobs.undp.org/rss_feeds/RAF.xml")
-        Assert.assertTrue("Raw xml must exists", rawXml.length() > 0)
+        Assert.assertTrue("Raw xml must exists", rawXml.length > 0)
         val res = transformXmlToRdfRss(rawXml)
 
         Assert.assertTrue("Transformation to RDF must be true", res.isTrue())
@@ -29,7 +29,7 @@ public class RdfRssTest{
         Assert.assertTrue("Must have channel title", !rdf.channel.title!!.isEmpty())
         Assert.assertTrue("Must have channel link", !rdf.channel.link!!.isEmpty())
         Assert.assertTrue("Must have channel description", !rdf.channel.link!!.isEmpty())
-        Assert.assertTrue("Must have items", rdf.item.size() > 0)
+        Assert.assertTrue("Must have items", rdf.item.size > 0)
 
         rdf.item.forEach {
             Assert.assertTrue(!it.title!!.isEmpty())
@@ -40,7 +40,7 @@ public class RdfRssTest{
     @Test
     public fun testBasicParsing(){
         val rawXml = downloadRawFeed("http://bloomington.craigslist.org/apa/index.rss")
-        Assert.assertTrue("Raw xml must exists", rawXml.length() > 0)
+        Assert.assertTrue("Raw xml must exists", rawXml.length > 0)
         val res = transformXmlToRdfRss(rawXml)
 
         Assert.assertTrue("Transformation to RDF must be true", res.isTrue())
@@ -54,7 +54,7 @@ public class RdfRssTest{
         Assert.assertTrue("Must have channel creator", !rdf.channel.dc.creator!!.isEmpty())
         Assert.assertTrue("Must have channel source", !rdf.channel.dc.source!!.isEmpty())
         Assert.assertTrue("Must have channel title", !rdf.channel.dc.title!!.isEmpty())
-        Assert.assertTrue("Must have items", rdf.item.size() > 0)
+        Assert.assertTrue("Must have items", rdf.item.size > 0)
         rdf.item.forEach {
             Assert.assertTrue(!it.title!!.isEmpty())
             Assert.assertTrue(!it.link!!.isEmpty())
@@ -66,6 +66,6 @@ public class RdfRssTest{
             Assert.assertTrue(!it.dc.title!!.isEmpty())
         }
 
-        //Assert.assertTrue("RDF must have content", rdf.item.size() > 0)
+        //Assert.assertTrue("RDF must have content", rdf.item.size > 0)
     }
 }

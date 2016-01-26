@@ -38,7 +38,7 @@ import com.silverkeytech.android_rivers.httpGet
 @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 public class DownloadBookmarksAsync(it: Context, ignoreCache: Boolean): AsyncTask<String, Int, Result<Opml>>(){
     companion object {
-        public val TAG: String = javaClass<DownloadBookmarksAsync>().getSimpleName()
+        public val TAG: String = DownloadBookmarksAsync::class.java.getSimpleName()
     }
 
     var dialog: ProgressDialog = ProgressDialog(it)

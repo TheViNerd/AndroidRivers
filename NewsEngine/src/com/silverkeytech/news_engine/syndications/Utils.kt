@@ -103,7 +103,7 @@ public fun getDateInFormat(status: ParsedDateFormat, date: String): Date? {
 public fun verifyRssFeedForDateFitness(r: Rss): Pair<Boolean, ParsedDateFormat?> {
     try
     {
-        if (r.channel?.item == null || r.channel!!.item!!.size() == 0)
+        if (r.channel?.item == null || r.channel!!.item!!.size == 0)
             return Pair(false, null)
 
         val i = r.channel!!.item!!.get(0)
@@ -122,7 +122,7 @@ public fun verifyRssFeedForDateFitness(r: Rss): Pair<Boolean, ParsedDateFormat?>
 
 public fun verifyRdfFeedForDateFitness(r: Rdf): Pair<Boolean, ParsedDateFormat?> {
     try{
-        if (r.item.size() == 0)
+        if (r.item.size == 0)
             return Pair(false, null)
 
         val i = r.item.get(0)
@@ -145,7 +145,7 @@ public fun verifyAtomFeedForDateFitness(f: Feed): Boolean {
         if (f.getUpdated() == null)
             return false
 
-        if (f.entry == null || f.entry!!.size() == 0)
+        if (f.entry == null || f.entry!!.size == 0)
             return false
 
         val e = f.entry!!.get(0)

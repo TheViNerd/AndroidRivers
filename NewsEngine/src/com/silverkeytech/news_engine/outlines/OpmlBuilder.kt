@@ -18,12 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.news_engine.outlines
 
-import java.util.ArrayList
-import java.util.Stack
+import java.util.*
 
 public class OpmlBuilder{
     companion object {
-        public val TAG: String = javaClass<OpmlBuilder>().getSimpleName()
+        public val TAG: String = OpmlBuilder::class.java.getSimpleName()
     }
 
     public val opml : Opml = Opml()
@@ -43,7 +42,7 @@ public class OpmlBuilder{
 
     public class BodyBuilder (val opml : Opml){
         companion object {
-            public val TAG: String = javaClass<BodyBuilder>().getSimpleName()
+            public val TAG: String = BodyBuilder::class.java.getSimpleName()
         }
 
         var currentLevel  = 0

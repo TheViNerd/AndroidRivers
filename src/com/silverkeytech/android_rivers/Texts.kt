@@ -28,7 +28,7 @@ import android.view.Gravity
 import android.widget.TextView
 import go.goyalla.dict.arabicDictionary.file.ArabicReshape
 import java.net.URL
-import java.util.UUID
+import java.util.*
 
 fun scrubJsonP(text: String): String {
     val rep = text.replace("onGetRiverStream(\\s*)\\(".toRegex(), "").removeSuffix(")")
@@ -42,9 +42,9 @@ fun scrubHtml(text: String?): String {
     else {
         val txt = text!!.trim().replace("(<br>|<br/>)".toRegex(), "\n")
         val spanned = android.text.Html.fromHtml(txt) as SpannableStringBuilder
-        val spannedObjects = spanned.getSpans(0, spanned.length(), javaClass<Any>())!!
+        val spannedObjects = spanned.getSpans(0, spanned.length, Any::class.java)!!
 
-        for(i in 0..(spannedObjects.size() - 1)){
+        for(i in 0..(spannedObjects.size - 1)){
             if (spannedObjects[i] is ImageSpan){
                 val img = spannedObjects[i] as ImageSpan
                 spanned.replace(spanned.getSpanStart(img), spanned.getSpanEnd(img), "")
@@ -59,7 +59,7 @@ fun scrubHtml(text: String?): String {
 fun String?.limitText(maxSize: Int): String {
     if (this.isNullOrBlank())
         return ""
-    else if (this!!.length().toInt() <= maxSize)
+    else if (this!!.length.toInt() <= maxSize)
         return this
     else
     {
@@ -69,9 +69,9 @@ fun String?.limitText(maxSize: Int): String {
 }
 
 fun rightPadding(text: String, sizeTarget: Int): String {
-    if (text.length() < sizeTarget){
+    if (text.length < sizeTarget){
         var spaces = StringBuffer()
-        val diff = sizeTarget - text.length()
+        val diff = sizeTarget - text.length
 
         for(i in 0..diff)
             spaces.append(' ')
@@ -84,7 +84,7 @@ fun rightPadding(text: String, sizeTarget: Int): String {
 
 fun getFileNameFromUri(url: String): String? {
     try{
-        val fileName = url.substring(url.lastIndexOf('/') + 1, url.length());
+        val fileName = url.substring(url.lastIndexOf('/') + 1, url.length);
         return fileName
     }catch(e: Exception){
         return null
@@ -155,7 +155,7 @@ public fun isLocalUrl(url: String): Boolean = url.contains(LOCAL_URL)
 
 public fun extractIdFromLocalUrl(url: String): Int? {
     try{
-        val id = url.substring(LOCAL_URL.length()).toString()
+        val id = url.substring(LOCAL_URL.length).toString()
         if (id.isNullOrEmpty())
             return null
         else

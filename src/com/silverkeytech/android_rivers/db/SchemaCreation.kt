@@ -24,7 +24,7 @@ import android.util.Log
 
 public class SchemaCreation(val db: SQLiteDatabase){
     companion object {
-        val TAG: String = javaClass<SchemaCreation>().getSimpleName()
+        val TAG: String = SchemaCreation::class.java.getSimpleName()
     }
 
     public fun create(version: Int) {
@@ -58,7 +58,7 @@ public class SchemaCreation(val db: SQLiteDatabase){
                         """)
             return true
         }catch (e: SQLException){
-            Log.d(TAG, "OnCreate(3) ${e.getMessage()}")
+            Log.d(TAG, "OnCreate(3) ${e.message}")
             return false
         }
     }
@@ -77,7 +77,7 @@ public class SchemaCreation(val db: SQLiteDatabase){
                         """)
             return true
         }catch (e: SQLException){
-            Log.d(TAG, "OnCreate(2) ${e.getMessage()}")
+            Log.d(TAG, "OnCreate(2) ${e.message}")
             return false
         }
     }

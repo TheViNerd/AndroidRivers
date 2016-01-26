@@ -41,7 +41,7 @@ import com.silverkeytech.android_rivers.traverse
 @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 public class DownloadOpmlAsync(it: Context?): AsyncTask<String, Int, Pair<String, Result<Opml>>>(){
     companion object {
-        public val TAG: String = javaClass<DownloadOpmlAsync>().getSimpleName()
+        public val TAG: String = DownloadOpmlAsync::class.java.getSimpleName()
     }
 
     var context: Activity = it!! as Activity
@@ -62,7 +62,7 @@ public class DownloadOpmlAsync(it: Context?): AsyncTask<String, Int, Pair<String
         try{
             req = httpGet(link).body()
 
-            Log.d(TAG, "Source $link Raw OPML ${req?.length()}")
+            Log.d(TAG, "Source $link Raw OPML ${req?.length}")
 
             if (req!!.contains("<html>")){
                 throw IllegalArgumentException("Document is not a valid OPML file (it might be a HTML document)")
@@ -98,7 +98,7 @@ public class DownloadOpmlAsync(it: Context?): AsyncTask<String, Int, Pair<String
                 try{
                     val opml = result.second.value!!
                     val processed = opml.traverse(processingFilter)
-                    Log.d(TAG, "Length of opml outlines ${opml.body?.outline?.get(0)?.outline?.size()} compared to processed outlines ${processed.size()}")
+                    Log.d(TAG, "Length of opml outlines ${opml.body?.outline?.get(0)?.outline?.size} compared to processed outlines ${processed.size}")
 
                     context.getMain().setOpmlCache(result.first, processed, PreferenceDefaults.OPML_NEWS_SOURCES_LISTING_CACHE_IN_MINUTES)
                     val res = Result.right(processed)
@@ -142,7 +142,7 @@ fun downloadOpmlAsync(context: Activity, url: String, title: String) {
                 startOutlinerActivity(context, res.value!!, title, url, false)
             }
             else{
-                context.toastee("Downloading url fails because of ${res.exception?.getMessage()}", Duration.LONG)
+                context.toastee("Downloading url fails because of ${res.exception?.message}", Duration.LONG)
             }
         }, { outline -> outline.text != "<rules>" })
                 .execute(url)

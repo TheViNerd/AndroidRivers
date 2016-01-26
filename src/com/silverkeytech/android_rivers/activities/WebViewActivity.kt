@@ -5,12 +5,12 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.actionbarsherlock.view.Window
-import org.holoeverywhere.app.Activity
 import com.silverkeytech.android_rivers.Params
+import org.holoeverywhere.app.Activity
 
 public class WebViewActivity: Activity() {
     companion object {
-        public val TAG: String = javaClass<WebViewActivity>().getSimpleName()
+        public val TAG: String = WebViewActivity::class.java.getSimpleName()
     }
 
     var uri: String? = null
@@ -60,7 +60,7 @@ public class WebViewActivity: Activity() {
     //ref http://www.anddev.org/other-coding-problems-f5/webviewcorethread-problem-t10234.html
     public override fun onPause() {
         if (!isPaused){
-            val pause = javaClass<WebView>().getMethod("onPause")
+            val pause = WebView::class.java.getMethod("onPause")
             pause.invoke(web)
             web!!.pauseTimers()
         }
@@ -69,7 +69,7 @@ public class WebViewActivity: Activity() {
 
     public override fun onResume() {
         if (isPaused){
-            val resume = javaClass<WebView>().getMethod("onResume")
+            val resume = WebView::class.java.getMethod("onResume")
             resume.invoke(web)
             web!!.resumeTimers()
             isPaused = false

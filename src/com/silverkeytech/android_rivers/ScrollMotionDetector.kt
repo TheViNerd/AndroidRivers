@@ -27,7 +27,7 @@ This is a utility class to handle user scroll/swipe movement and to differentiat
  */
 public class ScrollMotionDetector (scrollTreshold : Float = 10f){
     companion object {
-        public val TAG: String = javaClass<ScrollMotionDetector>().getSimpleName()
+        public val TAG: String = ScrollMotionDetector::class.java.getSimpleName()
     }
 
     var movementHorizontal: Float = 0f

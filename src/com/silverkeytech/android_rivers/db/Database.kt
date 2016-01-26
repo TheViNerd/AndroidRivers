@@ -27,7 +27,7 @@ import com.j256.ormlite.support.ConnectionSource
 
 public class Database (context: Context): OrmLiteSqliteOpenHelper(context, Database.DATABASE_NAME, null, Database.DATABASE_VERSION) {
     companion object {
-        val TAG: String = javaClass<Database>().getSimpleName()
+        val TAG: String = Database::class.java.getSimpleName()
         public val DATABASE_VERSION: Int = 3
         public val DATABASE_NAME: String = "AndroidRivers.sqlite"
     }
@@ -57,7 +57,7 @@ public class Database (context: Context): OrmLiteSqliteOpenHelper(context, Datab
 
     fun getBookmarkDao(): Any {
         if (bookmarkDao == null){
-            bookmarkDao = super<OrmLiteSqliteOpenHelper>.getDao(javaClass<Bookmark>())
+            bookmarkDao = super<OrmLiteSqliteOpenHelper>.getDao(Bookmark::class.java)
         }
         return bookmarkDao!!
     }
@@ -66,7 +66,7 @@ public class Database (context: Context): OrmLiteSqliteOpenHelper(context, Datab
 
     fun getBookmarkCollectionDao(): Any {
         if (bookmarkCollectionDao == null){
-            bookmarkCollectionDao = super<OrmLiteSqliteOpenHelper>.getDao(javaClass<BookmarkCollection>())
+            bookmarkCollectionDao = super<OrmLiteSqliteOpenHelper>.getDao(BookmarkCollection::class.java)
         }
         return bookmarkCollectionDao!!
     }
@@ -74,7 +74,7 @@ public class Database (context: Context): OrmLiteSqliteOpenHelper(context, Datab
     var podcastDao: Dao<Podcast, out Int?>? = null
     public fun getPodcastDao(): Any {
         if (podcastDao == null){
-            podcastDao = super<OrmLiteSqliteOpenHelper>.getDao(javaClass<Podcast>())
+            podcastDao = super<OrmLiteSqliteOpenHelper>.getDao(Podcast::class.java)
         }
         return podcastDao!!
     }

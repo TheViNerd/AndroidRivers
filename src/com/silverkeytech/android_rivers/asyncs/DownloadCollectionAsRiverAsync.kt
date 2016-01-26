@@ -43,7 +43,7 @@ import com.silverkeytech.android_rivers.toHoursInMinutes
 @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 public class DownloadCollectionAsRiverAsync(it: Context?, private val collectionId: Int): AsyncTask<String, Int, Result<List<RiverItemMeta>>>(){
     companion object {
-        public val TAG: String = javaClass<DownloadCollectionAsRiverAsync>().getSimpleName()
+        public val TAG: String = DownloadCollectionAsRiverAsync::class.java.getSimpleName()
     }
 
     var context: Activity = it!! as Activity
@@ -66,7 +66,7 @@ public class DownloadCollectionAsRiverAsync(it: Context?, private val collection
 
         var executor = Executors.newFixedThreadPool(4)
 
-        val maximumItemFilter = when(p0.size()){
+        val maximumItemFilter = when(p0.size){
             in 0..5 -> 20
             in 6..12 -> 15
             in 12..20 -> 10
@@ -79,7 +79,7 @@ public class DownloadCollectionAsRiverAsync(it: Context?, private val collection
                         val res = downloadSingleFeed(url!!, SyndicationFilter(maximumItemFilter, latestDate))
 
                         if (res.isFalse())
-                            Log.d(TAG, "Value at ${res.exception?.getMessage()}")
+                            Log.d(TAG, "Value at ${res.exception?.message}")
                         else
                         {
                             Log.d(TAG, "Download for $url is successful")
@@ -97,7 +97,7 @@ public class DownloadCollectionAsRiverAsync(it: Context?, private val collection
 
             val after = System.currentTimeMillis()
             val diff = after - before
-            Log.d(TAG, "It takes $diff mili seconds to complete ${p0.size()} rss downloads")
+            Log.d(TAG, "It takes $diff mili seconds to complete ${p0.size} rss downloads")
             return Result.right(ArrayList(list))
         }
         catch(ex: InterruptedException){

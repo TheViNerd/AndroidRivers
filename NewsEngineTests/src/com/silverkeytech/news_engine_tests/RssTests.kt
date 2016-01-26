@@ -10,7 +10,7 @@ public class RssTests{
         val download = downloadSingleFeed("http://scripting.com/rss.xml")
         Assert.assertTrue("Download must be true", download.isTrue())
         val feed = download.value!!
-        plog("Size of download ${feed.items.size()}")
-        Assert.assertTrue(feed.items.size() > 0)
+        plog("Size of download ${feed.items.size}")
+        Assert.assertTrue(feed.items.size > 0)
     }
 }

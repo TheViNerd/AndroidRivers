@@ -9,7 +9,7 @@ import android.util.Log
 
 public abstract class MainListFragment : ListFragment () {
     companion object {
-        public open val TAG: String = javaClass<MainListFragment>().getSimpleName()
+        public open val TAG: String = MainListFragment::class.java.getSimpleName()
     }
 
     protected var parent: Activity by kotlin.properties.Delegates.notNull()

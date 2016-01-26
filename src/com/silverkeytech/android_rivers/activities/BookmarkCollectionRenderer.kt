@@ -43,7 +43,7 @@ import com.silverkeytech.android_rivers.findView
 
 public class BookmarkCollectionRenderer(val context: BookmarkCollectionActivity){
     companion object {
-        public val TAG: String = javaClass<BookmarkCollectionRenderer>().getSimpleName()
+        public val TAG: String = BookmarkCollectionRenderer::class.java.getSimpleName()
     }
 
     fun handleListing(bookmarks: List<Bookmark>) {
@@ -127,14 +127,14 @@ fun showCollectionQuickActionPopup(context: BookmarkCollectionActivity, bookmark
                 var res = removeBookmarkFromCollection(bookmark.collection!!.id, bookmark.id)
 
                 if (res.isFalse())
-                    context.toastee("Error in removing this collection bookmark  ${res.exception?.getMessage()}")
+                    context.toastee("Error in removing this collection bookmark  ${res.exception?.message}")
                 else {
                     context.toastee(context.getString(R.string.bookmark_removed))
                     context.refreshCollection()
                 }
             }
             catch(e: Exception){
-                context.toastee("Error in trying to remove this collection bookmark ${e.getMessage()}")
+                context.toastee("Error in trying to remove this collection bookmark ${e.message}")
             }
             pp.dismiss()
         }, negative = {

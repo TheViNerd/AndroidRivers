@@ -31,7 +31,7 @@ import com.silverkeytech.android_rivers.asyncs.downloadOpmlAsync
 
 public open class BookmarkCollectionActivity(): ListActivity() {
     companion object {
-        public val TAG: String = javaClass<BookmarkCollectionActivity>().getSimpleName()
+        public val TAG: String = BookmarkCollectionActivity::class.java.getSimpleName()
     }
 
     var collectionTitle: String = ""

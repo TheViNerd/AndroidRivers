@@ -39,7 +39,7 @@ import com.silverkeytech.android_rivers.saveBookmark
 
 public class GoogleNewsSearchActivity (): Activity(){
     companion object {
-        public val TAG: String = javaClass<GoogleNewsSearchActivity>().getSimpleName()
+        public val TAG: String = GoogleNewsSearchActivity::class.java.getSimpleName()
     }
 
     var feedUrl: String = ""
@@ -125,7 +125,7 @@ public class GoogleNewsSearchActivity (): Activity(){
                         feedLanguage = feed.language
                     }
 
-                    if (feed.items.size() > 0 && !checkIfUrlAlreadyBookmarked(feedUrl))
+                    if (feed.items.size > 0 && !checkIfUrlAlreadyBookmarked(feedUrl))
                         bookmark.setEnabled(true)
                     else
                         bookmark.setEnabled(false)
@@ -133,7 +133,7 @@ public class GoogleNewsSearchActivity (): Activity(){
                     FeedContentRenderer(this, feedLanguage)
                             .handleNewsListing(R.id.google_news_search_results_lv, feedName, feedUrl, feed.items)
                 }else{
-                    toastee("Error ${res.exception?.getMessage()}", Duration.LONG)
+                    toastee("Error ${res.exception?.message}", Duration.LONG)
                 }
             }.execute(feedUrl)
         }

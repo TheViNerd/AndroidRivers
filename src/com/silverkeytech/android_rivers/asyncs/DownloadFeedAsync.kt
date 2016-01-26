@@ -38,7 +38,7 @@ import com.silverkeytech.android_rivers.PreferenceDefaults
 @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 public class DownloadFeedAsync(it: Context?, ignoreCache: Boolean): AsyncTask<String, Int, Result<SyndicationFeed>>(){
     companion object {
-        public val TAG: String = javaClass<DownloadFeedAsync>().getSimpleName()
+        public val TAG: String = DownloadFeedAsync::class.java.getSimpleName()
     }
 
     var context: Activity = it!! as Activity

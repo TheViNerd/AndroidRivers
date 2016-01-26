@@ -73,7 +73,7 @@ import com.silverkeytech.android_rivers.findView
 
 public class RiverListFragment(): MainListFragment() {
     companion object {
-        public val TAG: String = javaClass<RiverListFragment>().getSimpleName()
+        public val TAG: String = RiverListFragment::class.java.getSimpleName()
     }
 
     val DEFAULT_SUBSCRIPTION_LIST = "http://hobieu.apphb.com/api/1/default/riverssubscription"
@@ -268,7 +268,7 @@ public class RiverListFragment(): MainListFragment() {
 
                     dlg?.dismiss()
                 }else{
-                    Log.d(TAG, "RIVER $currentUrl conversion generates ${u.exception?.getMessage()}")
+                    Log.d(TAG, "RIVER $currentUrl conversion generates ${u.exception?.message}")
                     parent.toastee("The url you entered is not valid. Please try again", Duration.LONG)
                 }
             }
@@ -307,8 +307,8 @@ public class RiverListFragment(): MainListFragment() {
                         parent.getSetupPref().downloadDefaultRiversIfNecessary = false//we only download standard rivers from the internet by default when at setup the first time
                     }
                     else{
-                        Log.d(TAG, "Saving opml bookmark to db fails ${res2.exception?.getMessage()}")
-                        parent.toastee("Sorry, we cannot download your initial bookmarks at the moment ${res2.exception?.getMessage()}", Duration.LONG)
+                        Log.d(TAG, "Saving opml bookmark to db fails ${res2.exception?.message}")
+                        parent.toastee("Sorry, we cannot download your initial bookmarks at the moment ${res2.exception?.message}", Duration.LONG)
                     }
                 })
                         .execute(DEFAULT_SUBSCRIPTION_LIST)
@@ -400,14 +400,14 @@ public class RiverListFragment(): MainListFragment() {
                 try{
                     val res = DatabaseManager.cmd().bookmark().deleteByUrl(currentOutline.url!!)
                     if (res.isFalse())
-                        context.toastee("Error in removing this bookmark ${res.exception?.getMessage()}")
+                        context.toastee("Error in removing this bookmark ${res.exception?.message}")
                     else {
                         context.toastee("Bookmark removed")
                         refreshRiverBookmarks(false)
                     }
                 }
                 catch(e: Exception){
-                    context.toastee("Error in trying to remove this bookmark ${e.getMessage()}")
+                    context.toastee("Error in trying to remove this bookmark ${e.message}")
                 }
                 pp.dismiss()
             }, negative = {
@@ -451,7 +451,7 @@ public class RiverListFragment(): MainListFragment() {
                             refreshRiverBookmarks(false)
                             pp.dismiss()
                         }catch (ex: Exception){
-                            context.toastee("Sorry, I cannot update the title of this river for the following reason ${ex.getMessage()}", Duration.LONG)
+                            context.toastee("Sorry, I cannot update the title of this river for the following reason ${ex.message}", Duration.LONG)
                         }
                     } else {
                         context.toastee("Sorry, I cannot update the title of this river", Duration.LONG)

@@ -35,7 +35,7 @@ import com.silverkeytech.android_rivers.findView
 
 public class RiverSourcesRenderer(val context: RiverSourcesActivity, val language: String){
     companion object {
-        public val TAG: String = javaClass<RiverSourcesRenderer>().getSimpleName()
+        public val TAG: String = RiverSourcesRenderer::class.java.getSimpleName()
     }
 
     fun handleListing(sourcesTitles: List<String>, sourcesUris: List<String>) {

@@ -40,22 +40,22 @@ import com.silverkeytech.android_rivers.services.ImportOpmlSubscriptionListServi
 import com.silverkeytech.android_rivers.services.DownloadAllRiversService
 
 public fun startCraigslistListingActivity(context: Context) {
-    val i = Intent(context, javaClass<CraigslistListingActivity>())
+    val i = Intent(context, CraigslistListingActivity::class.java)
     context.startActivity(i)
 }
 
 public fun startKayakFlightDealsActivity(context: Context) {
-    val i = Intent(context, javaClass<KayakFlightDealsActivity>())
+    val i = Intent(context, KayakFlightDealsActivity::class.java)
     context.startActivity(i)
 }
 
 public fun startGoogleNewsSearchActivity(context: Context) {
-    val i = Intent(context, javaClass<GoogleNewsSearchActivity>())
+    val i = Intent(context, GoogleNewsSearchActivity::class.java)
     context.startActivity(i)
 }
 
 public fun startRiverSourcesActivity(context: Context, riverTitle: String, riverUri: String, sourcesTitles: ArrayList<String>, sourcesUris: ArrayList<String>) {
-    val i = Intent(context, javaClass<RiverSourcesActivity>())
+    val i = Intent(context, RiverSourcesActivity::class.java)
 
     i.putExtra(Params.RIVER_SOURCES_RIVER_TITLE, riverTitle)
     i.putExtra(Params.RIVER_SOURCES_RIVER_URI, riverUri)
@@ -66,14 +66,14 @@ public fun startRiverSourcesActivity(context: Context, riverTitle: String, river
 }
 
 public fun startBlogPostingService(context: Context, config: HashMap<String, String>, post: HashMap<String, String>) {
-    val i = Intent(context, javaClass<BlogPostService>())
+    val i = Intent(context, BlogPostService::class.java)
     i.putExtra(Params.BLOG_CONFIGURATION, config)
     i.putExtra(Params.BLOG_PAYLOAD, post)
     context.startService(i)
 }
 
 public fun startDownloadService(context: Context, title: String, url: String, sourceTitle: String, sourceUrl: String, description: String, messenger: Messenger) {
-    val i = Intent(context, javaClass<DownloadService>())
+    val i = Intent(context, DownloadService::class.java)
     i.putExtra(Params.DOWNLOAD_TITLE, title)
     i.putExtra(Params.DOWNLOAD_URL, url)
     i.putExtra(Params.DOWNLOAD_SOURCE_TITLE, sourceTitle)
@@ -84,13 +84,13 @@ public fun startDownloadService(context: Context, title: String, url: String, so
 }
 
 public fun startImportOpmlSubscriptionService(context: Context, url: String) {
-    val i = Intent(context, javaClass<ImportOpmlSubscriptionListService>())
+    val i = Intent(context, ImportOpmlSubscriptionListService::class.java)
     i.putExtra(Params.OPML_SUBSCRIPTION_LIST_URI, url)
     context.startService(i)
 }
 
 public fun startFeedActivity(context: Context, url: String, text: String, lang: String) {
-    val i = Intent(context, javaClass<FeedActivity>())
+    val i = Intent(context, FeedActivity::class.java)
     i.putExtra(Params.FEED_URL, url)
     i.putExtra(Params.FEED_NAME, text)
     i.putExtra(Params.FEED_LANGUAGE, lang)
@@ -99,12 +99,12 @@ public fun startFeedActivity(context: Context, url: String, text: String, lang: 
 }
 
 public fun startTryoutActivity(context: Context) {
-    val i = Intent(context, javaClass<TryOutActivity>())
+    val i = Intent(context, TryOutActivity::class.java)
     context.startActivity(i)
 }
 
 public fun startRiverActivity(context: Context, url: String, text: String, lang: String) {
-    val i = Intent(context, javaClass<RiverActivity>())
+    val i = Intent(context, RiverActivity::class.java)
     i.putExtra(Params.RIVER_URL, url)
     i.putExtra(Params.RIVER_NAME, text)
     i.putExtra(Params.RIVER_LANGUAGE, lang)
@@ -113,7 +113,7 @@ public fun startRiverActivity(context: Context, url: String, text: String, lang:
 }
 
 public fun startDownloadAllRiverService(context: Context, titleList: ArrayList<String>, urlList: ArrayList<String>) {
-    val i = Intent(context, javaClass<DownloadAllRiversService>())
+    val i = Intent(context, DownloadAllRiversService::class.java)
 
     i.putStringArrayListExtra(Params.RIVERS_DOWNLOAD_TITLE, titleList)
     i.putStringArrayListExtra(Params.RIVERS_DOWNLOAD_URLS, urlList)
@@ -122,7 +122,7 @@ public fun startDownloadAllRiverService(context: Context, titleList: ArrayList<S
 }
 
 public fun startCollectionActivity(context: Context, id: Int, title: String) {
-    val i = Intent(context, javaClass<BookmarkCollectionActivity>())
+    val i = Intent(context, BookmarkCollectionActivity::class.java)
     i.putExtra(Params.COLLECTION_ID, id)
     i.putExtra(Params.COLLECTION_TITLE, title)
 
@@ -131,7 +131,7 @@ public fun startCollectionActivity(context: Context, id: Int, title: String) {
 
 fun startOutlinerActivity(context: Context, outlines: ArrayList<OutlineContent>, title: String, url: String?, expandAll: Boolean) {
     val intent = Intent(Intent.ACTION_MAIN)
-    intent.setClass(context, javaClass<OutlinerActivity>())
+    intent.setClass(context, OutlinerActivity::class.java)
     intent.putExtra(Params.OUTLINES_DATA, outlines)
     intent.putExtra(Params.OUTLINES_TITLE, title)
     intent.putExtra(Params.OUTLINES_URL, url)
@@ -156,7 +156,7 @@ public fun startOpenBrowserActivity(context: Context, url: String) {
 
     /*
     val intent = Intent(Intent.ACTION_MAIN)
-    intent.setClass(context, javaClass<WebViewActivity>())
+    intent.setClass(context, WebViewActivity::class.java)
     intent.putExtra(Params.BUILT_IN_BROWSER_URI, url)
     context.startActivity(intent)
     */

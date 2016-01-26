@@ -60,7 +60,7 @@ fun downloadSingleFeed(url: String, filter: SyndicationFilter? = null): Result<S
             val before = System.currentTimeMillis()
             var feed = transformXmlToAtom(downloadedContent)
             val after = System.currentTimeMillis()
-            Log.d(TAG, "Time to parse XML to ATOM  is ${after - before} with feed ${feed.value?.entry?.size()} items")
+            Log.d(TAG, "Time to parse XML to ATOM  is ${after - before} with feed ${feed.value?.entry?.size} items")
             Log.d(TAG, "$url is an ATOM Feed")
             if (feed.isTrue()){
                 val beforeTransform = System.currentTimeMillis()
@@ -68,7 +68,7 @@ fun downloadSingleFeed(url: String, filter: SyndicationFilter? = null): Result<S
                 f.transformAtom()
                 val afterTransform = System.currentTimeMillis()
                 Log.d(TAG, "Time to transform ATOM Raw is ${afterTransform - beforeTransform}")
-                Log.d(TAG, "ATOM parsing with ${f.items.size()} items at url ${f.link}")
+                Log.d(TAG, "ATOM parsing with ${f.items.size} items at url ${f.link}")
                 return Result.right(f)
             } else{
                 return Result.wrong(feed.exception)
@@ -90,7 +90,7 @@ fun downloadSingleFeed(url: String, filter: SyndicationFilter? = null): Result<S
             val before = System.currentTimeMillis()
             var feed = transformXmlToRss(downloadedContent)
             val after = System.currentTimeMillis()
-            Log.d(TAG, "Time to parse XML to RSS  is ${after - before} with ${feed.value?.channel?.item?.size()} items")
+            Log.d(TAG, "Time to parse XML to RSS  is ${after - before} with ${feed.value?.channel?.item?.size} items")
             Log.d(TAG, "$url is a RSS Feed because isRdfFeed is ${isRdfFeed()}")
 
             if (feed.isTrue()){
@@ -99,7 +99,7 @@ fun downloadSingleFeed(url: String, filter: SyndicationFilter? = null): Result<S
                 f.transformRss()
                 val afterTransform = System.currentTimeMillis()
                 Log.d(TAG, "Time to transform RSS Raw is ${afterTransform - beforeTransform}")
-                Log.d(TAG, "RSS parsing with ${f.items.size()} items at url ${f.link}")
+                Log.d(TAG, "RSS parsing with ${f.items.size} items at url ${f.link}")
                 return Result.right(f)
             } else{
                 return Result.wrong(feed.exception)
@@ -107,7 +107,7 @@ fun downloadSingleFeed(url: String, filter: SyndicationFilter? = null): Result<S
         }
     }
     catch (e: Exception){
-        Log.d(TAG, "Problem when processing the feed ${e.getMessage()}")
+        Log.d(TAG, "Problem when processing the feed ${e.message}")
         return Result.wrong(e)
     }
 }
@@ -125,13 +125,13 @@ fun downloadSingleRiver(url: String): Result<River> {
 
     try{
         val scrubbed = scrubJsonP(req!!)
-        val feeds = Gson().fromJson(scrubbed, javaClass<River>())!!
+        val feeds = Gson().fromJson(scrubbed, River::class.java)!!
 
         return Result.right(feeds)
     }
     catch(e: Exception)
     {
-        Log.d("downloadSingleRiver", "${e.getMessage()} ${e.cause?.getMessage()}")
+        Log.d("downloadSingleRiver", "${e.message} ${e.cause?.message}")
         return Result.wrong(e)
     }
 }

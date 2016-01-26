@@ -18,11 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.news_engine.riverjs
 
-import java.util.Vector
 import com.silverkeytech.news_engine.DateHelper
-import com.silverkeytech.news_engine.syndications.SyndicationFeed
 import com.silverkeytech.news_engine.log
-import java.util.ArrayList
+import com.silverkeytech.news_engine.syndications.SyndicationFeed
+import java.util.*
 
 fun accumulateList(list: Vector<RiverItemMeta>, feed: SyndicationFeed) {
     for(f in feed.items.iterator()){
@@ -75,7 +74,7 @@ fun sortRiverItemMeta(newsItems: List<RiverItemMeta>): List<RiverItemMeta> {
 //This eliminated requires sorted news item otherwise it would not work
 //It performs elimination based on url or headline
 fun eliminateDuplicates(newsItems: List<RiverItemMeta>): List<RiverItemMeta> {
-    if (newsItems.size() < 2)
+    if (newsItems.size < 2)
         return newsItems
 
     val list = ArrayList<RiverItemMeta>()
@@ -114,6 +113,6 @@ fun River.getSortedNewsItems(): List<RiverItemMeta> {
     val sortedNewsItems = sortRiverItemMeta(newsItems)
     log("GetSortedNews", "Sorted News Items Orig ${sortedNewsItems.size}")
     val withoutDuplicates = eliminateDuplicates(sortedNewsItems)
-    log("GetSortedNews", "Sorted News Items After Duplication Elimination ${withoutDuplicates.size()}")
+    log("GetSortedNews", "Sorted News Items After Duplication Elimination ${withoutDuplicates.size}")
     return withoutDuplicates
 }

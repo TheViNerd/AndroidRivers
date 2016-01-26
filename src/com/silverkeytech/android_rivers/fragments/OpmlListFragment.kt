@@ -60,7 +60,7 @@ import com.silverkeytech.android_rivers.findView
 
 public class OpmlListFragment(): MainListFragment() {
     companion object {
-        public val TAG: String = javaClass<OpmlListFragment>().getSimpleName()
+        public val TAG: String = OpmlListFragment::class.java.getSimpleName()
     }
 
     var lastEnteredUrl: String? = ""
@@ -124,7 +124,7 @@ public class OpmlListFragment(): MainListFragment() {
 
     fun handleOpmlListing(bookmarks: List<Bookmark>) {
 
-        if (bookmarks.size() == 0)
+        if (bookmarks.size == 0)
             showMessage(parent.getString(R.string.empty_opml_items_list))
         else
             showMessage("")
@@ -176,14 +176,14 @@ public class OpmlListFragment(): MainListFragment() {
                 try{
                     val res = removeBookmark(current.url)
                     if (res.isFalse())
-                        context.toastee("Error in removing this OPML bookmark ${res.exception?.getMessage()}")
+                        context.toastee("Error in removing this OPML bookmark ${res.exception?.message}")
                     else {
                         context.toastee("OPML bookmark removed")
                         displayOpmlList()
                     }
                 }
                 catch(e: Exception){
-                    context.toastee("Error in trying to remove this bookmark ${e.getMessage()}")
+                    context.toastee("Error in trying to remove this bookmark ${e.message}")
                 }
                 pp.dismiss()
             }, negative = {
@@ -257,13 +257,13 @@ public class OpmlListFragment(): MainListFragment() {
                             }
                         }
                         else{
-                            parent.toastee("Downloading url fails because of ${res.exception?.getMessage()}", Duration.LONG)
+                            parent.toastee("Downloading url fails because of ${res.exception?.message}", Duration.LONG)
                         }
                     })
                             .execute(currentUrl)
                     dlg?.dismiss()
                 }else{
-                    Log.d(TAG, "RSS $currentUrl conversion generates ${u.exception?.getMessage()}")
+                    Log.d(TAG, "RSS $currentUrl conversion generates ${u.exception?.message}")
                     parent.toastee("The url you entered is not valid. Please try again", Duration.LONG)
                 }
             }

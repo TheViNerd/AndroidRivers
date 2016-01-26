@@ -18,43 +18,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.android_rivers.services
 
-import android.app.Service
-import android.app.Service.START_STICKY
-import android.content.Intent
-import android.media.MediaPlayer
-import android.media.MediaPlayer.OnErrorListener
-import android.os.Binder
-import android.os.IBinder
-import android.widget.Toast
-import android.net.Uri
-import android.util.Log
-import android.os.PowerManager
-import android.widget.RemoteViews
 import android.app.Notification
-import android.app.PendingIntent
-import android.support.v4.app.NotificationCompat
-import java.util.Random
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
-import android.media.AudioManager
-import android.media.AudioManager.OnAudioFocusChangeListener
-import android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT
-import android.media.AudioManager.AUDIOFOCUS_GAIN
-import android.media.AudioManager.AUDIOFOCUS_LOSS
-import android.os.Handler
-import android.os.Message
-import android.os.Bundle
+import android.content.Intent
 import android.content.res.Resources
-import com.silverkeytech.android_rivers.activities.MainWithFragmentsActivity
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.with
-import com.silverkeytech.android_rivers.isModernAndroid
+import android.media.AudioManager
+import android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT
+import android.media.AudioManager.OnAudioFocusChangeListener
+import android.media.MediaPlayer
+import android.net.Uri
+import android.os.*
+import android.support.v4.app.NotificationCompat
+import android.util.Log
+import android.widget.RemoteViews
+import android.widget.Toast
 import com.silverkeytech.android_rivers.Params
+import com.silverkeytech.android_rivers.R
+import com.silverkeytech.android_rivers.activities.MainWithFragmentsActivity
+import com.silverkeytech.android_rivers.isModernAndroid
+import com.silverkeytech.android_rivers.with
+import java.util.*
 
 @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListener, OnAudioFocusChangeListener {
     companion object {
-        public val TAG: String = javaClass<PodcastPlayerService>().getSimpleName()
+        public val TAG: String = PodcastPlayerService::class.java.getSimpleName()
         public val CURRENT_POSITION: String = "CURRENT_POSITION"
         public val TOTAL_DURATION: String = "TOTAL_DURATION"
     }
@@ -75,7 +66,7 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
 
     fun prepareNotification(): Notification {
         val notificationIntent = Intent(Intent.ACTION_MAIN)
-        notificationIntent.setClass(getApplicationContext()!!, javaClass<MainWithFragmentsActivity>())
+        notificationIntent.setClass(getApplicationContext()!!, MainWithFragmentsActivity::class.java)
 
         val contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
@@ -155,7 +146,7 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
 
             progressThread?.start()
         } catch(e: Exception) {
-            Log.d(TAG, "Exception in starting PodcastPlayerService ${e.getMessage()}")
+            Log.d(TAG, "Exception in starting PodcastPlayerService ${e.message}")
         }
 
         return super<Service>.onStartCommand(intent, flags, startId)
@@ -179,7 +170,7 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
                 }
                 Log.d(TAG, "Music progress update stops")
             } catch(e: Exception) {
-                Log.d(TAG, "Exception in progress thread ${e.getMessage()}")
+                Log.d(TAG, "Exception in progress thread ${e.message}")
             }
         }
     }
@@ -230,7 +221,7 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
                 stopProgressThread()
             }
         } catch (e: Exception) {
-            Log.d(TAG, "Pause music throws ${e.getMessage()}")
+            Log.d(TAG, "Pause music throws ${e.message}")
         }
     }
 
@@ -244,7 +235,7 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
                 restartProgressThread()
             }
         } catch (e: Exception) {
-            Log.d(TAG, "Resume music throws ${e.getMessage()}")
+            Log.d(TAG, "Resume music throws ${e.message}")
         }
     }
 
@@ -254,7 +245,7 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
             progressThread = Thread(progress)
             progressThread?.start()
         } catch (e: Exception) {
-            Log.d(TAG, "Restart Progress Thread throws ${e.getMessage()}")
+            Log.d(TAG, "Restart Progress Thread throws ${e.message}")
         }
     }
 
@@ -262,7 +253,7 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
         try {
             progressThread?.interrupt()
         } catch (e: Exception) {
-            Log.d(TAG, "Stop Progress Thread throws ${e.getMessage()}")
+            Log.d(TAG, "Stop Progress Thread throws ${e.message}")
         }
     }
 
@@ -276,7 +267,7 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
             Log.d(TAG, "Stop playing $podcastTitle and Stopping service")
             this.stopSelf()
         } catch (e: Exception) {
-            Log.d(TAG, "Stop Music throws ${e.getMessage()}")
+            Log.d(TAG, "Stop Music throws ${e.message}")
         }
     }
 

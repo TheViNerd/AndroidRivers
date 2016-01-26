@@ -48,7 +48,7 @@ import com.silverkeytech.android_rivers.getFileNameFromUri
 
 public class DownloadService(): IntentService("DownloadService"){
     companion object{
-        public val TAG: String = javaClass<DownloadService>().getSimpleName()
+        public val TAG: String = DownloadService::class.java.getSimpleName()
     }
 
     var targetTitle: String? = null
@@ -58,7 +58,7 @@ public class DownloadService(): IntentService("DownloadService"){
 
     fun prepareNotification(title: String, filePath: String): Notification {
         val notificationIntent = Intent(Intent.ACTION_MAIN)
-        notificationIntent.setClass(getApplicationContext()!!, javaClass<MainWithFragmentsActivity>())
+        notificationIntent.setClass(getApplicationContext()!!, MainWithFragmentsActivity::class.java)
         notificationIntent.putExtra(Params.DOWNLOAD_LOCATION_PATH, filePath)
 
         val contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT)
@@ -181,7 +181,7 @@ public class DownloadService(): IntentService("DownloadService"){
                 }
 
             }catch (e: java.io.FileNotFoundException){
-                notification!!.contentView!!.setTextViewText(R.id.notification_download_progress_status_text, "Download fails due to ${e.getMessage()}")
+                notification!!.contentView!!.setTextViewText(R.id.notification_download_progress_status_text, "Download fails due to ${e.message}")
                 notificationManager.notify(notificationId, notification!!)
                 result = Activity.RESULT_CANCELED
             }
@@ -192,7 +192,7 @@ public class DownloadService(): IntentService("DownloadService"){
             }
         }
         catch(e: Exception){
-            Log.d(TAG, "Exception happend at attempt to download $targetTitle with error : ${e.getMessage()}")
+            Log.d(TAG, "Exception happend at attempt to download $targetTitle with error : ${e.message}")
             if (notification != null){
                 notification!!.contentView!!.setTextViewText(R.id.notification_download_progress_status_text, "File $inferredName download cancelled due to error")
                 notificationManager.notify(notificationId, notification!!)

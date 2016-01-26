@@ -43,7 +43,7 @@ fun saveBookmark(context: Activity, feedName: String, feedUrl: String, feedLangu
             context.toastee("$feedName is bookmarked to your ${collection.title} collection.")
     }
     else {
-        Log.d("saveBookmark", "${res.exception?.getMessage()} in saving bookmark")
+        Log.d("saveBookmark", "${res.exception?.message} in saving bookmark")
         context.toastee("Sorry, I cannot bookmark $feedUrl", Duration.LONG)
     }
 }

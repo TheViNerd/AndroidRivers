@@ -33,7 +33,7 @@ import com.silverkeytech.android_rivers.R
 @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 public class DeleteAllPodcastsAsync(it: Context?): AsyncTask<String, Int, Result<Int>>(){
     companion object {
-        public val TAG: String = javaClass<DeleteAllPodcastsAsync>().getSimpleName()
+        public val TAG: String = DeleteAllPodcastsAsync::class.java.getSimpleName()
     }
 
     val context: Activity = it!! as Activity
@@ -62,7 +62,7 @@ public class DeleteAllPodcastsAsync(it: Context?): AsyncTask<String, Int, Result
         var deletedPodcasts = 0
         //get all active podcasts
         val podcasts = getPodcastsFromDb(SortingOrder.DESC)
-        if (podcasts.size() == 0)
+        if (podcasts.size == 0)
             return Result.right(deletedPodcasts)
 
         try{
@@ -74,7 +74,7 @@ public class DeleteAllPodcastsAsync(it: Context?): AsyncTask<String, Int, Result
 
                 val res = removePodcast(current.id)
                 if (res.isFalse()){
-                    Log.d(TAG, "Fail in deleting file ${f.name} ${res.exception?.getMessage()}")
+                    Log.d(TAG, "Fail in deleting file ${f.name} ${res.exception?.message}")
                     break
                 }
                 else
@@ -82,7 +82,7 @@ public class DeleteAllPodcastsAsync(it: Context?): AsyncTask<String, Int, Result
             }
         }
         catch(e: Exception){
-            Log.d(TAG, "Fail in trying to delete a file ${e.getMessage()}")
+            Log.d(TAG, "Fail in trying to delete a file ${e.message}")
         }
         finally{
             return Result.right(deletedPodcasts)

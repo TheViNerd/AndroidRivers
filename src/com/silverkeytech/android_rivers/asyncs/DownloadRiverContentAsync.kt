@@ -36,7 +36,7 @@ import com.silverkeytech.android_rivers.downloadSingleRiver
 //Responsible for handling a river js downloading and display in asynchronous way
 public class DownloadRiverContentAsync(it: Context?, val language: String): AsyncTask<String, Int, Result<River>>(){
     companion object {
-        public val TAG: String = javaClass<DownloadRiverContentAsync>().getSimpleName()
+        public val TAG: String = DownloadRiverContentAsync::class.java.getSimpleName()
     }
 
     val context: Activity = it!! as Activity

@@ -57,7 +57,7 @@ import com.silverkeytech.android_rivers.toHoursInMinutes
 
 public class DownloadAllRiversService(): IntentService("DownloadAllRiversService"){
     companion object{
-        public val TAG: String = javaClass<DownloadAllRiversService>().getSimpleName()
+        public val TAG: String = DownloadAllRiversService::class.java.getSimpleName()
     }
 
     var targetUrls: List<String?> ? = null
@@ -65,7 +65,7 @@ public class DownloadAllRiversService(): IntentService("DownloadAllRiversService
 
     fun prepareNotification(): Notification {
         val notificationIntent = Intent(Intent.ACTION_MAIN)
-        notificationIntent.setClass(getApplicationContext()!!, javaClass<MainWithFragmentsActivity>())
+        notificationIntent.setClass(getApplicationContext()!!, MainWithFragmentsActivity::class.java)
 
         val contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
@@ -145,7 +145,7 @@ public class DownloadAllRiversService(): IntentService("DownloadAllRiversService
                     }
                     catch(e: HttpRequestException){
                         val ex = e.cause
-                        Log.d(TAG, "Error while trying to download $url with error message ${ex?.getMessage()}")
+                        Log.d(TAG, "Error while trying to download $url with error message ${ex?.message}")
 
                         updateText("Problem downloading $title ")
                         notify()
@@ -155,7 +155,7 @@ public class DownloadAllRiversService(): IntentService("DownloadAllRiversService
                     if (successful){
                         try{
                             val scrubbed = scrubJsonP(req!!)
-                            val feeds = Gson().fromJson(scrubbed, javaClass<River>())!!
+                            val feeds = Gson().fromJson(scrubbed, River::class.java)!!
 
                             val sortedNewsItems = feeds.getSortedNewsItems()
 
@@ -185,7 +185,7 @@ public class DownloadAllRiversService(): IntentService("DownloadAllRiversService
                             val res = downloadSingleFeed(u, SyndicationFilter(PreferenceDefaults.CONTENT_BOOKMARK_COLLECTION_MAX_ITEMS_FILTER, latestDate))
 
                             if (res.isFalse())
-                                Log.d(TAG, "Value at ${res.exception?.getMessage()}")
+                                Log.d(TAG, "Value at ${res.exception?.message}")
                             else
                             {
                                 Log.d(TAG, "Download for $u is successful")

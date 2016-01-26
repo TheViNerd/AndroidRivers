@@ -36,7 +36,7 @@ import com.silverkeytech.android_rivers.getStoredPref
 
 public class KayakFlightDealsActivity (): Activity(){
     companion object {
-        public val TAG: String = javaClass<KayakFlightDealsActivity>().getSimpleName()
+        public val TAG: String = KayakFlightDealsActivity::class.java.getSimpleName()
     }
 
     var feedUrl: String = ""
@@ -103,10 +103,10 @@ public class KayakFlightDealsActivity (): Activity(){
                         }
 
                         //If the feed is correct, keep the city name
-                        if (feed.items.size() > 0)
+                        if (feed.items.size > 0)
                             this@KayakFlightDealsActivity.getStoredPref().kayakCity = input.trim()
 
-                        if (feed.items.size() > 0 && !checkIfUrlAlreadyBookmarked(feedUrl))
+                        if (feed.items.size > 0 && !checkIfUrlAlreadyBookmarked(feedUrl))
                             bookmark.setEnabled(true)
                         else
                             bookmark.setEnabled(false)
@@ -114,7 +114,7 @@ public class KayakFlightDealsActivity (): Activity(){
                         FeedContentRenderer(this, feedLanguage)
                                 .handleNewsListing(R.id.kayak_flight_deals_results_lv, feedName, feedUrl, feed.items)
                     }else{
-                        toastee("Error ${res.exception?.getMessage()}", Duration.LONG)
+                        toastee("Error ${res.exception?.message}", Duration.LONG)
                     }
                 }.execute(feedUrl)
             }

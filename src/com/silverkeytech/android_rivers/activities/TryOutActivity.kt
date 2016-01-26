@@ -67,7 +67,7 @@ import com.silverkeytech.android_rivers.asyncs.DownloadOpmlAsync
 public class TryOutActivity(): Activity()
 {
     companion object {
-        public val TAG: String = javaClass<TryOutActivity>().getSimpleName()
+        public val TAG: String = TryOutActivity::class.java.getSimpleName()
     }
 
     public override fun onCreate(savedInstanceState: Bundle?): Unit {
@@ -102,7 +102,7 @@ public class TryOutActivity(): Activity()
         btn.setOnClickListener {
             val cities = getCraigsListCities(this)
 
-            Log.d(TAG, "Cities in ${cities.size()}")
+            Log.d(TAG, "Cities in ${cities.size}")
 
             for(x in cities){
                 Log.d(TAG, "${x.toString()}")
@@ -176,7 +176,7 @@ public class TryOutActivity(): Activity()
 
         btn.setOnClickListener {
             val codes = getAirportCodes(this)
-            toastee("There are ${codes.size()} codes", Duration.LONG)
+            toastee("There are ${codes.size} codes", Duration.LONG)
         }
     }
 
@@ -197,7 +197,7 @@ public class TryOutActivity(): Activity()
             if (res.isTrue())
                 toastee("${res.value!!.title} - ${res.value!!.id}")
             else
-                toastee("Exception ${res.exception?.getMessage()}")
+                toastee("Exception ${res.exception?.message}")
         }
     }
 
@@ -238,7 +238,7 @@ public class TryOutActivity(): Activity()
         list.add(Pair("Daring Fireball", "http://daringfireball.net/index.xml"))
         list.add(Pair("Nomadlife", "http://nomadone.nomadlife.org/atom.xml"))
 
-        val names = Array<String>(list.size(), { "" })
+        val names = Array<String>(list.size, { "" })
         var i = 0
         list.forEach {
             names[i] = it.first
@@ -253,7 +253,7 @@ public class TryOutActivity(): Activity()
 
                     Log.d(TAG, "Opening $url")
 
-                    val ix = Intent(this@TryOutActivity, javaClass<FeedActivity>())
+                    val ix = Intent(this@TryOutActivity, FeedActivity::class.java)
                     ix.putExtra(Params.FEED_URL, url)
                     ix.putExtra(Params.FEED_NAME, "Display ATOM Feeds")
                     ix.putExtra(Params.FEED_LANGUAGE, "en")
@@ -275,7 +275,7 @@ public class TryOutActivity(): Activity()
         list.add(Pair("NPR Songs", "http://www.npr.org/rss/podcast.php?id=510019"))
         list.add(Pair("Times of India", "http://timesofindia.feedsportal.com/c/33039/f/533965/index.rss"))
 
-        val names = Array<String>(list.size(), { "" })
+        val names = Array<String>(list.size, { "" })
         var i = 0
         list.forEach {
             names[i] = it.first
@@ -290,7 +290,7 @@ public class TryOutActivity(): Activity()
 
                     Log.d(TAG, "Opening $url")
 
-                    val ix = Intent(this@TryOutActivity, javaClass<FeedActivity>())
+                    val ix = Intent(this@TryOutActivity, FeedActivity::class.java)
                     ix.putExtra(Params.FEED_URL, url)
                     ix.putExtra(Params.FEED_NAME, "Display RSS Feed")
                     ix.putExtra(Params.FEED_LANGUAGE, "en")
@@ -344,7 +344,7 @@ public class TryOutActivity(): Activity()
                 }
             })
 
-            val ix = Intent(this, javaClass<DownloadService>())
+            val ix = Intent(this, DownloadService::class.java)
             ix.putExtra(Params.DOWNLOAD_URL, "http://podcastdownload.npr.org/anon.npr-podcasts/podcast/13/166038315/npr_166038315.mp3")
             ix.putExtra(Params.MESSENGER, messenger)
             this.startService(ix)
@@ -385,7 +385,7 @@ public class TryOutActivity(): Activity()
         btn.setOnClickListener {
 
             var notificationIntent = Intent(Intent.ACTION_MAIN)
-            notificationIntent.setClass(getApplicationContext()!!, javaClass<MainWithFragmentsActivity>())
+            notificationIntent.setClass(getApplicationContext()!!, MainWithFragmentsActivity::class.java)
             notificationIntent.putExtra(Params.DOWNLOAD_LOCATION_PATH, "Location PATH")
 
             var contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_ONE_SHOT)
@@ -422,7 +422,7 @@ public class TryOutActivity(): Activity()
                         Thread.sleep(50)
                     }
                     catch(e: InterruptedException){
-                        Log.d(TAG, "Exception ${e.getMessage()}")
+                        Log.d(TAG, "Exception ${e.message}")
                     }
                 }
                 //nm.cancel(counter);
@@ -443,13 +443,13 @@ public class TryOutActivity(): Activity()
                 res ->
                 if (res.isTrue()){
                     var intent = Intent(Intent.ACTION_MAIN)
-                    intent.setClass(getApplicationContext()!!, javaClass<OutlinerActivity>())
+                    intent.setClass(getApplicationContext()!!, OutlinerActivity::class.java)
                     intent.putExtra(Params.OUTLINES_DATA, res.value!!)
 
                     startActivity(intent)
                 }
                 else{
-                    toastee("Downloading url fails becaue of ${res.exception?.getMessage()}", Duration.LONG)
+                    toastee("Downloading url fails becaue of ${res.exception?.message}", Duration.LONG)
                 }
             }, { outline -> outline.text != "<rules>" })
                     .execute(url)
@@ -466,7 +466,7 @@ public class TryOutActivity(): Activity()
             public override fun onClick(p0: View) {
                 val url = "http://hobieu.apphb.com/api/1/samples/riverjswithopml"
 
-                var i = Intent(this@TryOutActivity, javaClass<RiverActivity>())
+                var i = Intent(this@TryOutActivity, RiverActivity::class.java)
                 i.putExtra(Params.RIVER_URL, url)
                 i.putExtra(Params.RIVER_NAME, "Sample River with OPML")
                 i.putExtra(Params.RIVER_LANGUAGE, "en")
@@ -500,8 +500,8 @@ public class TryOutActivity(): Activity()
                     val sorted = opml.value!!.traverse()
                     toastee("Opml parsing is Great ${sorted.count()}")
                 }   else{
-                    Log.d(TAG, "Error in parsing opml  ${opml.exception?.getMessage()}")
-                    toastee("Error in parsing opml ${opml.exception?.getMessage()}")
+                    Log.d(TAG, "Error in parsing opml  ${opml.exception?.message}")
+                    toastee("Error in parsing opml ${opml.exception?.message}")
                 }
             }
         })

@@ -7,7 +7,7 @@ import org.xmlrpc.android.XMLRPCClient
 //http://codex.wordpress.org/XML-RPC_MetaWeblog_API
 public class Blog(val blogId: Int?, val server: String, val username: String, val password: String){
     companion object {
-        public val TAG: String = javaClass<Blog>().getSimpleName()
+        public val TAG: String = Blog::class.java.getSimpleName()
     }
 
     public fun newPost(payload: PostPayload) {

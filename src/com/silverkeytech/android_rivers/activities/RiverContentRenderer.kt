@@ -63,7 +63,7 @@ import com.silverkeytech.android_rivers.findView
 //Manage the rendering of each news item in the river list
 public class RiverContentRenderer(val context: Activity, val language: String){
     companion object {
-        public val TAG: String = javaClass<RiverContentRenderer>().getSimpleName()
+        public val TAG: String = RiverContentRenderer::class.java.getSimpleName()
     }
 
     //hold the view data for the list
@@ -247,11 +247,11 @@ public class RiverContentRenderer(val context: Activity, val language: String){
                                 startOutlinerActivity(context, outlines, title!!, null, true)
                             }
                             else{
-                                Log.d(TAG, "Error in transformation feedopml to opml ${opml.exception?.getMessage()}")
+                                Log.d(TAG, "Error in transformation feedopml to opml ${opml.exception?.message}")
                             }
                         }
                         catch(e: Exception){
-                            context.toastee("Error in processing opml source ${e.getMessage()}")
+                            context.toastee("Error in processing opml source ${e.message}")
                         }
                     }))
                 }

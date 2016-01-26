@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 package com.silverkeytech.news_engine
 
 import android.util.Log
-import java.util.UUID
+import java.util.*
 
 fun scrubJsonP(text: String): String {
     val rep = text.replace("onGetRiverStream(\\s*)\\(".toRegex(), "").removeSuffix(")")
@@ -29,9 +29,9 @@ fun scrubJsonP(text: String): String {
 
 
 fun rightPadding(text: String, sizeTarget: Int): String {
-    if (text.length() < sizeTarget){
+    if (text.length < sizeTarget){
         var spaces = StringBuffer()
-        val diff = sizeTarget - text.length()
+        val diff = sizeTarget - text.length
 
         for(i in 0..diff)
             spaces.append(' ')
@@ -44,7 +44,7 @@ fun rightPadding(text: String, sizeTarget: Int): String {
 
 fun getFileNameFromUri(url: String): String? {
     try{
-        val fileName = url.substring(url.lastIndexOf('/') + 1, url.length());
+        val fileName = url.substring(url.lastIndexOf('/') + 1, url.length);
         return fileName
     }catch(e: Exception){
         return null
@@ -66,7 +66,7 @@ public fun isLocalUrl(url: String): Boolean = url.contains(LOCAL_URL)
 
 public fun extractIdFromLocalUrl(url: String): Int? {
     try{
-        val id = url.substring(LOCAL_URL.length()).toString()
+        val id = url.substring(LOCAL_URL.length).toString()
         if (id.isNullOrEmpty())
             return null
         else

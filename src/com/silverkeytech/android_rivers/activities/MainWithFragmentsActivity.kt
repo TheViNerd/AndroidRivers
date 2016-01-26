@@ -69,7 +69,7 @@ enum class MainActivityMode {
 
 public open class MainWithFragmentsActivity(): Activity() {
     companion object {
-        public val TAG: String = javaClass<MainWithFragmentsActivity>().getSimpleName()
+        public val TAG: String = MainWithFragmentsActivity::class.java.getSimpleName()
         public val REPLACEMENT_HOME_ID: Int = 16908332
     }
 
@@ -367,7 +367,7 @@ public open class MainWithFragmentsActivity(): Activity() {
     val EXPLORE: Int = 2
 
     fun requireSlidingMenu(): SlidingMenuA {
-        return requireAddon(javaClass<org.holoeverywhere.addon.SlidingMenu>())!!.activity(this)!!
+        return requireAddon(org.holoeverywhere.addon.SlidingMenu::class.java)!!.activity(this)!!
     }
 
     fun makeMenuView(savedInstanceState: Bundle?): View {

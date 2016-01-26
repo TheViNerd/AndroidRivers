@@ -41,7 +41,7 @@ import com.silverkeytech.android_rivers.asyncs.downloadOpmlAsync
 public class OutlinerActivity(): Activity()
 {
     companion object {
-        public val TAG: String = javaClass<OutlinerActivity>().getSimpleName()
+        public val TAG: String = OutlinerActivity::class.java.getSimpleName()
     }
 
     val LEVEL_NUMBER: Int = 12
@@ -152,7 +152,7 @@ public class OutlinerActivity(): Activity()
                 this.getMain().setOpmlCache(url, res.value!!)
             }
             else{
-                toastee("Downloading url fails because of ${res.exception?.getMessage()}", Duration.LONG)
+                toastee("Downloading url fails because of ${res.exception?.message}", Duration.LONG)
             }
         }, { outline -> outline.text != "<rules>" })
                 .execute(url)

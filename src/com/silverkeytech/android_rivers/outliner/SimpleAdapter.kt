@@ -26,20 +26,15 @@ import android.widget.TextView
 import com.pl.polidea.treeview.AbstractTreeViewAdapter
 import com.pl.polidea.treeview.TreeNodeInfo
 import com.pl.polidea.treeview.TreeStateManager
-import com.silverkeytech.android_rivers.asyncs.DownloadOpmlAsync
+import com.silverkeytech.android_rivers.*
 import com.silverkeytech.android_rivers.activities.Duration
 import com.silverkeytech.android_rivers.activities.OutlinerActivity
-import com.silverkeytech.android_rivers.R
 import com.silverkeytech.android_rivers.activities.getMain
-import com.silverkeytech.android_rivers.startFeedActivity
-import com.silverkeytech.android_rivers.startOpenBrowserActivity
-import com.silverkeytech.android_rivers.startOpenEmailActivity
-import com.silverkeytech.android_rivers.startOutlinerActivity
-import com.silverkeytech.android_rivers.startRiverActivity
 import com.silverkeytech.android_rivers.activities.toastee
-import java.util.ArrayList
+import com.silverkeytech.android_rivers.asyncs.DownloadOpmlAsync
 import com.silverkeytech.news_engine.outliner.OutlineContent
 import com.silverkeytech.news_engine.outliner.OutlineType
+import java.util.*
 
 public open class SimpleAdapter(private val context: OutlinerActivity,
                                 private val treeStateManager: TreeStateManager<Long?>,
@@ -49,7 +44,7 @@ public open class SimpleAdapter(private val context: OutlinerActivity,
 AbstractTreeViewAdapter<Long?>(context, treeStateManager, numberOfLevels) {
 
     companion object {
-        public val TAG: String = javaClass<SimpleAdapter>().getSimpleName()
+        public val TAG: String = SimpleAdapter::class.java.getSimpleName()
     }
 
     private fun getDescription(id: Long?): String? {
@@ -133,7 +128,7 @@ AbstractTreeViewAdapter<Long?>(context, treeStateManager, numberOfLevels) {
 
         //root level
         childList.add(OutlineContent(0, currentOutline.text))
-        while (idx < outlines.size()){
+        while (idx < outlines.size){
             val outline = outlines.get(idx)
             if ((outline.level - currentOutline.level) < 1)
                 break
@@ -146,7 +141,7 @@ AbstractTreeViewAdapter<Long?>(context, treeStateManager, numberOfLevels) {
         }
 
         //do not launch another activity. It's already alone
-        if (outlines.size() == childList.size())
+        if (outlines.size == childList.size)
             return true
 
         startOutlinerActivity(context, childList, currentOutline.text, null, true)
@@ -188,7 +183,7 @@ AbstractTreeViewAdapter<Long?>(context, treeStateManager, numberOfLevels) {
                     startOutlinerActivity(context, outlines, currentOutline.text, url, expandAll)
                 }
                 else{
-                    context.toastee("Downloading url fails because of ${res.exception?.getMessage()}", Duration.LONG)
+                    context.toastee("Downloading url fails because of ${res.exception?.message}", Duration.LONG)
                 }
             }, { outline -> outline.text != "<rules>" })
                     .execute(url)

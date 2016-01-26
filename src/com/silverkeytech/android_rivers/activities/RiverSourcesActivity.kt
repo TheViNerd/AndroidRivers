@@ -31,7 +31,7 @@ import com.silverkeytech.android_rivers.asyncs.downloadOpmlAsync
 
 public open class RiverSourcesActivity(): ListActivity() {
     companion object {
-        public val TAG: String = javaClass<RiverSourcesActivity>().getSimpleName()
+        public val TAG: String = RiverSourcesActivity::class.java.getSimpleName()
     }
 
     var riverTitle: String = ""

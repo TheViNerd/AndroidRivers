@@ -1,11 +1,10 @@
 package com.silverkeytech.news_engine_tests
 
-import org.junit.Test
-import org.junit.Assert
 import com.silverkeytech.news_engine.outlines.Outline
-import java.util.ArrayList
 import com.silverkeytech.news_engine.transformXmlToOpml
-import com.silverkeytech.news_engine.outlines.OpmlParser
+import org.junit.Assert
+import org.junit.Test
+import java.util.*
 
 public class OpmlParserTests {
     @Test
@@ -14,12 +13,12 @@ public class OpmlParserTests {
 
         val rawXml = downloadRawFeed("http://hobieu.apphb.com/api/1/opml/root")
         //val rawXml = downloadRawFeed("http://smallpicture.com/feed.opml")
-        Assert.assertTrue("Raw xml must exists", rawXml.length() > 0)
+        Assert.assertTrue("Raw xml must exists", rawXml.length > 0)
         val res = transformXmlToOpml(rawXml)
 
-        println("Error message : ${res.exception?.getMessage()}")
+        println("Error message : ${res.exception?.message}")
 
-        assert(res.isTrue()) { "transform operation must be true not ${res.exception?.getMessage()}" }
+        assert(res.isTrue()) { "transform operation must be true not ${res.exception?.message}" }
         val opml = res.value!!
         assert(!opml.head!!.title!!.isEmpty()) { "Must have title" }
         assert(!opml.head!!.dateModified!!.isEmpty()) { "Must have date modified" }

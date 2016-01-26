@@ -24,35 +24,30 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.widget.RemoteViews
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException
+import com.silverkeytech.android_rivers.*
+import com.silverkeytech.android_rivers.activities.MainWithFragmentsActivity
 import com.silverkeytech.android_rivers.db.BookmarkKind
 import com.silverkeytech.android_rivers.db.checkIfUrlAlreadyBookmarked
 import com.silverkeytech.android_rivers.db.saveBookmarkToDb
-import com.silverkeytech.news_engine.transformXmlToOpml
 import com.silverkeytech.news_engine.outlines.Outline
-import com.silverkeytech.android_rivers.downloadSingleFeed
-import java.util.Random
-import android.content.res.Resources
-import com.silverkeytech.android_rivers.activities.MainWithFragmentsActivity
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.with
-import com.silverkeytech.android_rivers.Params
-import com.silverkeytech.android_rivers.isModernAndroid
-import com.silverkeytech.android_rivers.httpGet
+import com.silverkeytech.news_engine.transformXmlToOpml
+import java.util.*
 
 public class ImportOpmlSubscriptionListService: IntentService("ImportOpmlSubscriptionListService"){
     companion object{
-        public val TAG: String = javaClass<ImportOpmlSubscriptionListService>().getSimpleName()
+        public val TAG: String = ImportOpmlSubscriptionListService::class.java.getSimpleName()
     }
 
     var targetUrl: String ? = null
 
     fun prepareNotification(): Notification {
         val notificationIntent = Intent(Intent.ACTION_MAIN)
-        notificationIntent.setClass(getApplicationContext()!!, javaClass<MainWithFragmentsActivity>())
+        notificationIntent.setClass(getApplicationContext()!!, MainWithFragmentsActivity::class.java)
 
         val contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 

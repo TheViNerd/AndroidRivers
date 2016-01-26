@@ -49,7 +49,7 @@ import com.silverkeytech.news_engine.riverjs.getSortedNewsItems
 public class RiverActivity(): ListActivity(), WithVisualModificationPanel
 {
     companion object {
-        public val TAG: String = javaClass<RiverActivity>().getSimpleName()
+        public val TAG: String = RiverActivity::class.java.getSimpleName()
     }
 
     var riverUrl: String = ""
@@ -125,7 +125,7 @@ public class RiverActivity(): ListActivity(), WithVisualModificationPanel
                             RiverContentRenderer(this, riverLanguage).handleNewsListing(sortedNewsItems!!)
                         }
                         else {
-                            Log.d(TAG, "Downloading collection $id with ${urls.size()} urls fails")
+                            Log.d(TAG, "Downloading collection $id with ${urls.size} urls fails")
                         }
                     }.execute(*(urls as Array<String?>))
                 }
@@ -190,7 +190,7 @@ public class RiverActivity(): ListActivity(), WithVisualModificationPanel
 
     //Collect river sources into a list and make sure they are unique (based on the source uris)
     fun collectRiverSources() {
-        if (sortedNewsItems != null && sortedNewsItems!!.size() > 0){
+        if (sortedNewsItems != null && sortedNewsItems!!.size > 0){
             val distinct = ArrayList<RiverItemSource>();
             var itm = sortedNewsItems!!.get(0).source
             sortedNewsItems!!.map { x -> x.source }.sortedBy { x -> x.uri!! }.forEach { x ->
@@ -201,7 +201,7 @@ public class RiverActivity(): ListActivity(), WithVisualModificationPanel
                 }
             }
 
-            Log.d(TAG, "Unique sources are ${distinct.size()}")
+            Log.d(TAG, "Unique sources are ${distinct.size}")
 
             val sortedDistinct = distinct.sortedBy { x -> x.title!! }
 

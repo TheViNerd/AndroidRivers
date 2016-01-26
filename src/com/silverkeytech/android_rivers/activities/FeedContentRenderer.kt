@@ -59,7 +59,7 @@ import com.silverkeytech.android_rivers.ScrollMotionDetector
 //Manage the rendering of each news item in the river list
 public class FeedContentRenderer(val context: Activity, val language: String){
     companion object {
-        public val TAG: String = javaClass<FeedContentRenderer>().getSimpleName()
+        public val TAG: String = FeedContentRenderer::class.java.getSimpleName()
     }
 
     //hold the view data for the list

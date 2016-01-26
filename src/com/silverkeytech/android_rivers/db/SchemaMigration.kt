@@ -24,7 +24,7 @@ import android.util.Log
 
 public class SchemaMigration(val db: SQLiteDatabase){
     companion object {
-        val TAG: String = javaClass<SchemaMigration>().getSimpleName()
+        val TAG: String = SchemaMigration::class.java.getSimpleName()
     }
 
     public fun migrate(version: Int): Boolean {
@@ -60,7 +60,7 @@ public class SchemaMigration(val db: SQLiteDatabase){
                         """)
             return true
         }catch (e: SQLException){
-            Log.d(TAG, "Exception on Upgrade(2) ${e.getMessage()}")
+            Log.d(TAG, "Exception on Upgrade(2) ${e.message}")
             return false
         }
     }
@@ -84,7 +84,7 @@ public class SchemaMigration(val db: SQLiteDatabase){
                         """)
             return true
         }catch (e: SQLException){
-            Log.d(TAG, "Exception on Upgrade(1) ${e.getMessage()}")
+            Log.d(TAG, "Exception on Upgrade(1) ${e.message}")
             return false
         }
     }

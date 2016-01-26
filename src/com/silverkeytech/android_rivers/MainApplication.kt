@@ -34,7 +34,7 @@ import java.util.ArrayList
 public class MainApplication(): Application()
 {
     companion object {
-        public val TAG: String = javaClass<MainApplication>().getSimpleName()
+        public val TAG: String = MainApplication::class.java.getSimpleName()
     }
 
     var riverCache = LruCache<String, CacheItem<List<RiverItemMeta>>>(inMegaByte(4))

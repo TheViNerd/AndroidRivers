@@ -64,7 +64,7 @@ import com.silverkeytech.android_rivers.createConfirmationDialog
 
 public class RssListFragment(): MainListFragment() {
     companion object {
-        public val TAG: String = javaClass<RssListFragment>().getSimpleName()
+        public val TAG: String = RssListFragment::class.java.getSimpleName()
     }
 
     var lastEnteredUrl: String? = ""
@@ -142,7 +142,7 @@ public class RssListFragment(): MainListFragment() {
                     lastEnteredUrl = ""
                     startImportOpmlSubscriptionService(parent, u.value!!.toString())
                 } else {
-                    Log.d(TAG, "Opml download $currentUrl conversion generates ${u.exception?.getMessage()}")
+                    Log.d(TAG, "Opml download $currentUrl conversion generates ${u.exception?.message}")
                     parent.toastee("The url you entered is not valid. Please try again", Duration.LONG)
                 }
             }
@@ -187,13 +187,13 @@ public class RssListFragment(): MainListFragment() {
                                 parent.toastee("Sorry, we cannot add this $currentUrl river", Duration.LONG)
                             }
                         }else{
-                            parent.toastee("Error ${res.exception?.getMessage()}", Duration.LONG)
+                            parent.toastee("Error ${res.exception?.message}", Duration.LONG)
                         }
                     }
                             .execute(currentUrl)
                     dlg?.dismiss()
                 }else{
-                    Log.d(TAG, "RSS $currentUrl conversion generates ${u.exception?.getMessage()}")
+                    Log.d(TAG, "RSS $currentUrl conversion generates ${u.exception?.message}")
                     parent.toastee("The url you entered is not valid. Please try again", Duration.LONG)
                 }
             }
@@ -282,7 +282,7 @@ public class RssListFragment(): MainListFragment() {
                     }
                 }
                 catch(e: Exception){
-                    context.toastee("Error in trying to remove this bookmark ${e.getMessage()}")
+                    context.toastee("Error in trying to remove this bookmark ${e.message}")
                 }
                 pp.dismiss()
             }, negative = {
@@ -296,11 +296,11 @@ public class RssListFragment(): MainListFragment() {
         fun showCollectionAssignmentPopup(alreadyBelongsToACollection: Boolean) {
             var coll = getBookmarkCollectionFromDb(sortByTitleOrder = SortingOrder.ASC)
 
-            if (coll.size() == 0){
+            if (coll.size == 0){
                 context.toastee("Please create a collection before assigning a bookmark to it", Duration.LONG)
                 pp.dismiss()
             }
-            else if (coll.size() == 1 && alreadyBelongsToACollection){
+            else if (coll.size == 1 && alreadyBelongsToACollection){
                 context.toastee("This RSS already belongs to a collection and there is no other collection to reassign it to", Duration.LONG)
                 pp.dismiss()
             }
@@ -364,7 +364,7 @@ public class RssListFragment(): MainListFragment() {
                             showCollectionAssignmentPopup(alreadyBelongsToACollection)
                         }
                     }else{
-                        context.toastee("Error ${res.exception?.getMessage()}", Duration.LONG)
+                        context.toastee("Error ${res.exception?.message}", Duration.LONG)
                     }
                 }
                         .execute(currentBookmark.url)

@@ -48,7 +48,7 @@ import kotlin.properties.Delegates
 
 public class BlogPostService(): IntentService("DownloadService"){
     companion object{
-        public val TAG: String = javaClass<BlogPostService>().getSimpleName()
+        public val TAG: String = BlogPostService::class.java.getSimpleName()
     }
 
     var config: HashMap<String, String> by Delegates.notNull()
@@ -56,7 +56,7 @@ public class BlogPostService(): IntentService("DownloadService"){
 
     fun prepareNotification(title: String): Notification {
         val notificationIntent = Intent(Intent.ACTION_MAIN)
-        notificationIntent.setClass(getApplicationContext()!!, javaClass<MainWithFragmentsActivity>())
+        notificationIntent.setClass(getApplicationContext()!!, MainWithFragmentsActivity::class.java)
         //notificationIntent.putExtra(Params.DOWNLOAD_LOCATION_PATH, filePath)
 
         val contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT)

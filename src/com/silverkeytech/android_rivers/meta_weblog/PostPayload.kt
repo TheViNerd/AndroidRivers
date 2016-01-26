@@ -29,9 +29,9 @@ public class PostPayload {
         if (!post_type.isNullOrBlank())
             map.put("post_type", post_type!!)
 
-        if (categories != null && categories!!.size() > 0)
+        if (categories != null && categories!!.size > 0)
             map.put("categories", categories!!)
-        if (mt_keywords != null && mt_keywords!!.size() > 0)
+        if (mt_keywords != null && mt_keywords!!.size > 0)
             map.put("mt_keywords", mt_keywords!!)
         if (!mt_excerpt.isNullOrBlank())
             map.put("mt_excerpt", mt_excerpt!!)

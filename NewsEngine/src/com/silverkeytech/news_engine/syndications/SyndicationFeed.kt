@@ -18,16 +18,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.news_engine.syndications
 
+import com.silverkeytech.news_engine.log
 import com.silverkeytech.news_engine.syndications.atom.ContentElement
 import com.silverkeytech.news_engine.syndications.atom.Feed
 import com.silverkeytech.news_engine.syndications.rss.Rss
-import java.util.ArrayList
-import com.silverkeytech.news_engine.log
 import com.silverkeytech.news_engine.syndications.rss_rdf.Rdf
+import java.util.*
 
 public data class SyndicationFeed(public val rss: Rss?, public val atom: Feed?, public val rdf: Rdf?, val filter: SyndicationFilter? = null){
     companion object{
-        public val TAG: String = javaClass<SyndicationFeed>().getSimpleName()
+        public val TAG: String = SyndicationFeed::class.java.getSimpleName()
     }
 
     public var title: String = ""
@@ -122,7 +122,7 @@ public data class SyndicationFeed(public val rss: Rss?, public val atom: Feed?, 
             if (atom.link != null && atom.link!!.count() > 0){
                 val l = atom.link!!.filter { it.rel == "alternate" }
 
-                if (l.size() == 1 && !l.get(0).href.isNullOrEmpty())
+                if (l.size == 1 && !l.get(0).href.isNullOrEmpty())
                     link = l.get(0).href!!
             }
 

@@ -21,7 +21,7 @@ import android.util.Log
 
 public class CraigslistListingActivity (): Activity(){
     companion object {
-        public val TAG: String = javaClass<CraigslistListingActivity>().getSimpleName()
+        public val TAG: String = CraigslistListingActivity::class.java.getSimpleName()
     }
 
     var feedUrl: String = ""
@@ -110,10 +110,10 @@ public class CraigslistListingActivity (): Activity(){
 
                         feedName = feed.title
 
-                        if (feed.items.size() > 0)
+                        if (feed.items.size > 0)
                             this@CraigslistListingActivity.getStoredPref().craigsListCity = input.trim()
 
-                        if (feed.items.size() > 0 && !checkIfUrlAlreadyBookmarked(feedUrl))
+                        if (feed.items.size > 0 && !checkIfUrlAlreadyBookmarked(feedUrl))
                             bookmark.setEnabled(true)
                         else
                             bookmark.setEnabled(false)
@@ -121,7 +121,7 @@ public class CraigslistListingActivity (): Activity(){
                         FeedContentRenderer(this, feedLanguage)
                                 .handleNewsListing(R.id.craigslist_listing_results_lv, feedName, feedUrl, feed.items)
                     }else{
-                        toastee("Error ${res.exception?.getMessage()}", Duration.LONG)
+                        toastee("Error ${res.exception?.message}", Duration.LONG)
                     }
                 }.execute(feedUrl)
             }

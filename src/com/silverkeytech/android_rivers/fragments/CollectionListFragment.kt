@@ -65,7 +65,7 @@ import com.silverkeytech.android_rivers.findView
 
 public class CollectionListFragment: MainListFragment() {
     companion object {
-        public val TAG: String = javaClass<CollectionListFragment>().getSimpleName()
+        public val TAG: String = CollectionListFragment::class.java.getSimpleName()
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -182,7 +182,7 @@ public class CollectionListFragment: MainListFragment() {
 
                     val res = DatabaseManager.cmd().bookmarkCollection().deleteById(collection.id)
                     if (res.isFalse())
-                        context.toastee("Error in removing this bookmark collection ${res.exception?.getMessage()}")
+                        context.toastee("Error in removing this bookmark collection ${res.exception?.message}")
                     else {
                         //assume that this collection is bookmarked. So remove the id from the bookmark
                         //and refresh the cache so when user view the rivers bookmark view, it is already removed
@@ -195,7 +195,7 @@ public class CollectionListFragment: MainListFragment() {
                     }
                 }
                 catch(e: Exception){
-                    context.toastee("Error in trying to remove this bookmark ${e.getMessage()}")
+                    context.toastee("Error in trying to remove this bookmark ${e.message}")
                 }
                 pp.dismiss()
             }, negative = {

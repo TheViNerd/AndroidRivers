@@ -159,7 +159,7 @@ public class PodcastListFragment(): MainListFragment() {
     public fun displayPodcasts() {
         val podcast = getPodcastsFromDb(SortingOrder.DESC)
 
-        if (podcast.size() == 0)
+        if (podcast.size == 0)
             showMessage("All the podcasts you have downloaded will be listed here.")
         else
             showMessage("")
@@ -194,7 +194,7 @@ public class PodcastListFragment(): MainListFragment() {
                 Log.d(TAG, "Is podcast player paused ${isPodcastPlayerPaused()}")
 
                 if (!isPodcastPlayerPlaying() && !isPodcastPlayerPaused()){
-                    val i = Intent(getActivity()!!, javaClass<PodcastPlayerService>())
+                    val i = Intent(getActivity()!!, PodcastPlayerService::class.java)
                     i.putExtra(Params.PODCAST_TITLE, currentPodcast.title)
                     i.putExtra(Params.PODCAST_PATH, Uri.fromFile(File(currentPodcast.localPath)).toString())
                     getSupportActivity()!!.startService(i)
@@ -248,14 +248,14 @@ public class PodcastListFragment(): MainListFragment() {
 
                     val res = removePodcast(currentPodcast.id)
                     if (res.isFalse())
-                        context.toastee("Error in removing this podcast ${res.exception?.getMessage()}")
+                        context.toastee("Error in removing this podcast ${res.exception?.message}")
                     else {
                         context.toastee("Podcast removed")
                         displayPodcasts()
                     }
                 }
                 catch(e: Exception){
-                    context.toastee("Error in trying to remove this bookmark ${e.getMessage()}")
+                    context.toastee("Error in trying to remove this bookmark ${e.message}")
                 }
                 pp.dismiss()
             }, negative = {

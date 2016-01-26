@@ -96,13 +96,13 @@ fun Activity.getStoredPref(): StoredPreference =
 
 public class StoredPreference(public val pref: SharedPreferences){
     companion object {
-        public val TAG: String = javaClass<StoredPreference>().getSimpleName()
+        public val TAG: String = StoredPreference::class.java.getSimpleName()
     }
 
     public var kayakCity: String
         get() = pref.getString(Preferences.STORED_KAYAK_CITY, "")!!
         set(city: String) {
-            if (city.length() == 0)
+            if (city.length == 0)
                 return
             var edit = pref.edit()
             edit.putString(Preferences.STORED_KAYAK_CITY, city)
@@ -114,7 +114,7 @@ public class StoredPreference(public val pref: SharedPreferences){
     public var craigsListCity: String
         get() = pref.getString(Preferences.STORED_CRAIGS_LIST_CITY, "")!!
         set(city: String) {
-            if (city.length() == 0)
+            if (city.length == 0)
                 return
             var edit = pref.edit()
             edit.putString(Preferences.STORED_CRAIGS_LIST_CITY, city)
@@ -125,7 +125,7 @@ public class StoredPreference(public val pref: SharedPreferences){
     public var googleNewsCountry: String
         get() = pref.getString(Preferences.STORED_GOOGLE_NEWS_COUNTRY, "")!!
         set(country: String) {
-            if (country.length() == 0)
+            if (country.length == 0)
                 return
             var edit = pref.edit()
             edit.putString(Preferences.STORED_GOOGLE_NEWS_COUNTRY, country)
@@ -136,7 +136,7 @@ public class StoredPreference(public val pref: SharedPreferences){
 
 public class ContentPreference(public val pref: SharedPreferences){
     companion object {
-        public val TAG: String = javaClass<ContentPreference>().getSimpleName()
+        public val TAG: String = ContentPreference::class.java.getSimpleName()
     }
 
     public var riverBookmarksSorting: Int
@@ -151,7 +151,7 @@ public class ContentPreference(public val pref: SharedPreferences){
 
 public class SetupPreference(public val pref: SharedPreferences){
     companion object {
-        public val TAG: String = javaClass<SetupPreference>().getSimpleName()
+        public val TAG: String = SetupPreference::class.java.getSimpleName()
     }
 
     public var downloadDefaultRiversIfNecessary: Boolean
@@ -166,7 +166,7 @@ public class SetupPreference(public val pref: SharedPreferences){
 
 public class VisualPreference (public val pref: SharedPreferences){
     companion object {
-        public val TAG: String = javaClass<VisualPreference>().getSimpleName()
+        public val TAG: String = VisualPreference::class.java.getSimpleName()
     }
 
     public var listTextSize: Int
