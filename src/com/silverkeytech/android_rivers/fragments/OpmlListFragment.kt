@@ -20,58 +20,37 @@ package com.silverkeytech.android_rivers.fragments
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
+import android.widget.AdapterView.OnItemClickListener
 import com.actionbarsherlock.view.Menu
 import com.actionbarsherlock.view.MenuInflater
-import com.silverkeytech.android_rivers.db.getBookmarksFromDb
-import org.holoeverywhere.LayoutInflater
-import org.holoeverywhere.app.Activity
-import com.silverkeytech.android_rivers.db.Bookmark
-import com.silverkeytech.android_rivers.db.BookmarkKind
-import com.silverkeytech.android_rivers.db.SortingOrder
-import android.widget.Adapter
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.ListView
-import android.widget.PopupWindow
-import android.widget.TextView
-import android.view.Gravity
-import com.silverkeytech.android_rivers.db.DatabaseManager
-import com.silverkeytech.android_rivers.db.saveBookmarkToDb
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.currentTextViewItem
-import com.silverkeytech.android_rivers.getVisualPref
-import com.silverkeytech.android_rivers.handleFontResize
+import com.silverkeytech.android_rivers.*
 import com.silverkeytech.android_rivers.activities.Duration
-import com.silverkeytech.android_rivers.Result
-import com.silverkeytech.android_rivers.None
 import com.silverkeytech.android_rivers.activities.getLocationOnScreen
 import com.silverkeytech.android_rivers.activities.toastee
 import com.silverkeytech.android_rivers.asyncs.DownloadOpmlAsync
-import com.silverkeytech.android_rivers.createConfirmationDialog
-import com.silverkeytech.android_rivers.createSingleInputDialog
-import com.silverkeytech.android_rivers.safeUrlConvert
 import com.silverkeytech.android_rivers.asyncs.downloadOpmlAsync
-import com.silverkeytech.android_rivers.tryGetUriFromClipboard
-import com.silverkeytech.android_rivers.findView
+import com.silverkeytech.android_rivers.db.*
+import org.holoeverywhere.LayoutInflater
+import org.holoeverywhere.app.Activity
 
-public class OpmlListFragment(): MainListFragment() {
+class OpmlListFragment(): MainListFragment() {
     companion object {
-        public val TAG: String = OpmlListFragment::class.java.getSimpleName()
+        val TAG: String = OpmlListFragment::class.java.simpleName
     }
 
     var lastEnteredUrl: String? = ""
     var isFirstLoad: Boolean = true
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
-        super<MainListFragment>.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
     }
 
-    public override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val vw = inflater!!.inflate(R.layout.opml_list_fragment, container, false)
 
         Log.d(TAG, "We are being created")
@@ -79,18 +58,18 @@ public class OpmlListFragment(): MainListFragment() {
         return vw
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         Log.d(TAG, "OnResume")
 
-        if (getUserVisibleHint()){
+        if (userVisibleHint){
             Log.d(TAG, "OnResume - OpmlListFragment visible")
             displayOpmlList()
         }
 
-        super<MainListFragment>.onResume()
+        super.onResume()
     }
 
-    public override fun onHiddenChanged(hidden: Boolean) {
+    override fun onHiddenChanged(hidden: Boolean) {
         Log.d(TAG, "OnHiddenChanged $hidden")
 
         if (!hidden && !isFirstLoad){
@@ -98,16 +77,16 @@ public class OpmlListFragment(): MainListFragment() {
         }
 
         isFirstLoad = false
-        super<MainListFragment>.onHiddenChanged(hidden)
+        super.onHiddenChanged(hidden)
     }
 
-    public override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater!!.inflate(R.menu.opml_list_fragment_menu, menu)
-        super<MainListFragment>.onCreateOptionsMenu(menu, inflater)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
-    public override fun onOptionsItemSelected(item: com.actionbarsherlock.view.MenuItem?): Boolean {
-        when(item!!.getItemId()) {
+    override fun onOptionsItemSelected(item: com.actionbarsherlock.view.MenuItem?): Boolean {
+        when(item!!.itemId) {
             R.id.opml_list_fragment_menu_show_add_dialog -> {
                 displayAddNewOpmlDialog()
                 return false
@@ -132,36 +111,32 @@ public class OpmlListFragment(): MainListFragment() {
         val textSize = parent.getVisualPref().listTextSize
 
         val adapter = object : ArrayAdapter<Bookmark>(parent, android.R.layout.simple_list_item_1, android.R.id.text1, bookmarks){
-            public override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val text = bookmarks[position].toString()
-                return currentTextViewItem(text, convertView, parent, textSize.toFloat(), false, this@OpmlListFragment.getLayoutInflater()!!)
+                return currentTextViewItem(text, convertView, parent, textSize.toFloat(), false, this@OpmlListFragment.layoutInflater!!)
             }
         }
 
-        val list = getView().findView<ListView>(android.R.id.list)
-        list.setAdapter(adapter)
-        list.setOnItemClickListener(object : OnItemClickListener{
-            public override fun onItemClick(p0: AdapterView<out Adapter?>, p1: View, p2: Int, p3: Long) {
-                val bookmark = bookmarks.get(p2)
-                downloadOpmlAsync(this@OpmlListFragment.getActivity()!!, bookmark.url, bookmark.title)
-            }
-        })
+        val list = view.findView<ListView>(android.R.id.list)
+        list.adapter = adapter
+        list.onItemClickListener = OnItemClickListener { p0, p1, p2, p3 ->
+            val bookmark = bookmarks.get(p2)
+            downloadOpmlAsync(this@OpmlListFragment.activity!!, bookmark.url, bookmark.title)
+        }
 
-        list.setOnItemLongClickListener(object : AdapterView.OnItemLongClickListener{
-            public override fun onItemLongClick(p0: AdapterView<out Adapter?>?, p1: View?, p2: Int, p3: Long): Boolean {
-                val bookmark = bookmarks.get(p2)
-                showOpmlQuickActionPopup(parent, bookmark, p1!!, list)
-                return true
-            }
-        })
+        list.onItemLongClickListener = AdapterView.OnItemLongClickListener { p0, p1, p2, p3 ->
+            val bookmark = bookmarks.get(p2)
+            showOpmlQuickActionPopup(parent, bookmark, p1!!, list)
+            true
+        }
     }
 
     fun showOpmlQuickActionPopup(context: Activity, current: Bookmark, item: View, list: View) {
         //overlay popup at top of clicked overview position
-        val popupWidth = item.getWidth()
-        val popupHeight = item.getHeight()
+        val popupWidth = item.width
+        val popupHeight = item.height
 
-        val x = context.getLayoutInflater().inflate(R.layout.opml_quick_actions, null, false)!!
+        val x = context.layoutInflater.inflate(R.layout.opml_quick_actions, null, false)!!
         val pp = PopupWindow(x, popupWidth, popupHeight, true)
 
         x.setBackgroundColor(android.graphics.Color.LTGRAY)
@@ -197,19 +172,19 @@ public class OpmlListFragment(): MainListFragment() {
         pp.showAtLocation(list, Gravity.TOP or Gravity.LEFT, itemLocation.x, itemLocation.y)
     }
 
-    public fun removeBookmark (url: String): Result<None> {
+    fun removeBookmark (url: String): Result<None> {
         return DatabaseManager.cmd().bookmark().deleteByUrl(url)
     }
 
     private fun showMessage(msg: String) {
-        val txt = getView().findView<TextView>(R.id.opml_list_fragment_message_tv)
+        val txt = view.findView<TextView>(R.id.opml_list_fragment_message_tv)
         if (msg.isNullOrBlank()){
-            txt.setVisibility(View.INVISIBLE)
-            txt.setText("")
+            txt.visibility = View.INVISIBLE
+            txt.text = ""
         }
         else {
             val textSize = parent.getVisualPref().listTextSize
-            txt.setVisibility(View.VISIBLE)
+            txt.visibility = View.VISIBLE
             handleFontResize(txt, msg, textSize.toFloat())
         }
     }

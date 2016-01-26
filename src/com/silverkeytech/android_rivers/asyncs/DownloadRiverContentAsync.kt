@@ -21,29 +21,27 @@ package com.silverkeytech.android_rivers.asyncs
 import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
-import com.silverkeytech.news_engine.riverjs.River
-import org.holoeverywhere.app.Activity
-import com.silverkeytech.android_rivers.activities.Duration
-import com.silverkeytech.android_rivers.activities.toastee
-import com.silverkeytech.android_rivers.activities.ConnectivityErrorMessage
-import com.silverkeytech.android_rivers.activities.handleConnectivityError
-import com.silverkeytech.android_rivers.Result
 import com.silverkeytech.android_rivers.InfinityProgressDialog
 import com.silverkeytech.android_rivers.R
+import com.silverkeytech.android_rivers.Result
+import com.silverkeytech.android_rivers.activities.ConnectivityErrorMessage
+import com.silverkeytech.android_rivers.activities.handleConnectivityError
 import com.silverkeytech.android_rivers.downloadSingleRiver
+import com.silverkeytech.news_engine.riverjs.River
+import org.holoeverywhere.app.Activity
 
 @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 //Responsible for handling a river js downloading and display in asynchronous way
-public class DownloadRiverContentAsync(it: Context?, val language: String): AsyncTask<String, Int, Result<River>>(){
+class DownloadRiverContentAsync(it: Context?, val language: String): AsyncTask<String, Int, Result<River>>(){
     companion object {
-        public val TAG: String = DownloadRiverContentAsync::class.java.getSimpleName()
+        val TAG: String = DownloadRiverContentAsync::class.java.simpleName
     }
 
     val context: Activity = it!! as Activity
     val dialog: InfinityProgressDialog = InfinityProgressDialog(context, context.getString(R.string.please_wait_while_loading))
 
     //Prepare stuff before execution
-    protected override fun onPreExecute() {
+    override fun onPreExecute() {
         dialog.onCancel{
             dlg ->
             dlg.dismiss()
@@ -57,13 +55,13 @@ public class DownloadRiverContentAsync(it: Context?, val language: String): Asyn
 
     var rawCallback: ((Result<River>, String) -> Unit)? = null
 
-    public fun executeOnComplete(callback: (Result<River>, String) -> Unit): DownloadRiverContentAsync {
+    fun executeOnComplete(callback: (Result<River>, String) -> Unit): DownloadRiverContentAsync {
         rawCallback = callback
         return this
     }
 
     //Download river data in a thread
-    protected override fun doInBackground(vararg p0: String?): Result<River>? {
+    override fun doInBackground(vararg p0: String?): Result<River>? {
         url = p0.get(0)!!
         Log.d(TAG, "Cache is missed for url $url")
 
@@ -72,7 +70,7 @@ public class DownloadRiverContentAsync(it: Context?, val language: String): Asyn
     }
 
     //Once the thread is done.
-    protected override fun onPostExecute(result: Result<River>) {
+    override fun onPostExecute(result: Result<River>) {
         dialog.dismiss()
         if (result.isFalse()){
             val error = ConnectivityErrorMessage(

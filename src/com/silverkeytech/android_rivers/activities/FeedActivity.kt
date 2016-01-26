@@ -19,29 +19,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 package com.silverkeytech.android_rivers.activities
 
 import android.os.Bundle
+import android.util.Log
 import com.actionbarsherlock.view.ActionMode
 import com.actionbarsherlock.view.Menu
 import com.actionbarsherlock.view.MenuItem
+import com.silverkeytech.android_rivers.*
+import com.silverkeytech.android_rivers.asyncs.DownloadFeedAsync
+import com.silverkeytech.android_rivers.asyncs.downloadOpmlAsync
 import com.silverkeytech.android_rivers.db.checkIfUrlAlreadyBookmarked
 import org.holoeverywhere.app.Activity
 import org.holoeverywhere.app.ListActivity
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.Params
-import com.silverkeytech.android_rivers.WithVisualModificationPanel
-import com.silverkeytech.android_rivers.asyncs.DownloadFeedAsync
-import com.silverkeytech.android_rivers.PreferenceDefaults
-import com.silverkeytech.android_rivers.ResizeTextActionMode
-import com.silverkeytech.android_rivers.saveBookmark
-import com.silverkeytech.android_rivers.getVisualPref
-import com.silverkeytech.android_rivers.asyncs.downloadOpmlAsync
-import android.util.Log
-import com.silverkeytech.android_rivers.addBookmarkOption
 
 //Responsible of downloading, caching and viewing a news river content
-public class FeedActivity(): ListActivity(), WithVisualModificationPanel
+class FeedActivity(): ListActivity(), WithVisualModificationPanel
 {
     companion object {
-        public val TAG: String = FeedActivity::class.java.getSimpleName()
+        val TAG: String = FeedActivity::class.java.simpleName
     }
 
     var feedUrl: String = ""
@@ -51,18 +44,18 @@ public class FeedActivity(): ListActivity(), WithVisualModificationPanel
 
     public override fun onCreate(savedInstanceState: Bundle?): Unit {
         setTheme(this.getVisualPref().theme)
-        super<ListActivity>.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.feeds)
 
-        var actionBar = getSupportActionBar()!!
+        var actionBar = supportActionBar!!
         actionBar.setDisplayShowHomeEnabled(false) //hide the app icon.
 
-        var i = getIntent()!!
+        var i = intent!!
         feedUrl = i.getStringExtra(Params.FEED_URL)!!
         feedName = i.getStringExtra(Params.FEED_NAME)!!
         feedLanguage = i.getStringExtra(Params.FEED_LANGUAGE)!!
 
-        setTitle(feedName)
+        title = feedName
 
         downloadFeed(false)
     }
@@ -93,15 +86,15 @@ public class FeedActivity(): ListActivity(), WithVisualModificationPanel
     val REFRESH: Int = 1
     val RESIZE_TEXT: Int = 2
 
-    public override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val feedBookmarked = checkIfUrlAlreadyBookmarked(feedUrl)
 
         val bookmarkMenu = menu!!.findItem(R.id.feed_menu_bookmark)!!
-        bookmarkMenu.setVisible(!feedBookmarked)
+        bookmarkMenu.isVisible = !feedBookmarked
         return true
     }
 
-    public override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menu?.add(0, RESIZE_TEXT, 0, "Resize Text")
         ?.setIcon(android.R.drawable.ic_menu_preferences)
         ?.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
@@ -110,14 +103,14 @@ public class FeedActivity(): ListActivity(), WithVisualModificationPanel
         ?.setIcon(R.drawable.ic_menu_refresh)
         ?.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
 
-        var inflater = getSupportMenuInflater()!!
+        var inflater = supportMenuInflater!!
         inflater.inflate(R.menu.feed_menu, menu)
 
         return true
     }
 
-    public override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item!!.getItemId()){
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item!!.itemId){
             R.id.feed_menu_help -> {
                 downloadOpmlAsync(this, PreferenceDefaults.CONTENT_OUTLINE_HELP_SOURCE, getString(R.string.help))
                 return true
@@ -138,7 +131,7 @@ public class FeedActivity(): ListActivity(), WithVisualModificationPanel
                 return true
             }
             else ->
-                return super<ListActivity>.onOptionsItemSelected(item)
+                return super.onOptionsItemSelected(item)
         }
     }
 

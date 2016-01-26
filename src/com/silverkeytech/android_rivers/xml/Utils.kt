@@ -24,7 +24,7 @@ import com.thebuzzmedia.sjxp.rule.ParsingMode
 
 fun <T: Any> textRule(path: String, action: (text: String, rss: T) -> Unit): DefaultRule<T> {
     return object: DefaultRule<T> (ParsingMode.CHARACTER, path){
-        public override fun handleParsedCharacters(parser: XMLParser<T>?, text: String?, userObject: T?) {
+        override fun handleParsedCharacters(parser: XMLParser<T>?, text: String?, userObject: T?) {
             if (!text.isNullOrBlank())
                 action(text!!, userObject!!)
         }
@@ -33,9 +33,9 @@ fun <T: Any> textRule(path: String, action: (text: String, rss: T) -> Unit): Def
 
 fun <T: Any> attributeRule(path: String, action: (attrName: String, attrValue: String, rss: T) -> Unit, vararg attrNames: String?): DefaultRule<T> {
     return object: DefaultRule<T> (ParsingMode.ATTRIBUTE, path, *attrNames){
-        public override fun handleParsedAttribute(parser: XMLParser<T>?, index: Int, value: String?, userObject: T?) {
+        override fun handleParsedAttribute(parser: XMLParser<T>?, index: Int, value: String?, userObject: T?) {
             if (!value.isNullOrBlank()){
-                val attrName = this.getAttributeNames()!!.get(index)
+                val attrName = this.attributeNames!!.get(index)
                 action(attrName, value!!, userObject!!)
             }
         }
@@ -44,7 +44,7 @@ fun <T: Any> attributeRule(path: String, action: (attrName: String, attrValue: S
 
 fun <T: Any> tagRule(path: String, action: (isStartTag: Boolean, rss: T) -> Unit): DefaultRule<T> {
     return object: DefaultRule<T> (ParsingMode.TAG, path){
-        public override fun handleTag(parser: XMLParser<T>?, isStartTag: Boolean, userObject: T?) {
+        override fun handleTag(parser: XMLParser<T>?, isStartTag: Boolean, userObject: T?) {
             action(isStartTag, userObject!!)
         }
     }

@@ -20,29 +20,29 @@ package com.silverkeytech.news_engine.outlines
 
 import java.util.*
 
-public class OpmlBuilder{
+class OpmlBuilder{
     companion object {
-        public val TAG: String = OpmlBuilder::class.java.getSimpleName()
+        val TAG: String = OpmlBuilder::class.java.simpleName
     }
 
-    public val opml : Opml = Opml()
-    public val body : BodyBuilder = BodyBuilder(opml)
-    public val head : HeadBuilder = HeadBuilder(opml)
+    val opml : Opml = Opml()
+    val body : BodyBuilder = BodyBuilder(opml)
+    val head : HeadBuilder = HeadBuilder(opml)
 
-    public class HeadBuilder(val opml : Opml){
+    class HeadBuilder(val opml : Opml){
         init {
             opml.head = Head()
         }
-        public fun setTitle(title : String) { opml.head!!.title = title }
-        public fun setDateCreated(date : String) { opml.head!!.dateCreated = date }
-        public fun setDateModified(date : String) {  opml.head!!.dateModified = date }
-        public fun setOwnerName(owner: String) { opml.head!!.ownerName = owner }
-        public fun setOwnerEmail(email : String) { opml.head!!.ownerEmail = email }
+        fun setTitle(title : String) { opml.head!!.title = title }
+        fun setDateCreated(date : String) { opml.head!!.dateCreated = date }
+        fun setDateModified(date : String) {  opml.head!!.dateModified = date }
+        fun setOwnerName(owner: String) { opml.head!!.ownerName = owner }
+        fun setOwnerEmail(email : String) { opml.head!!.ownerEmail = email }
     }
 
-    public class BodyBuilder (val opml : Opml){
+    class BodyBuilder (val opml : Opml){
         companion object {
-            public val TAG: String = BodyBuilder::class.java.getSimpleName()
+            val TAG: String = BodyBuilder::class.java.simpleName
         }
 
         var currentLevel  = 0
@@ -55,7 +55,7 @@ public class OpmlBuilder{
             rootOutlines = opml.body!!.outline
         }
 
-        public fun startLevel(level : Int){
+        fun startLevel(level : Int){
             if (level == 0){
                 currentLevel = 0
                 currentOutline = Outline()
@@ -82,7 +82,7 @@ public class OpmlBuilder{
             }
         }
 
-        public fun endLevel(level : Int){
+        fun endLevel(level : Int){
             if (level < currentLevel && level > 0){
                 parentOutline = parents.pop()
                 currentLevel = level
@@ -95,17 +95,17 @@ public class OpmlBuilder{
             }
         }
 
-        public fun setText(text : String) { currentOutline.text = text }
-        public fun setUrl(url : String) { currentOutline.url = url }
-        public fun setXmlUrl(xmlUrl : String) { currentOutline.xmlUrl = xmlUrl }
-        public fun setHtmlUrl(htmlUrl : String) { currentOutline.htmlUrl = htmlUrl }
-        public fun setOpmlUrl(opmlUrl : String) { currentOutline.opmlUrl = opmlUrl }
-        public fun setType(tp : String) { currentOutline.outlineType = tp }
-        public fun setLanguage(lang : String) { currentOutline.language = lang }
-        public fun setName(name : String) { currentOutline.name = name }
+        fun setText(text : String) { currentOutline.text = text }
+        fun setUrl(url : String) { currentOutline.url = url }
+        fun setXmlUrl(xmlUrl : String) { currentOutline.xmlUrl = xmlUrl }
+        fun setHtmlUrl(htmlUrl : String) { currentOutline.htmlUrl = htmlUrl }
+        fun setOpmlUrl(opmlUrl : String) { currentOutline.opmlUrl = opmlUrl }
+        fun setType(tp : String) { currentOutline.outlineType = tp }
+        fun setLanguage(lang : String) { currentOutline.language = lang }
+        fun setName(name : String) { currentOutline.name = name }
     }
 
-    public fun build() : Opml{
+    fun build() : Opml{
         return opml
     }
 }

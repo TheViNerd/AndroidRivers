@@ -21,17 +21,17 @@ package com.silverkeytech.android_rivers.activities
 import android.os.Bundle
 import com.actionbarsherlock.view.Menu
 import com.actionbarsherlock.view.MenuItem
-import com.silverkeytech.android_rivers.db.getBookmarksFromDbByCollection
-import org.holoeverywhere.app.ListActivity
-import com.silverkeytech.android_rivers.R
 import com.silverkeytech.android_rivers.Params
 import com.silverkeytech.android_rivers.PreferenceDefaults
-import com.silverkeytech.android_rivers.getVisualPref
+import com.silverkeytech.android_rivers.R
 import com.silverkeytech.android_rivers.asyncs.downloadOpmlAsync
+import com.silverkeytech.android_rivers.db.getBookmarksFromDbByCollection
+import com.silverkeytech.android_rivers.getVisualPref
+import org.holoeverywhere.app.ListActivity
 
-public open class BookmarkCollectionActivity(): ListActivity() {
+open class BookmarkCollectionActivity(): ListActivity() {
     companion object {
-        public val TAG: String = BookmarkCollectionActivity::class.java.getSimpleName()
+        val TAG: String = BookmarkCollectionActivity::class.java.simpleName
     }
 
     var collectionTitle: String = ""
@@ -43,27 +43,27 @@ public open class BookmarkCollectionActivity(): ListActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.collection)
 
-        var i = getIntent()!!
+        var i = intent!!
         collectionId = i.getIntExtra(Params.COLLECTION_ID, 0)
         collectionTitle = i.getStringExtra(Params.COLLECTION_TITLE)!!
 
-        var actionBar = getSupportActionBar()!!
+        var actionBar = supportActionBar!!
         actionBar.setDisplayShowHomeEnabled(false) //hide the app icon.
         actionBar.setDisplayShowTitleEnabled(true)
-        actionBar.setTitle(getString(R.string.edit_sources_of_collection, collectionTitle))
+        actionBar.title = getString(R.string.edit_sources_of_collection, collectionTitle)
 
         displayCollection()
     }
 
 
-    public override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        var inflater = getSupportMenuInflater()!!
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        var inflater = supportMenuInflater!!
         inflater.inflate(R.menu.collection_menu, menu)
         return true
     }
 
-    public override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item!!.getItemId()){
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item!!.itemId){
             R.id.collection_menu_help -> {
                 downloadOpmlAsync(this, PreferenceDefaults.CONTENT_OUTLINE_HELP_SOURCE, getString(R.string.help))
                 return true
@@ -74,7 +74,7 @@ public open class BookmarkCollectionActivity(): ListActivity() {
         }
     }
 
-    public fun refreshCollection() {
+    fun refreshCollection() {
         displayCollection()
     }
 

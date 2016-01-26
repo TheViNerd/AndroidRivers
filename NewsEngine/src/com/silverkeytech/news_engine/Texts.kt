@@ -57,14 +57,14 @@ fun generateThrowawayName(): String {
 }
 
 val LOCAL_URL: String = "http://www.localhost/"
-public fun makeLocalUrl(id: Int): String {
+fun makeLocalUrl(id: Int): String {
     val url = LOCAL_URL + id.toString()
     return url
 }
 
-public fun isLocalUrl(url: String): Boolean = url.contains(LOCAL_URL)
+fun isLocalUrl(url: String): Boolean = url.contains(LOCAL_URL)
 
-public fun extractIdFromLocalUrl(url: String): Int? {
+fun extractIdFromLocalUrl(url: String): Int? {
     try{
         val id = url.substring(LOCAL_URL.length).toString()
         if (id.isNullOrEmpty())

@@ -23,11 +23,11 @@ import com.silverkeytech.news_engine.outlines.Body
 import com.silverkeytech.news_engine.outlines.Opml
 import com.silverkeytech.news_engine.outlines.Outline
 
-public fun removePodcast (id: Int): Result<None> {
+fun removePodcast (id: Int): Result<None> {
     return DatabaseManager.cmd().podcast().deleteById(id)
 }
 
-public fun getPodcastsFromDb(sortByTitle: SortingOrder): List<Podcast> {
+fun getPodcastsFromDb(sortByTitle: SortingOrder): List<Podcast> {
     val podcasts = DatabaseManager.query().podcast().all(sortByTitle)
 
     if (podcasts.exist)
@@ -36,7 +36,7 @@ public fun getPodcastsFromDb(sortByTitle: SortingOrder): List<Podcast> {
         return arrayListOf<Podcast>()
 }
 
-public fun savePodcastToDb(
+fun savePodcastToDb(
         title: String, url: String, sourceTitle: String, sourceUrl: String, localPath: String,
         description: String, mimeType: String, length: Int): Result<Podcast> {
     try{
@@ -58,7 +58,7 @@ public fun savePodcastToDb(
     }
 }
 
-public fun addNewCollection(title: String, kind: BookmarkCollectionKind): Result<BookmarkCollection> {
+fun addNewCollection(title: String, kind: BookmarkCollectionKind): Result<BookmarkCollection> {
     try{
         val coll = BookmarkCollection()
         coll.title = title
@@ -73,7 +73,7 @@ public fun addNewCollection(title: String, kind: BookmarkCollectionKind): Result
 }
 
 
-public fun clearBookmarksFromCollection(collectionId: Int): Result<None> {
+fun clearBookmarksFromCollection(collectionId: Int): Result<None> {
     try{
         val bookmarks = getBookmarksFromDbByCollection(collectionId)
         if (bookmarks.count() > 0){
@@ -82,7 +82,7 @@ public fun clearBookmarksFromCollection(collectionId: Int): Result<None> {
                 //double check to make sure that the bookmark really exists
                 if (b.exists){
                     b.value!!.collection = null
-                    DatabaseManager.bookmark!!.update(b.value!!) //now it is removed
+                    DatabaseManager.bookmark!!.update(b.value) //now it is removed
                 }
             }
         }
@@ -93,7 +93,7 @@ public fun clearBookmarksFromCollection(collectionId: Int): Result<None> {
     }
 }
 
-public fun removeBookmarkFromCollection(collectionId: Int, bookmarkId: Int): Result<None> {
+fun removeBookmarkFromCollection(collectionId: Int, bookmarkId: Int): Result<None> {
     try{
         val bookmarks = getBookmarksFromDbByCollection(collectionId)
         if (bookmarks.count() > 0){
@@ -105,7 +105,7 @@ public fun removeBookmarkFromCollection(collectionId: Int, bookmarkId: Int): Res
                 //double check to make sure that the bookmark really exists
                 if (b.exists){
                     b.value!!.collection = null
-                    DatabaseManager.bookmark!!.update(b.value!!) //now it is removed
+                    DatabaseManager.bookmark!!.update(b.value) //now it is removed
                 }
             }
         }
@@ -117,7 +117,7 @@ public fun removeBookmarkFromCollection(collectionId: Int, bookmarkId: Int): Res
 }
 
 
-public fun getBookmarkCollectionFromDb(sortByTitleOrder: SortingOrder): List<BookmarkCollection> {
+fun getBookmarkCollectionFromDb(sortByTitleOrder: SortingOrder): List<BookmarkCollection> {
     val coll = DatabaseManager.query().bookmarkCollection().all(sortByTitleOrder)
 
     if (coll.exist)
@@ -126,7 +126,7 @@ public fun getBookmarkCollectionFromDb(sortByTitleOrder: SortingOrder): List<Boo
         return arrayListOf<BookmarkCollection>()
 }
 
-public fun getBookmarksFromDbByCollection(collectionId: Int): List<Bookmark> {
+fun getBookmarksFromDbByCollection(collectionId: Int): List<Bookmark> {
     val bookmarks = DatabaseManager.query().bookmark().byCollectionId(collectionId)
 
     if (bookmarks.exist)
@@ -135,18 +135,18 @@ public fun getBookmarksFromDbByCollection(collectionId: Int): List<Bookmark> {
         return arrayListOf<Bookmark>()
 }
 
-public fun getBookmarksUrlsFromDbByCollection(collectionId: Int): Array<String> {
+fun getBookmarksUrlsFromDbByCollection(collectionId: Int): Array<String> {
     val bookmarks = getBookmarksFromDbByCollection(collectionId)
     val urls = bookmarks.map { it.url }.toTypedArray()
 
     return urls
 }
 
-public fun checkIfUrlAlreadyBookmarked(url: String): Boolean {
+fun checkIfUrlAlreadyBookmarked(url: String): Boolean {
     return DatabaseManager.query().bookmark().byUrl(url).exists
 }
 
-public fun saveBookmarkToDb(title: String,
+fun saveBookmarkToDb(title: String,
                             url: String,
                             kind: BookmarkKind,
                             lang: String,
@@ -169,7 +169,7 @@ public fun saveBookmarkToDb(title: String,
 }
 
 
-public fun getBookmarksFromDb(kind: BookmarkKind, sortByTitleOrder: SortingOrder): List<Bookmark> {
+fun getBookmarksFromDb(kind: BookmarkKind, sortByTitleOrder: SortingOrder): List<Bookmark> {
     val bookmarks = DatabaseManager.query().bookmark().byKind(kind, sortByTitleOrder)
 
     if (bookmarks.exist)
@@ -179,7 +179,7 @@ public fun getBookmarksFromDb(kind: BookmarkKind, sortByTitleOrder: SortingOrder
 }
 
 //get bookmarks from db and return the data in opml format
-public fun getBookmarksFromDbAsOpml(kind: BookmarkKind, sortByTitleOrder: SortingOrder): Opml {
+fun getBookmarksFromDbAsOpml(kind: BookmarkKind, sortByTitleOrder: SortingOrder): Opml {
     val opml = Opml()
     opml.body = Body()
 
@@ -197,7 +197,7 @@ public fun getBookmarksFromDbAsOpml(kind: BookmarkKind, sortByTitleOrder: Sortin
     return opml
 }
 
-public fun saveOpmlAsBookmarks(opml: Opml): Result<Opml> {
+fun saveOpmlAsBookmarks(opml: Opml): Result<Opml> {
     try{
         val bkDao = DatabaseManager.bookmark!!
 
@@ -221,6 +221,6 @@ public fun saveOpmlAsBookmarks(opml: Opml): Result<Opml> {
     }
 }
 
-public fun removeItemByUrlFromBookmarkDb(url: String): Result<None> {
+fun removeItemByUrlFromBookmarkDb(url: String): Result<None> {
     return  DatabaseManager.cmd().bookmark().deleteByUrl(url)
 }

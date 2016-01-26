@@ -24,26 +24,15 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.AdapterView
+import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.ListView
-import android.widget.PopupWindow
-import android.widget.TextView
+import com.silverkeytech.android_rivers.*
 import com.silverkeytech.android_rivers.db.Bookmark
 import com.silverkeytech.android_rivers.db.removeBookmarkFromCollection
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.getVisualPref
-import com.silverkeytech.android_rivers.startFeedActivity
-import com.silverkeytech.android_rivers.handleFontResize
-import com.silverkeytech.android_rivers.createConfirmationDialog
-import com.silverkeytech.android_rivers.findView
 
-public class BookmarkCollectionRenderer(val context: BookmarkCollectionActivity){
+class BookmarkCollectionRenderer(val context: BookmarkCollectionActivity){
     companion object {
-        public val TAG: String = BookmarkCollectionRenderer::class.java.getSimpleName()
+        val TAG: String = BookmarkCollectionRenderer::class.java.simpleName
     }
 
     fun handleListing(bookmarks: List<Bookmark>) {
@@ -55,32 +44,30 @@ public class BookmarkCollectionRenderer(val context: BookmarkCollectionActivity)
         }
 
         val adapter = object : ArrayAdapter<Bookmark>(context, android.R.layout.simple_list_item_1, android.R.id.text1, bookmarks){
-            public override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val text = bookmarks[position].toString()
                 return currentListItem(text, convertView, parent, textSize.toFloat())
             }
         }
 
         val list = context.findView<ListView>(android.R.id.list)
-        list.setAdapter(adapter)
-        list.setOnItemClickListener(object : OnItemClickListener{
-            public override fun onItemClick(p0: AdapterView<out Adapter?>, p1: View, p2: Int, p3: Long) {
+        list.adapter = adapter
+        list.onItemClickListener = object : OnItemClickListener{
+            override fun onItemClick(p0: AdapterView<out Adapter?>, p1: View, p2: Int, p3: Long) {
                 val bookmark = bookmarks.get(p2)
                 Log.d(TAG, "Downloading feed ${bookmark.title} - ${bookmark.url}")
                 startFeedActivity(context, bookmark.url, bookmark.title, bookmark.language)
             }
-        })
+        }
 
-        list.setOnItemLongClickListener(object : AdapterView.OnItemLongClickListener{
-            public override fun onItemLongClick(p0: AdapterView<out Adapter?>?, p1: View?, p2: Int, p3: Long): Boolean {
-                val currentBookmark = bookmarks.get(p2)
-                showCollectionQuickActionPopup(context, currentBookmark, p1!!, list)
-                return true
-            }
-        })
+        list.onItemLongClickListener = AdapterView.OnItemLongClickListener { p0, p1, p2, p3 ->
+            val currentBookmark = bookmarks.get(p2)
+            showCollectionQuickActionPopup(context, currentBookmark, p1!!, list)
+            true
+        }
     }
 
-    public data class ViewHolder (var name: TextView)
+    data class ViewHolder (var name: TextView)
 
     fun currentListItem(text: String, convertView: View?, parent: ViewGroup?, textSize: Float): View {
         var holder: ViewHolder?
@@ -91,13 +78,13 @@ public class BookmarkCollectionRenderer(val context: BookmarkCollectionActivity)
             vw = inflater().inflate(android.R.layout.simple_list_item_1, parent, false)
 
             holder = ViewHolder(vw.findView<TextView>(android.R.id.text1))
-            vw!!.setTag(holder)
+            vw!!.tag = holder
         }else{
-            holder = vw!!.getTag() as ViewHolder
+            holder = vw.tag as ViewHolder
         }
 
-        handleFontResize(holder!!.name, text, textSize)
-        return vw!!
+        handleFontResize(holder.name, text, textSize)
+        return vw
     }
 
     fun inflater(): LayoutInflater {
@@ -108,10 +95,10 @@ public class BookmarkCollectionRenderer(val context: BookmarkCollectionActivity)
 
 fun showCollectionQuickActionPopup(context: BookmarkCollectionActivity, bookmark: Bookmark, item: View, list: View) {
     //overlay popup at top of clicked overview position
-    val popupWidth = item.getWidth()
-    val popupHeight = item.getHeight()
+    val popupWidth = item.width
+    val popupHeight = item.height
 
-    val x = context.getLayoutInflater().inflate(R.layout.collection_quick_actions, null, false)!!
+    val x = context.layoutInflater.inflate(R.layout.collection_quick_actions, null, false)!!
     val pp = PopupWindow(x, popupWidth, popupHeight, true)
 
     x.setBackgroundColor(android.graphics.Color.LTGRAY)

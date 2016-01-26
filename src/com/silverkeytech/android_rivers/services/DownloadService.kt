@@ -18,37 +18,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.android_rivers.services
 
-import android.app.Activity
-import android.app.IntentService
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Environment
 import android.os.Message
 import android.os.RemoteException
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.widget.RemoteViews
-import com.github.kevinsawicki.http.HttpRequest.HttpRequestException
+import com.silverkeytech.android_rivers.*
+import com.silverkeytech.android_rivers.activities.MainWithFragmentsActivity
 import com.silverkeytech.android_rivers.db.savePodcastToDb
 import java.io.BufferedInputStream
 import java.io.FileOutputStream
 import java.net.URL
-import java.util.Random
-import android.content.res.Resources
-import com.silverkeytech.android_rivers.activities.MainWithFragmentsActivity
-import com.silverkeytech.android_rivers.Params
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.with
-import com.silverkeytech.android_rivers.isModernAndroid
-import com.silverkeytech.android_rivers.generateThrowawayName
-import com.silverkeytech.android_rivers.getFileNameFromUri
+import java.util.*
 
-public class DownloadService(): IntentService("DownloadService"){
+class DownloadService(): IntentService("DownloadService"){
     companion object{
-        public val TAG: String = DownloadService::class.java.getSimpleName()
+        val TAG: String = DownloadService::class.java.simpleName
     }
 
     var targetTitle: String? = null
@@ -58,7 +48,7 @@ public class DownloadService(): IntentService("DownloadService"){
 
     fun prepareNotification(title: String, filePath: String): Notification {
         val notificationIntent = Intent(Intent.ACTION_MAIN)
-        notificationIntent.setClass(getApplicationContext()!!, MainWithFragmentsActivity::class.java)
+        notificationIntent.setClass(applicationContext!!, MainWithFragmentsActivity::class.java)
         notificationIntent.putExtra(Params.DOWNLOAD_LOCATION_PATH, filePath)
 
         val contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT)
@@ -71,7 +61,7 @@ public class DownloadService(): IntentService("DownloadService"){
 
         notification!!.icon = android.R.drawable.stat_sys_download
 
-        val remote = RemoteViews(getApplicationContext()!!.getPackageName(), R.layout.notification_download_progress).with {
+        val remote = RemoteViews(applicationContext!!.packageName, R.layout.notification_download_progress).with {
             this.setImageViewResource(R.id.notification_download_progress_status_icon, android.R.drawable.stat_sys_download_done)
             this.setProgressBar(R.id.notification_download_progress_status_progress, 100, 0, false)
             this.setTextViewText(R.id.notification_download_progress_status_text, "Downloading $targetTitle")
@@ -89,7 +79,7 @@ public class DownloadService(): IntentService("DownloadService"){
         return notification
     }
 
-    protected override fun onHandleIntent(p0: Intent?) {
+    override fun onHandleIntent(p0: Intent?) {
         targetTitle = p0?.getStringExtra(Params.DOWNLOAD_TITLE)
         targetUrl = p0?.getStringExtra(Params.DOWNLOAD_URL)
         targetSourceTitle = p0?.getStringExtra(Params.DOWNLOAD_SOURCE_TITLE)
@@ -112,22 +102,22 @@ public class DownloadService(): IntentService("DownloadService"){
             val connection = url.openConnection()!!
             connection.connect()
 
-            val fileLength: Int = connection.getContentLength()
-            val contentType = connection.getContentType()!!
+            val fileLength: Int = connection.contentLength
+            val contentType = connection.contentType!!
 
             Log.d(TAG, "File length $fileLength")
 
             if (inferredName == null)
                 inferredName = generateThrowawayName() + ".mp3"
 
-            val directory = Environment.getExternalStorageDirectory()!!.getPath() + "/" + Environment.DIRECTORY_PODCASTS
+            val directory = Environment.getExternalStorageDirectory()!!.path + "/" + Environment.DIRECTORY_PODCASTS
             filename = directory + "/" + inferredName
 
             notification = prepareNotification(targetTitle!!, filename)
 
             Log.d(TAG, "Podcast to be stored at ${filename}")
 
-            notificationManager.notify(notificationId, notification!!)
+            notificationManager.notify(notificationId, notification)
 
             var input: BufferedInputStream? = null
             var output: FileOutputStream? = null
@@ -139,7 +129,7 @@ public class DownloadService(): IntentService("DownloadService"){
                 var total: Long = 0
                 var progress: Int = 0
 
-                var count: Int = input!!.read(data)
+                var count: Int = input.read(data)
 
                 var oldProgress: Int
 
@@ -150,12 +140,12 @@ public class DownloadService(): IntentService("DownloadService"){
                     Log.d(TAG, "Download progress ($total * 100) / $fileLength $progress")
 
                     if (progress != oldProgress){
-                        notification!!.contentView!!.setProgressBar(R.id.notification_download_progress_status_progress, 100, progress, false)
-                        notificationManager.notify(notificationId, notification!!)
+                        notification.contentView!!.setProgressBar(R.id.notification_download_progress_status_progress, 100, progress, false)
+                        notificationManager.notify(notificationId, notification)
                     }
 
-                    output!!.write(data, 0, count)
-                    count = input!!.read(data)
+                    output.write(data, 0, count)
+                    count = input.read(data)
                 }
 
                 val res = savePodcastToDb(targetTitle!!,
@@ -169,20 +159,20 @@ public class DownloadService(): IntentService("DownloadService"){
                 )
 
                 if (res.isFalse()){
-                    notification!!.contentView!!.setTextViewText(R.id.notification_download_progress_status_text, "File download fails to save to db")
-                    notificationManager.notify(notificationId, notification!!)
+                    notification.contentView!!.setTextViewText(R.id.notification_download_progress_status_text, "File download fails to save to db")
+                    notificationManager.notify(notificationId, notification)
                     result = Activity.RESULT_CANCELED
                 }
                 else{
-                    notification!!.contentView!!.setTextViewText(R.id.notification_download_progress_status_text, "File successfully downloaded to $filename")
-                    notification!!.contentView!!.setProgressBar(R.id.notification_download_progress_status_progress, 100, 100, false)
-                    notificationManager.notify(notificationId, notification!!)
+                    notification.contentView!!.setTextViewText(R.id.notification_download_progress_status_text, "File successfully downloaded to $filename")
+                    notification.contentView!!.setProgressBar(R.id.notification_download_progress_status_progress, 100, 100, false)
+                    notificationManager.notify(notificationId, notification)
                     result = Activity.RESULT_OK
                 }
 
             }catch (e: java.io.FileNotFoundException){
-                notification!!.contentView!!.setTextViewText(R.id.notification_download_progress_status_text, "Download fails due to ${e.message}")
-                notificationManager.notify(notificationId, notification!!)
+                notification.contentView!!.setTextViewText(R.id.notification_download_progress_status_text, "Download fails due to ${e.message}")
+                notificationManager.notify(notificationId, notification)
                 result = Activity.RESULT_CANCELED
             }
             finally{
@@ -194,13 +184,13 @@ public class DownloadService(): IntentService("DownloadService"){
         catch(e: Exception){
             Log.d(TAG, "Exception happend at attempt to download $targetTitle with error : ${e.message}")
             if (notification != null){
-                notification!!.contentView!!.setTextViewText(R.id.notification_download_progress_status_text, "File $inferredName download cancelled due to error")
-                notificationManager.notify(notificationId, notification!!)
+                notification.contentView!!.setTextViewText(R.id.notification_download_progress_status_text, "File $inferredName download cancelled due to error")
+                notificationManager.notify(notificationId, notification)
             }
             result = Activity.RESULT_CANCELED
         }
 
-        val extras = p0?.getExtras()
+        val extras = p0?.extras
         if (extras != null){
             val messenger = extras.get(Params.MESSENGER) as android.os.Messenger
             val msg = Message.obtain()!!
@@ -215,24 +205,24 @@ public class DownloadService(): IntentService("DownloadService"){
         }
     }
 
-    public override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         Log.d(TAG, "OnStartCommand  with ${targetUrl}")
 
-        return super<IntentService>.onStartCommand(intent, flags, startId)
+        return super.onStartCommand(intent, flags, startId)
     }
 
-    public override fun onCreate() {
-        super<IntentService>.onCreate()
+    override fun onCreate() {
+        super.onCreate()
         Log.d(TAG, "Service created  with ${targetUrl}")
     }
 
-    public override fun onStart(intent: Intent?, startId: Int) {
-        super<IntentService>.onStart(intent, startId)
+    override fun onStart(intent: Intent?, startId: Int) {
+        super.onStart(intent, startId)
         Log.d(TAG, "Service started  with ${targetUrl}")
     }
 
-    public override fun onDestroy() {
-        super<IntentService>.onDestroy()
+    override fun onDestroy() {
+        super.onDestroy()
         Log.d(TAG, "Service destroyed  with ${targetUrl}")
     }
 }

@@ -5,9 +5,8 @@ import com.silverkeytech.news_engine.transformXmlToRdfRss
 import org.junit.Assert
 import org.junit.Test
 
-public class RdfRssTest{
-    @Test
-    public fun testCraigsList(){
+class RdfRssTest{
+    @Test fun testCraigsList(){
         val download = downloadSingleFeed("http://bloomington.craigslist.org/apa/index.rss")
         Assert.assertTrue("Download must be true", download.isTrue())
         val feed = download.value!!
@@ -17,8 +16,7 @@ public class RdfRssTest{
         plog("Date of first item ${feed.items.get(0).pubDate}")
     }
 
-    @Test
-    public fun testUNDPJobs(){
+    @Test fun testUNDPJobs(){
         val rawXml = downloadRawFeed("http://jobs.undp.org/rss_feeds/RAF.xml")
         Assert.assertTrue("Raw xml must exists", rawXml.length > 0)
         val res = transformXmlToRdfRss(rawXml)
@@ -37,8 +35,7 @@ public class RdfRssTest{
         }
     }
 
-    @Test
-    public fun testBasicParsing(){
+    @Test fun testBasicParsing(){
         val rawXml = downloadRawFeed("http://bloomington.craigslist.org/apa/index.rss")
         Assert.assertTrue("Raw xml must exists", rawXml.length > 0)
         val res = transformXmlToRdfRss(rawXml)

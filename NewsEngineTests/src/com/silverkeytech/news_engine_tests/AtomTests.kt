@@ -1,13 +1,11 @@
 package com.silverkeytech.news_engine_tests
 
 
-import org.junit.Test
 import org.junit.Assert
-import org.junit.runner.RunWith
+import org.junit.Test
 
-public class AtomTests(){
-    @Test
-    public fun testAssociatedPress(){
+class AtomTests(){
+    @Test fun testAssociatedPress(){
         val download = downloadAtomFeed("http://hosted2.ap.org/atom/APDEFAULT/3d281c11a96b4ad082fe88aa0db04305")
         //val download = downloadAtomFeed("http://daringfireball.net/index.xml")
         Assert.assertTrue("Download must be true instead of ${download.exception?.message}", download.isTrue())

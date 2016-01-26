@@ -18,46 +18,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.android_rivers.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app._HoloActivity
 import android.util.Log
 import android.view.View
 import com.actionbarsherlock.app.ActionBar
 import com.actionbarsherlock.view.Menu
 import com.actionbarsherlock.view.MenuItem
-import org.holoeverywhere.app.Activity
-import com.slidingmenu.lib.SlidingMenu
-import org.holoeverywhere.addon.SlidingMenu.SlidingMenuA
+import com.silverkeytech.android_rivers.*
+import com.silverkeytech.android_rivers.asyncs.downloadOpmlAsync
 import com.silverkeytech.android_rivers.meta_weblog.showBlogConfigurationDialog
 import com.silverkeytech.android_rivers.meta_weblog.showPostBlogDialog
-import android.support.v4.app._HoloActivity
-import java.util.Random
-import android.content.Intent
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.Params
-import com.silverkeytech.android_rivers.PreferenceDefaults
-import com.silverkeytech.android_rivers.NavItem
-import com.silverkeytech.android_rivers.startBlogPostingService
-import com.silverkeytech.android_rivers.asyncs.downloadOpmlAsync
-import com.silverkeytech.android_rivers.getVisualPref
-import com.silverkeytech.android_rivers.fillSlidingMenuNavigation
-import com.silverkeytech.android_rivers.getMainNavigationItems
-import com.silverkeytech.android_rivers.SLIDE_MENU_TRY_OUT
-import com.silverkeytech.android_rivers.SLIDE_MENU_WRITE
-import com.silverkeytech.android_rivers.SLIDE_MENU_GOOGLE_NEWS
-import com.silverkeytech.android_rivers.SLIDE_MENU_KAYAK_DEALS
-import com.silverkeytech.android_rivers.SLIDE_MENU_PRAISE
-import com.silverkeytech.android_rivers.SLIDE_MENU_FEEDBACK
-import com.silverkeytech.android_rivers.SLIDE_MENU_CRAIGSLIST_LISTING
-import com.silverkeytech.android_rivers.createSingleInputDialog
-import com.silverkeytech.android_rivers.startOpenEmailActivity
-import com.silverkeytech.android_rivers.startCraigslistListingActivity
-import com.silverkeytech.android_rivers.startKayakFlightDealsActivity
-import com.silverkeytech.android_rivers.startTryoutActivity
-import com.silverkeytech.android_rivers.shareActionIntent
-import com.silverkeytech.android_rivers.andHide
-import com.silverkeytech.android_rivers.startGoogleNewsSearchActivity
-import com.silverkeytech.android_rivers.Bus
-import com.silverkeytech.android_rivers.MessageEvent
+import com.slidingmenu.lib.SlidingMenu
+import org.holoeverywhere.addon.SlidingMenu.SlidingMenuA
+import org.holoeverywhere.app.Activity
+import java.util.*
 
 enum class MainActivityMode {
     RIVER,
@@ -67,10 +43,10 @@ enum class MainActivityMode {
     OPML
 }
 
-public open class MainWithFragmentsActivity(): Activity() {
+open class MainWithFragmentsActivity(): Activity() {
     companion object {
-        public val TAG: String = MainWithFragmentsActivity::class.java.getSimpleName()
-        public val REPLACEMENT_HOME_ID: Int = 16908332
+        val TAG: String = MainWithFragmentsActivity::class.java.simpleName
+        val REPLACEMENT_HOME_ID: Int = 16908332
     }
 
     val DEFAULT_SUBSCRIPTION_LIST = "http://hobieu.apphb.com/api/1/default/riverssubscription"
@@ -96,7 +72,7 @@ public open class MainWithFragmentsActivity(): Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_with_fragments)
 
-        val actionBar: ActionBar = getSupportActionBar()!!
+        val actionBar: ActionBar = supportActionBar!!
         //actionBar.setIcon(getSlidingIconBasedOnTheme(getSlidingIconBasedOnTheme(currentTheme!!)))
         actionBar.setDisplayShowHomeEnabled(false)
 
@@ -105,15 +81,15 @@ public open class MainWithFragmentsActivity(): Activity() {
 
         //sliding menu setup
         val slidingMenuAddon = requireSlidingMenu()
-        val slidingMenu = slidingMenuAddon.getSlidingMenu()!!
+        val slidingMenu = slidingMenuAddon.slidingMenu!!
         val slidingMenuView = makeMenuView(savedInstanceState)
         slidingMenuAddon.setBehindContentView(slidingMenuView)
         fillSlidingMenuNavigation(getMainNavigationItems(), slidingMenuView, { item -> handleSideNavigationItemClick(item) })
         slidingMenuAddon.setSlidingActionBarEnabled(true)
-        slidingMenu.setEnabled(true)
+        slidingMenu.isEnabled = true
         slidingMenu.setBehindWidth(computeSideMenuWidth())
-        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN)
-        slidingMenu.setSlidingEnabled(true)
+        slidingMenu.touchModeAbove = SlidingMenu.TOUCHMODE_MARGIN
+        slidingMenu.isSlidingEnabled = true
     }
 
     fun handleSideNavigationItemClick(item: NavItem) {
@@ -181,13 +157,13 @@ public open class MainWithFragmentsActivity(): Activity() {
         }
     }
 
-    protected override fun onCreateConfig(savedInstanceState: Bundle?): _HoloActivity.Holo? {
+    override fun onCreateConfig(savedInstanceState: Bundle?): _HoloActivity.Holo? {
         val config = super.onCreateConfig(savedInstanceState);
         config!!.requireSlidingMenu = true;
         return config;
     }
 
-    protected override fun onResume() {
+    override fun onResume() {
         super.onResume()
         //skip if this event comes after onCreate
         if (!isOnCreate){
@@ -205,19 +181,19 @@ public open class MainWithFragmentsActivity(): Activity() {
         }
     }
 
-    public override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         if (menu != null){
             menu.findItem(R.id.main_menu_updates).andHide()
 
-            menu.findItem(SWITCH_BACKWARD)?.setEnabled(true)
-            menu.findItem(SWITCH_FORWARD)?.setEnabled(true)
+            menu.findItem(SWITCH_BACKWARD)?.isEnabled = true
+            menu.findItem(SWITCH_FORWARD)?.isEnabled = true
         }
 
         return super.onPrepareOptionsMenu(menu)
     }
 
-    public override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = getSupportMenuInflater()!!
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = supportMenuInflater!!
         inflater.inflate(R.menu.main_fragments_menu, menu)
 
         //fixed top menu
@@ -269,20 +245,20 @@ public open class MainWithFragmentsActivity(): Activity() {
     }
 
     fun setTitle() {
-        val actionBar = getSupportActionBar()!!
+        val actionBar = supportActionBar!!
         when(mode){
-            MainActivityMode.RIVER -> actionBar.setTitle("Rivers")
-            MainActivityMode.RSS -> actionBar.setTitle("RSS")
-            MainActivityMode.COLLECTION -> actionBar.setTitle("Collections")
-            MainActivityMode.PODCASTS -> actionBar.setTitle("Podcasts")
-            MainActivityMode.OPML -> actionBar.setTitle("OPMLs")
+            MainActivityMode.RIVER -> actionBar.title = "Rivers"
+            MainActivityMode.RSS -> actionBar.title = "RSS"
+            MainActivityMode.COLLECTION -> actionBar.title = "Collections"
+            MainActivityMode.PODCASTS -> actionBar.title = "Podcasts"
+            MainActivityMode.OPML -> actionBar.title = "OPMLs"
             else -> {
             }
         }
     }
 
-    public override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item!!.getItemId()) {
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item!!.itemId) {
             REPLACEMENT_HOME_ID -> {
                 requireSlidingMenu().toggle()
                 return true
@@ -371,11 +347,11 @@ public open class MainWithFragmentsActivity(): Activity() {
     }
 
     fun makeMenuView(savedInstanceState: Bundle?): View {
-        return getLayoutInflater().inflate(R.layout.main_slide_menu)!!
+        return layoutInflater.inflate(R.layout.main_slide_menu)!!
     }
 
     fun computeSideMenuWidth(): Int {
-        return getResources()!!.getFraction(R.dimen.sliding_menu_width, getResources()!!.getDisplayMetrics().widthPixels, 1).toInt()
+        return resources!!.getFraction(R.dimen.sliding_menu_width, resources!!.displayMetrics.widthPixels, 1).toInt()
     }
 }
 

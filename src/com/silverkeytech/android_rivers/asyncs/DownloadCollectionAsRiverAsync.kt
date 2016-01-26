@@ -21,35 +21,26 @@ package com.silverkeytech.android_rivers.asyncs
 import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
+import com.silverkeytech.android_rivers.*
+import com.silverkeytech.android_rivers.activities.getMain
 import com.silverkeytech.news_engine.riverjs.RiverItemMeta
 import com.silverkeytech.news_engine.riverjs.accumulateList
 import com.silverkeytech.news_engine.riverjs.sortRiverItemMeta
 import com.silverkeytech.news_engine.syndications.SyndicationFilter
-import com.silverkeytech.android_rivers.downloadSingleFeed
-import java.util.ArrayList
-import java.util.Vector
+import org.holoeverywhere.app.Activity
+import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import org.holoeverywhere.app.Activity
-import com.silverkeytech.android_rivers.activities.getMain
-import com.silverkeytech.android_rivers.Result
-import com.silverkeytech.android_rivers.InfinityProgressDialog
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.daysBeforeNow
-import com.silverkeytech.android_rivers.PreferenceDefaults
-import com.silverkeytech.android_rivers.makeLocalUrl
-import com.silverkeytech.android_rivers.toHoursInMinutes
 
-@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-public class DownloadCollectionAsRiverAsync(it: Context?, private val collectionId: Int): AsyncTask<String, Int, Result<List<RiverItemMeta>>>(){
+@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") class DownloadCollectionAsRiverAsync(it: Context?, private val collectionId: Int): AsyncTask<String, Int, Result<List<RiverItemMeta>>>(){
     companion object {
-        public val TAG: String = DownloadCollectionAsRiverAsync::class.java.getSimpleName()
+        val TAG: String = DownloadCollectionAsRiverAsync::class.java.simpleName
     }
 
     var context: Activity = it!! as Activity
     var dialog: InfinityProgressDialog = InfinityProgressDialog(context, context.getString(R.string.please_wait_while_loading))
 
-    protected override fun onPreExecute() {
+    override fun onPreExecute() {
         dialog.onCancel {
             dlg ->
             dlg.dismiss()
@@ -59,7 +50,7 @@ public class DownloadCollectionAsRiverAsync(it: Context?, private val collection
         dialog.show()
     }
 
-    protected override fun doInBackground(vararg p0: String?): Result<List<RiverItemMeta>>? {
+    override fun doInBackground(vararg p0: String?): Result<List<RiverItemMeta>>? {
         val latestDate = daysBeforeNow(PreferenceDefaults.CONTENT_BOOKMARK_COLLECTION_LATEST_DATE_FILTER_IN_DAYS)
         val before = System.currentTimeMillis()
         var list = Vector<RiverItemMeta>()
@@ -109,12 +100,12 @@ public class DownloadCollectionAsRiverAsync(it: Context?, private val collection
     var callback: ((String, Result<List<RiverItemMeta>>) -> Unit)? = null
 
     //Set up function to call when download is done
-    public fun executeOnCompletion(action: ((String, Result<List<RiverItemMeta>>) -> Unit)?): DownloadCollectionAsRiverAsync {
+    fun executeOnCompletion(action: ((String, Result<List<RiverItemMeta>>) -> Unit)?): DownloadCollectionAsRiverAsync {
         callback = action
         return this
     }
 
-    protected override fun onPostExecute(result: Result<List<RiverItemMeta>>) {
+    override fun onPostExecute(result: Result<List<RiverItemMeta>>) {
         dialog.dismiss()
         val url = makeLocalUrl(collectionId)
         if (result.isTrue()){

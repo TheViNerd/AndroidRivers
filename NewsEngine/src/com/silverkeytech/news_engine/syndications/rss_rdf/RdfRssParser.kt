@@ -23,8 +23,8 @@ import com.thebuzzmedia.sjxp.XMLParser
 import com.silverkeytech.news_engine.xml.textRule
 import com.silverkeytech.news_engine.xml.tagRule
 
-public class RdfRssParser{
-    public fun parse(input: InputStream, rss: RdfRssBuilder) {
+class RdfRssParser{
+    fun parse(input: InputStream, rss: RdfRssBuilder) {
         XMLParser.DEBUG = false
         var parser = XMLParser<RdfRssBuilder>(channelTitle, channelLink, channelDescription, channelDcLanguage,
                 channelDcRights, channelDcPublisher, channelDcCreator, channelDcSource, channelDcTitle,

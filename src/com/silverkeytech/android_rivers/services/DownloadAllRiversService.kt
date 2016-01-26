@@ -24,40 +24,24 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.widget.RemoteViews
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException
 import com.google.gson.Gson
-import com.silverkeytech.android_rivers.db.getBookmarksUrlsFromDbByCollection
-import com.silverkeytech.news_engine.riverjs.River
-import com.silverkeytech.news_engine.riverjs.RiverItemMeta
-import com.silverkeytech.news_engine.syndications.SyndicationFilter
-import com.silverkeytech.android_rivers.downloadSingleFeed
-import java.util.Random
-import java.util.Vector
-import android.content.res.Resources
-import com.silverkeytech.news_engine.riverjs.accumulateList
-import com.silverkeytech.news_engine.riverjs.sortRiverItemMeta
-import com.silverkeytech.news_engine.riverjs.getSortedNewsItems
+import com.silverkeytech.android_rivers.*
 import com.silverkeytech.android_rivers.activities.MainWithFragmentsActivity
 import com.silverkeytech.android_rivers.activities.getMain
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.PreferenceDefaults
-import com.silverkeytech.android_rivers.Params
-import com.silverkeytech.android_rivers.with
-import com.silverkeytech.android_rivers.isModernAndroid
-import com.silverkeytech.android_rivers.httpGet
-import com.silverkeytech.android_rivers.scrubJsonP
-import com.silverkeytech.android_rivers.isLocalUrl
-import com.silverkeytech.android_rivers.daysBeforeNow
-import com.silverkeytech.android_rivers.extractIdFromLocalUrl
-import com.silverkeytech.android_rivers.toHoursInMinutes
+import com.silverkeytech.android_rivers.db.getBookmarksUrlsFromDbByCollection
+import com.silverkeytech.news_engine.riverjs.*
+import com.silverkeytech.news_engine.syndications.SyndicationFilter
+import java.util.*
 
 
-public class DownloadAllRiversService(): IntentService("DownloadAllRiversService"){
+class DownloadAllRiversService(): IntentService("DownloadAllRiversService"){
     companion object{
-        public val TAG: String = DownloadAllRiversService::class.java.getSimpleName()
+        val TAG: String = DownloadAllRiversService::class.java.simpleName
     }
 
     var targetUrls: List<String?> ? = null
@@ -65,7 +49,7 @@ public class DownloadAllRiversService(): IntentService("DownloadAllRiversService
 
     fun prepareNotification(): Notification {
         val notificationIntent = Intent(Intent.ACTION_MAIN)
-        notificationIntent.setClass(getApplicationContext()!!, MainWithFragmentsActivity::class.java)
+        notificationIntent.setClass(applicationContext!!, MainWithFragmentsActivity::class.java)
 
         val contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
@@ -77,7 +61,7 @@ public class DownloadAllRiversService(): IntentService("DownloadAllRiversService
 
         notification!!.icon = android.R.drawable.stat_sys_download
 
-        val remote = RemoteViews(getApplicationContext()!!.getPackageName(), R.layout.notification_download_progress).with {
+        val remote = RemoteViews(applicationContext!!.packageName, R.layout.notification_download_progress).with {
             this.setImageViewResource(R.id.notification_download_progress_status_icon, android.R.drawable.stat_sys_download_done)
             this.setProgressBar(R.id.notification_download_progress_status_progress, 100, 0, false)
             this.setTextViewText(R.id.notification_download_progress_status_text, getString(R.string.download_starts))
@@ -95,7 +79,7 @@ public class DownloadAllRiversService(): IntentService("DownloadAllRiversService
         return notification
     }
 
-    protected override fun onHandleIntent(p0: Intent?) {
+    override fun onHandleIntent(p0: Intent?) {
         targetTitles = p0?.getStringArrayListExtra(Params.RIVERS_DOWNLOAD_TITLE)
         targetUrls = p0?.getStringArrayListExtra(Params.RIVERS_DOWNLOAD_URLS)
 
@@ -223,24 +207,24 @@ public class DownloadAllRiversService(): IntentService("DownloadAllRiversService
         notify()
     }
 
-    public override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         Log.d(TAG, "OnStartCommand ")
 
-        return super<IntentService>.onStartCommand(intent, flags, startId)
+        return super.onStartCommand(intent, flags, startId)
     }
 
-    public override fun onCreate() {
-        super<IntentService>.onCreate()
+    override fun onCreate() {
+        super.onCreate()
         Log.d(TAG, "Service created")
     }
 
-    public override fun onStart(intent: Intent?, startId: Int) {
-        super<IntentService>.onStart(intent, startId)
+    override fun onStart(intent: Intent?, startId: Int) {
+        super.onStart(intent, startId)
         Log.d(TAG, "Service started ")
     }
 
-    public override fun onDestroy() {
-        super<IntentService>.onDestroy()
+    override fun onDestroy() {
+        super.onDestroy()
         Log.d(TAG, "Service destroyed ")
     }
 }

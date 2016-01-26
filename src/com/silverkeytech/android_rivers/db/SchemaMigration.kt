@@ -22,12 +22,12 @@ import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 
-public class SchemaMigration(val db: SQLiteDatabase){
+class SchemaMigration(val db: SQLiteDatabase){
     companion object {
-        val TAG: String = SchemaMigration::class.java.getSimpleName()
+        val TAG: String = SchemaMigration::class.java.simpleName
     }
 
-    public fun migrate(version: Int): Boolean {
+    fun migrate(version: Int): Boolean {
         return when(version){
             1 -> migrate1()
             2 -> {

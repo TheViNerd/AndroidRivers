@@ -22,12 +22,12 @@ import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 
-public class SchemaCreation(val db: SQLiteDatabase){
+class SchemaCreation(val db: SQLiteDatabase){
     companion object {
-        val TAG: String = SchemaCreation::class.java.getSimpleName()
+        val TAG: String = SchemaCreation::class.java.simpleName
     }
 
-    public fun create(version: Int) {
+    fun create(version: Int) {
         when(version){
             1 -> create1()
             2 -> create2()

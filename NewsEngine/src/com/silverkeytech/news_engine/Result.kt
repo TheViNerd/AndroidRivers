@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 package com.silverkeytech.news_engine
 
-public class None(){
+class None(){
 }
 
-public class Result<T: Any>(p1: T?, p2: Exception? = null){
+class Result<T: Any>(p1: T?, p2: Exception? = null){
     companion object{
         //return True result
         fun <T: Any> right(value: T?): Result<T> {
@@ -33,14 +33,14 @@ public class Result<T: Any>(p1: T?, p2: Exception? = null){
         }
     }
 
-    public val value: T? = p1
-    public val exception: Exception? = p2
+    val value: T? = p1
+    val exception: Exception? = p2
 
-    public fun isTrue(): Boolean {
+    fun isTrue(): Boolean {
         return exception == null
     }
 
-    public fun isFalse(): Boolean {
+    fun isFalse(): Boolean {
         return exception != null
     }
 }

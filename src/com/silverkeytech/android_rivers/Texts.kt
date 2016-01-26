@@ -101,14 +101,14 @@ fun handleForeignTextStyle(context: Activity, language: String, text: TextView, 
     when(language.toLowerCase()){
         "ar", "ar-eg" -> {
             if (arabicFont == null)
-                arabicFont = Typeface.createFromAsset(context.getAssets(), "DroidKufi-Regular.ttf")
-            text.setTypeface(arabicFont)
-            text.setGravity(Gravity.RIGHT)
+                arabicFont = Typeface.createFromAsset(context.assets, "DroidKufi-Regular.ttf")
+            text.typeface = arabicFont
+            text.gravity = Gravity.RIGHT
             text.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize - 4.toFloat())
         }
         "iw", "he" -> {
             //hebrew
-            text.setGravity(Gravity.RIGHT)
+            text.gravity = Gravity.RIGHT
         }
         else -> {
             text.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
@@ -119,21 +119,21 @@ fun handleForeignTextStyle(context: Activity, language: String, text: TextView, 
 fun handleForeignText(language: String, text: TextView, content: String) {
     when(language.toLowerCase()){
         "ar", "ar-eg" -> {
-            text.setText(ArabicReshape.reshape(content))
+            text.text = ArabicReshape.reshape(content)
         }
         else -> {
             val processed = content.trim()
                     .replace("\n","<br/>")
                     .replace("(<br/><br/><br/><br/>|<br/><br/><br/>)".toRegex(), "<br/>")
             val spannable = android.text.Html.fromHtml(processed)
-            text.setText(spannable)
+            text.text = spannable
         }
     }
 }
 
 fun handleFontResize(text: TextView, content: String, textSize: Float) {
     text.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
-    text.setText(content)
+    text.text = content
 }
 
 fun handleTextColorBasedOnTheme(context: Activity, text: TextView) {
@@ -146,14 +146,14 @@ fun handleTextColorBasedOnTheme(context: Activity, text: TextView) {
 }
 
 val LOCAL_URL: String = "http://www.localhost/"
-public fun makeLocalUrl(id: Int): String {
+fun makeLocalUrl(id: Int): String {
     val url = LOCAL_URL + id.toString()
     return url
 }
 
-public fun isLocalUrl(url: String): Boolean = url.contains(LOCAL_URL)
+fun isLocalUrl(url: String): Boolean = url.contains(LOCAL_URL)
 
-public fun extractIdFromLocalUrl(url: String): Int? {
+fun extractIdFromLocalUrl(url: String): Int? {
     try{
         val id = url.substring(LOCAL_URL.length).toString()
         if (id.isNullOrEmpty())

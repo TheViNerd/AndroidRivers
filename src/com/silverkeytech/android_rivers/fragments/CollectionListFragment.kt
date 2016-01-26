@@ -24,68 +24,40 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.AdapterView
+import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.ListView
-import android.widget.PopupWindow
-import android.widget.TextView
 import com.actionbarsherlock.view.Menu
 import com.actionbarsherlock.view.MenuInflater
-import com.silverkeytech.android_rivers.db.BookmarkCollection
-import com.silverkeytech.android_rivers.db.BookmarkCollectionKind
-import com.silverkeytech.android_rivers.db.BookmarkKind
-import com.silverkeytech.android_rivers.db.DatabaseManager
-import com.silverkeytech.android_rivers.db.SortingOrder
-import com.silverkeytech.android_rivers.db.addNewCollection
-import com.silverkeytech.android_rivers.db.clearBookmarksFromCollection
-import com.silverkeytech.android_rivers.db.getBookmarkCollectionFromDb
-import com.silverkeytech.android_rivers.db.removeItemByUrlFromBookmarkDb
-import com.silverkeytech.android_rivers.db.saveBookmarkToDb
+import com.silverkeytech.android_rivers.*
+import com.silverkeytech.android_rivers.activities.*
+import com.silverkeytech.android_rivers.db.*
 import org.holoeverywhere.LayoutInflater
 import org.holoeverywhere.app.Activity
 import org.holoeverywhere.app.AlertDialog
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.makeLocalUrl
-import com.silverkeytech.android_rivers.currentTextViewItem
-import com.silverkeytech.android_rivers.getVisualPref
-import com.silverkeytech.android_rivers.activities.getStandardDialogBackgroundColor
-import com.silverkeytech.android_rivers.handleFontResize
-import com.silverkeytech.android_rivers.startRiverActivity
-import com.silverkeytech.android_rivers.createConfirmationDialog
-import com.silverkeytech.android_rivers.activities.getMain
-import com.silverkeytech.android_rivers.activities.getLocationOnScreen
-import com.silverkeytech.android_rivers.startCollectionActivity
-import com.silverkeytech.android_rivers.activities.Duration
-import com.silverkeytech.android_rivers.activities.toastee
-import com.silverkeytech.android_rivers.findView
 
-public class CollectionListFragment: MainListFragment() {
+class CollectionListFragment: MainListFragment() {
     companion object {
-        public val TAG: String = CollectionListFragment::class.java.getSimpleName()
+        val TAG: String = CollectionListFragment::class.java.simpleName
     }
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
-        super<MainListFragment>.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
     }
 
-    public override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val vw = inflater!!.inflate(R.layout.collection_list_fragment, container, false)
 
         return vw
     }
 
-    public override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater!!.inflate(R.menu.collection_list_fragment_menu, menu)
-        super<MainListFragment>.onCreateOptionsMenu(menu, inflater)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
-    public override fun onOptionsItemSelected(item: com.actionbarsherlock.view.MenuItem?): Boolean {
-        when(item!!.getItemId()) {
+    override fun onOptionsItemSelected(item: com.actionbarsherlock.view.MenuItem?): Boolean {
+        when(item!!.itemId) {
             R.id.collection_list_fragment_menu_add_new -> {
                 showAddNewCollectionDialog()
                 return true
@@ -94,23 +66,23 @@ public class CollectionListFragment: MainListFragment() {
         }
     }
 
-    public override fun onHiddenChanged(hidden: Boolean) {
+    override fun onHiddenChanged(hidden: Boolean) {
         Log.d(TAG, "OnHiddenChanged $hidden")
         if (!hidden){
             displayBookmarkCollection()
         }
-        super<MainListFragment>.onHiddenChanged(hidden)
+        super.onHiddenChanged(hidden)
     }
 
     fun showMessage(msg: String) {
-        val txt = getView().findView<TextView>(R.id.collection_list_fragment_message_tv)
+        val txt = view.findView<TextView>(R.id.collection_list_fragment_message_tv)
         if (msg.isNullOrBlank()){
-            txt.setVisibility(View.INVISIBLE)
-            txt.setText("")
+            txt.visibility = View.INVISIBLE
+            txt.text = ""
         }
         else{
             val textSize = parent.getVisualPref().listTextSize
-            txt.setVisibility(View.VISIBLE)
+            txt.visibility = View.VISIBLE
             handleFontResize(txt, msg, textSize.toFloat())
         }
     }
@@ -130,40 +102,36 @@ public class CollectionListFragment: MainListFragment() {
         val textSize = parent.getVisualPref().listTextSize
 
         val adapter = object : ArrayAdapter<BookmarkCollection>(parent, android.R.layout.simple_list_item_1, android.R.id.text1, coll){
-            public override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val text = coll[position].toString()
-                return currentTextViewItem(text, convertView, parent, textSize.toFloat(), false, this@CollectionListFragment.getLayoutInflater()!!)
+                return currentTextViewItem(text, convertView, parent, textSize.toFloat(), false, this@CollectionListFragment.layoutInflater!!)
             }
         }
 
-        val list = getView().findView<ListView>(android.R.id.list)
-        list.setAdapter(adapter)
-        list.setOnItemClickListener(object : OnItemClickListener{
-            public override fun onItemClick(p0: AdapterView<out Adapter?>, p1: View, p2: Int, p3: Long) {
-                val current = coll[p2]
-                //make the local url and delegate to riveractivity to figure out whether
-                //to use this collection data from cache or perform the arduous task of
-                //downloading and transforming rss feeds into river
-                val localUrl = makeLocalUrl(current.id)
-                startRiverActivity(parent, localUrl, current.title, "en")
-            }
-        })
+        val list = view.findView<ListView>(android.R.id.list)
+        list.adapter = adapter
+        list.onItemClickListener = OnItemClickListener { p0, p1, p2, p3 ->
+            val current = coll[p2]
+            //make the local url and delegate to riveractivity to figure out whether
+            //to use this collection data from cache or perform the arduous task of
+            //downloading and transforming rss feeds into river
+            val localUrl = makeLocalUrl(current.id)
+            startRiverActivity(parent, localUrl, current.title, "en")
+        }
 
-        list.setOnItemLongClickListener(object : AdapterView.OnItemLongClickListener{
-            public override fun onItemLongClick(p0: AdapterView<out Adapter?>?, p1: View?, p2: Int, p3: Long): Boolean {
-                val current = coll[p2]
-                showCollectionQuickActionPopup(parent, current, p1!!, list)
-                return true
-            }
-        })
+        list.onItemLongClickListener = AdapterView.OnItemLongClickListener { p0, p1, p2, p3 ->
+            val current = coll[p2]
+            showCollectionQuickActionPopup(parent, current, p1!!, list)
+            true
+        }
     }
 
     fun showCollectionQuickActionPopup(context: Activity, collection: BookmarkCollection, item: View, list: View) {
         //overlay popup at top of clicked overview position
-        val popupWidth = item.getWidth()
-        val popupHeight = item.getHeight()
+        val popupWidth = item.width
+        val popupHeight = item.height
 
-        val x = context.getLayoutInflater().inflate(R.layout.main_collection_quick_actions, null, false)!!
+        val x = context.layoutInflater.inflate(R.layout.main_collection_quick_actions, null, false)!!
         val pp = PopupWindow(x, popupWidth, popupHeight, true)
 
         x.setBackgroundColor(android.graphics.Color.LTGRAY)
@@ -217,10 +185,10 @@ public class CollectionListFragment: MainListFragment() {
 
 
     fun showAddNewCollectionDialog() {
-        val dlg: View = parent.getLayoutInflater().inflate(R.layout.collection_add_new, null)!!
+        val dlg: View = parent.layoutInflater.inflate(R.layout.collection_add_new, null)!!
 
         //take care of color
-        dlg.setDrawingCacheBackgroundColor(parent.getStandardDialogBackgroundColor())
+        dlg.drawingCacheBackgroundColor = parent.getStandardDialogBackgroundColor()
 
         val dialog = AlertDialog.Builder(parent)
         dialog.setView(dlg)
@@ -228,36 +196,29 @@ public class CollectionListFragment: MainListFragment() {
 
         var input = dlg.findView<EditText>(R.id.collection_add_new_title_et)
 
-        dialog.setPositiveButton("OK", object : DialogInterface.OnClickListener{
-            public override fun onClick(p0: DialogInterface, p1: Int) {
-                val text = input.getText().toString()
-                if (text.isNullOrEmpty()){
-                    parent.toastee("Please enter collection title", Duration.AVERAGE)
-                    return
-                }
+        dialog.setPositiveButton("OK", DialogInterface.OnClickListener { p0, p1 ->
+            val text = input.text.toString()
+            if (text.isNullOrEmpty()){
+                parent.toastee("Please enter collection title", Duration.AVERAGE)
+                return@OnClickListener
+            }
 
-                val res = addNewCollection(text, BookmarkCollectionKind.RIVER)
+            val res = addNewCollection(text, BookmarkCollectionKind.RIVER)
 
-                if (res.isTrue()){
-                    val url = makeLocalUrl(res.value!!.id)
-                    //when a collection is added as a river, bookmark it immediately
-                    saveBookmarkToDb(text, url, BookmarkKind.RIVER, "en", null)
-                    parent.getMain().clearRiverBookmarksCache()
+            if (res.isTrue()){
+                val url = makeLocalUrl(res.value!!.id)
+                //when a collection is added as a river, bookmark it immediately
+                saveBookmarkToDb(text, url, BookmarkKind.RIVER, "en", null)
+                parent.getMain().clearRiverBookmarksCache()
 
-                    parent.toastee("Collection is successfully added")
-                    displayBookmarkCollection()
-                }
-                else{
-                    parent.toastee("Sorry, I have problem adding this new collection", Duration.AVERAGE)
-                }
+                parent.toastee("Collection is successfully added")
+                displayBookmarkCollection()
+            } else{
+                parent.toastee("Sorry, I have problem adding this new collection", Duration.AVERAGE)
             }
         })
 
-        dialog.setNegativeButton("Cancel", object : DialogInterface.OnClickListener{
-            public override fun onClick(p0: DialogInterface, p1: Int) {
-                p0.dismiss()
-            }
-        })
+        dialog.setNegativeButton("Cancel", { p0, p1 -> p0.dismiss() })
 
         val createdDialog = dialog.create()!!
         createdDialog.show()

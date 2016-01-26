@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.android_rivers.db
 
-public enum class SortingOrder{
+enum class SortingOrder{
     NONE,
     ASC,
     DESC

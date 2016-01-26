@@ -18,16 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.news_engine.syndications
 
-import java.util.Date
-import java.util.HashMap
+import java.util.*
 
-public class SyndicationFeedItem {
-    public var title: String? = null
-    public var description: String? = null
-    public var link: String? = null
-    public var pubDate: Date? = null
-    public var enclosure: SyndicationFeedEnclosure? = null
-    public var extensions: HashMap<String, String> = HashMap<String, String>()
+class SyndicationFeedItem {
+    var title: String? = null
+    var description: String? = null
+    var link: String? = null
+    var pubDate: Date? = null
+    var enclosure: SyndicationFeedEnclosure? = null
+    var extensions: HashMap<String, String> = HashMap<String, String>()
 
     fun hasTitle(): Boolean {
         return !title.isNullOrBlank()

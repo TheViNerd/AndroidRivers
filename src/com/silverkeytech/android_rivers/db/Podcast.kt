@@ -21,51 +21,49 @@ package com.silverkeytech.android_rivers.db
 import com.j256.ormlite.field.DataType
 import com.j256.ormlite.field.DatabaseField
 import com.j256.ormlite.table.DatabaseTable
-import java.util.Calendar
-import java.util.Date
+import java.util.*
 
-public val PODCAST_ID: String = "id"
-public val PODCAST_TITLE: String = "title"
-public val PODCAST_URL: String = "url"
-public val PODCAST_SOURCE_TITLE: String = "source_title"
-public val PODCAST_SOURCE_URL: String = "source_url"
-public val PODCAST_LOCAL_PATH: String = "local_path"
-public val PODCAST_MIME_TYPE: String = "mime_type"
-public val PODCAST_LENGTH: String = "length"
-public val PODCAST_DESCRIPTION: String = "description"
-public val PODCAST_DATE_CREATED: String = "date_created"
+val PODCAST_ID: String = "id"
+val PODCAST_TITLE: String = "title"
+val PODCAST_URL: String = "url"
+val PODCAST_SOURCE_TITLE: String = "source_title"
+val PODCAST_SOURCE_URL: String = "source_url"
+val PODCAST_LOCAL_PATH: String = "local_path"
+val PODCAST_MIME_TYPE: String = "mime_type"
+val PODCAST_LENGTH: String = "length"
+val PODCAST_DESCRIPTION: String = "description"
+val PODCAST_DATE_CREATED: String = "date_created"
 
-@DatabaseTable
-public class Podcast(){
+@DatabaseTable class Podcast(){
     @DatabaseField(generatedId = true, columnName = "id")
-    public var id: Int = 0
+    var id: Int = 0
 
     @DatabaseField(canBeNull = false, columnName = "title", width = 255, dataType = DataType.STRING)
-    public var title: String = ""
+    var title: String = ""
 
     @DatabaseField(canBeNull = false, columnName = "url", width = 550, dataType = DataType.LONG_STRING)
-    public var url: String = ""
+    var url: String = ""
 
     @DatabaseField(canBeNull = false, columnName = "source_title", width = 255, dataType = DataType.STRING)
-    public var sourceTitle: String = ""
+    var sourceTitle: String = ""
 
     @DatabaseField(canBeNull = false, columnName = "source_url", width = 255, dataType = DataType.STRING)
-    public var sourceUrl: String = ""
+    var sourceUrl: String = ""
 
     @DatabaseField(canBeNull = false, columnName = "local_path", width = 550, dataType = DataType.LONG_STRING)
-    public var localPath: String = ""
+    var localPath: String = ""
 
     @DatabaseField(canBeNull = false, columnName = "mime_type", width = 20, dataType = DataType.STRING)
-    public var mimeType: String = ""
+    var mimeType: String = ""
 
     @DatabaseField(canBeNull = false, columnName = "length", dataType = DataType.INTEGER)
-    public var length: Int = 0
+    var length: Int = 0
 
     @DatabaseField(canBeNull = false, columnName = "description", width = 550, dataType = DataType.LONG_STRING)
-    public var description: String = ""
+    var description: String = ""
 
     @DatabaseField(canBeNull = false, columnName = "date_created", dataType = DataType.DATE)
-    public var dateCreated: Date = Calendar.getInstance().getTime()
+    var dateCreated: Date = Calendar.getInstance().time
 
     override fun toString(): String {
         return title

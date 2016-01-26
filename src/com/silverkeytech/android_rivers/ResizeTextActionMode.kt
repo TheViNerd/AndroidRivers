@@ -21,16 +21,15 @@ package com.silverkeytech.android_rivers
 import com.actionbarsherlock.view.ActionMode
 import com.actionbarsherlock.view.Menu
 import com.actionbarsherlock.view.MenuItem
-import org.holoeverywhere.app.Activity
 import com.silverkeytech.android_rivers.activities.restart
+import org.holoeverywhere.app.Activity
 
-public interface WithVisualModificationPanel{
+interface WithVisualModificationPanel{
     open fun refreshContent()
     open fun getActivity(): Activity
 }
 
-@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-public class ResizeTextActionMode (private val parent: WithVisualModificationPanel, private var mode: ActionMode?): ActionMode.Callback{
+@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") class ResizeTextActionMode (private val parent: WithVisualModificationPanel, private var mode: ActionMode?): ActionMode.Callback{
     val INCREASE_SIZE = 1
     val DECREASE_SIZE = 2
     val SWITCH_THEME: Int = 3
@@ -50,8 +49,8 @@ public class ResizeTextActionMode (private val parent: WithVisualModificationPan
         pref.listTextSize = textSize
     }
 
-    public override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
-        when(item!!.getItemId()){
+    override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+        when(item!!.itemId){
             INCREASE_SIZE -> {
                 increaseTextSize()
                 parent.refreshContent()
@@ -74,15 +73,15 @@ public class ResizeTextActionMode (private val parent: WithVisualModificationPan
         return true
     }
 
-    public override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
         return false
     }
 
-    public override fun onDestroyActionMode(mode: ActionMode?) {
+    override fun onDestroyActionMode(mode: ActionMode?) {
 
     }
 
-    public override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+    override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
 
         menu?.add(0, DECREASE_SIZE, 0, "Decrease Text Size")
         ?.setIcon(android.R.drawable.btn_minus)

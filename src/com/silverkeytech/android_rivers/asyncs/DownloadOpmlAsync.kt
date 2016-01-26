@@ -17,37 +17,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 package com.silverkeytech.android_rivers.asyncs
 
+import android.app.Activity
 import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException
-import com.silverkeytech.news_engine.outliner.OutlineContent
-import com.silverkeytech.news_engine.transformXmlToOpml
-import com.silverkeytech.news_engine.outlines.Opml
-import com.silverkeytech.news_engine.outlines.Outline
-import java.util.ArrayList
-import android.app.Activity
+import com.silverkeytech.android_rivers.*
+import com.silverkeytech.android_rivers.activities.Duration
 import com.silverkeytech.android_rivers.activities.getMain
 import com.silverkeytech.android_rivers.activities.toastee
-import com.silverkeytech.android_rivers.activities.Duration
-import com.silverkeytech.android_rivers.Result
-import com.silverkeytech.android_rivers.InfinityProgressDialog
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.httpGet
-import com.silverkeytech.android_rivers.PreferenceDefaults
-import com.silverkeytech.android_rivers.startOutlinerActivity
-import com.silverkeytech.android_rivers.traverse
+import com.silverkeytech.news_engine.outliner.OutlineContent
+import com.silverkeytech.news_engine.outlines.Opml
+import com.silverkeytech.news_engine.outlines.Outline
+import com.silverkeytech.news_engine.transformXmlToOpml
+import java.util.*
 
-@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-public class DownloadOpmlAsync(it: Context?): AsyncTask<String, Int, Pair<String, Result<Opml>>>(){
+@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") class DownloadOpmlAsync(it: Context?): AsyncTask<String, Int, Pair<String, Result<Opml>>>(){
     companion object {
-        public val TAG: String = DownloadOpmlAsync::class.java.getSimpleName()
+        val TAG: String = DownloadOpmlAsync::class.java.simpleName
     }
 
     var context: Activity = it!! as Activity
     var dialog: InfinityProgressDialog = InfinityProgressDialog(context, context.getString(R.string.please_wait_while_downloading_outlines))
 
-    protected override fun onPreExecute() {
+    override fun onPreExecute() {
         dialog.onCancel {
             dlg ->
             dlg.dismiss()
@@ -56,7 +49,7 @@ public class DownloadOpmlAsync(it: Context?): AsyncTask<String, Int, Pair<String
         dialog.show()
     }
 
-    protected override fun doInBackground(vararg url: String?): Pair<String, Result<Opml>>? {
+    override fun doInBackground(vararg url: String?): Pair<String, Result<Opml>>? {
         var link = url[0]!!
         var req: String?
         try{
@@ -68,7 +61,7 @@ public class DownloadOpmlAsync(it: Context?): AsyncTask<String, Int, Pair<String
                 throw IllegalArgumentException("Document is not a valid OPML file (it might be a HTML document)")
             }
 
-            val opml = transformXmlToOpml(req?.replace("<?xml version=\"1.0\" encoding=\"utf-8\" ?>", "")
+            val opml = transformXmlToOpml(req.replace("<?xml version=\"1.0\" encoding=\"utf-8\" ?>", "")
             ?.replace("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>", "")
             )
             return Pair(link, Result(opml.value, opml.exception))
@@ -87,7 +80,7 @@ public class DownloadOpmlAsync(it: Context?): AsyncTask<String, Int, Pair<String
     private var processedCallBack: ((Result<ArrayList<OutlineContent>>) -> Unit)? = null
     private var processingFilter: ((Outline) -> Boolean)? = null
 
-    protected override fun onPostExecute(result: Pair<String, Result<Opml>>) {
+    override fun onPostExecute(result: Pair<String, Result<Opml>>) {
         dialog.dismiss()
 
         if (rawCallback != null)
@@ -113,13 +106,13 @@ public class DownloadOpmlAsync(it: Context?): AsyncTask<String, Int, Pair<String
     }
 
     //Set up function to call when download is done
-    public fun executeOnRawCompletion(action: ((Result<Opml>) -> Unit)?): DownloadOpmlAsync {
+    fun executeOnRawCompletion(action: ((Result<Opml>) -> Unit)?): DownloadOpmlAsync {
         rawCallback = action
         return this
     }
 
     //set up function to call when download is done, include optional processing filter
-    public fun executeOnProcessedCompletion(action: ((Result<ArrayList<OutlineContent>>) -> Unit)?,
+    fun executeOnProcessedCompletion(action: ((Result<ArrayList<OutlineContent>>) -> Unit)?,
                                             filter: ((Outline) -> Boolean)? = null): DownloadOpmlAsync {
         processedCallBack = action
         processingFilter = filter

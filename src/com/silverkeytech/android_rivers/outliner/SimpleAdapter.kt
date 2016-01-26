@@ -36,7 +36,7 @@ import com.silverkeytech.news_engine.outliner.OutlineContent
 import com.silverkeytech.news_engine.outliner.OutlineType
 import java.util.*
 
-public open class SimpleAdapter(private val context: OutlinerActivity,
+open class SimpleAdapter(private val context: OutlinerActivity,
                                 private val treeStateManager: TreeStateManager<Long?>,
                                 numberOfLevels: Int,
                                 val outlines: List<OutlineContent>,
@@ -44,7 +44,7 @@ public open class SimpleAdapter(private val context: OutlinerActivity,
 AbstractTreeViewAdapter<Long?>(context, treeStateManager, numberOfLevels) {
 
     companion object {
-        public val TAG: String = SimpleAdapter::class.java.getSimpleName()
+        val TAG: String = SimpleAdapter::class.java.simpleName
     }
 
     private fun getDescription(id: Long?): String? {
@@ -59,21 +59,21 @@ AbstractTreeViewAdapter<Long?>(context, treeStateManager, numberOfLevels) {
         }
     }
 
-    public override fun getNewChildView(treeNodeInfo: TreeNodeInfo<Long?>?): View? {
-        val viewLayout: LinearLayout? = getActivity()?.getLayoutInflater()?.inflate(R.layout.outliner_list_item, null) as LinearLayout?
+    override fun getNewChildView(treeNodeInfo: TreeNodeInfo<Long?>?): View? {
+        val viewLayout: LinearLayout? = activity?.layoutInflater?.inflate(R.layout.outliner_list_item, null) as LinearLayout?
         return updateView(viewLayout, treeNodeInfo)
     }
 
-    public override fun updateView(view: View?, treeNodeInfo: TreeNodeInfo<Long?>?): LinearLayout? {
+    override fun updateView(view: View?, treeNodeInfo: TreeNodeInfo<Long?>?): LinearLayout? {
         val viewLayout: LinearLayout? = view as LinearLayout?
 
         val descriptionView = viewLayout?.findViewById(R.id.outliner_list_item_description)!! as TextView
-        descriptionView.setText(getDescription(treeNodeInfo?.getId()))
+        descriptionView.text = getDescription(treeNodeInfo?.id)
         descriptionView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize.toFloat())
 
         descriptionView.setOnClickListener(object : View.OnClickListener{
-            public override fun onClick(p0: View) {
-                var currentPosition = treeNodeInfo!!.getId()!!.toInt()
+            override fun onClick(p0: View) {
+                var currentPosition = treeNodeInfo!!.id!!.toInt()
                 var currentOutline = outlines.get(currentPosition)
 
                 when(currentOutline.getType()){
@@ -83,9 +83,9 @@ AbstractTreeViewAdapter<Long?>(context, treeStateManager, numberOfLevels) {
                     OutlineType.RIVER -> handleRiver(currentOutline)
                     OutlineType.RSS -> handleRss(currentOutline)
                     else -> {
-                        val id = treeNodeInfo.getId()!!
+                        val id = treeNodeInfo.id!!
                         Log.d(TAG, "Clicked on id $id")
-                        if (treeNodeInfo.isExpanded())
+                        if (treeNodeInfo.isExpanded)
                             treeStateManager.collapseChildren(id)
                         else
                             treeStateManager.expandDirectChildren(id)
@@ -95,8 +95,8 @@ AbstractTreeViewAdapter<Long?>(context, treeStateManager, numberOfLevels) {
         })
 
         descriptionView.setOnLongClickListener(object : View.OnLongClickListener{
-            public override fun onLongClick(p0: View): Boolean {
-                var currentPosition = treeNodeInfo!!.getId()!!.toInt()
+            override fun onLongClick(p0: View): Boolean {
+                var currentPosition = treeNodeInfo!!.id!!.toInt()
                 var currentOutline = outlines.get(currentPosition)
 
                 return handleOpmlZoom(currentOutline, currentPosition)
@@ -152,10 +152,10 @@ AbstractTreeViewAdapter<Long?>(context, treeStateManager, numberOfLevels) {
         var url = currentOutline.getAttribute("url")
         try{
             if (url!!.contains("mailto:")){
-                val email = url!!.replace("mailto:", "")
+                val email = url.replace("mailto:", "")
                 startOpenEmailActivity(context, email, "About Android Rivers", "")
             }else{
-                startOpenBrowserActivity(context, url!!)
+                startOpenBrowserActivity(context, url)
             }
             return true
         }
@@ -192,7 +192,7 @@ AbstractTreeViewAdapter<Long?>(context, treeStateManager, numberOfLevels) {
         return true
     }
 
-    public override fun getItemId(i: Int): Long {
+    override fun getItemId(i: Int): Long {
         return getTreeId(i)!!
     }
 }

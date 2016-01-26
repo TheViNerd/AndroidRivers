@@ -24,8 +24,8 @@ import com.silverkeytech.news_engine.xml.textRule
 import com.silverkeytech.news_engine.xml.tagRule
 import com.silverkeytech.news_engine.xml.attributeRule
 
-public class AtomParser{
-    public fun parse(input: InputStream, atom: AtomBuilder) {
+class AtomParser{
+    fun parse(input: InputStream, atom: AtomBuilder) {
         var parser = XMLParser<AtomBuilder>(feedId, feedTitle, feedUpdated, feedIcon, feedLogo,
         feedAuthorTag, feedAuthorName, feedAuthorEmail, feedAuthorUri, feedSubtitle,
         feedLinkTag, feedLinkAttributes,

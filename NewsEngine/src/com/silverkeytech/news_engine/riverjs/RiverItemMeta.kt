@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.news_engine.riverjs
 
-public data class RiverItemMeta(
+data class RiverItemMeta(
         val item: RiverItem,
         val source: RiverItemSource)
 {

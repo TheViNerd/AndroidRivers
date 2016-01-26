@@ -1,5 +1,5 @@
 package com.silverkeytech.android_rivers
 
-public data class MessageEvent(
-    public val message: String
+data class MessageEvent(
+    val message: String
 )

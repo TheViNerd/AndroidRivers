@@ -18,56 +18,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.android_rivers.activities
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Message
 import android.os.Messenger
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.AdapterView
+import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.TextView
-import com.silverkeytech.news_engine.transformFeedOpmlToOpml
-import com.silverkeytech.android_rivers.traverse
-import com.silverkeytech.news_engine.riverjs.RiverItemMeta
-import org.holoeverywhere.app.Activity
-import java.util.ArrayList
-import com.silverkeytech.android_rivers.PreferenceDefaults
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.handleForeignText
-import com.silverkeytech.android_rivers.handleForeignTextStyle
-import com.silverkeytech.android_rivers.scrubHtml
-import com.silverkeytech.android_rivers.isSupportedImageMime
-import com.silverkeytech.android_rivers.limitText
-import com.silverkeytech.android_rivers.DialogBtn
-import com.silverkeytech.android_rivers.getVisualPref
+import com.silverkeytech.android_rivers.*
 import com.silverkeytech.android_rivers.asyncs.DownloadImageAsync
-import com.silverkeytech.android_rivers.startDownloadService
-import com.silverkeytech.android_rivers.MediaScannerWrapper
-import com.silverkeytech.android_rivers.handleTextColorBasedOnTheme
-import com.silverkeytech.android_rivers.startOpenBrowserActivity
-import com.silverkeytech.android_rivers.shareActionIntent
-import com.silverkeytech.android_rivers.startOutlinerActivity
-import com.silverkeytech.android_rivers.createFlexibleContentDialog
-import android.app.Dialog
-import android.text.method.ScrollingMovementMethod
-import com.silverkeytech.android_rivers.ScrollMotionDetector
-import com.silverkeytech.android_rivers.findView
+import com.silverkeytech.news_engine.riverjs.RiverItemMeta
+import com.silverkeytech.news_engine.transformFeedOpmlToOpml
+import org.holoeverywhere.app.Activity
+import java.util.*
 
 //Manage the rendering of each news item in the river list
-public class RiverContentRenderer(val context: Activity, val language: String){
+class RiverContentRenderer(val context: Activity, val language: String){
     companion object {
-        public val TAG: String = RiverContentRenderer::class.java.getSimpleName()
+        val TAG: String = RiverContentRenderer::class.java.simpleName
     }
 
     //hold the view data for the list
-    public data class ViewHolder (val news: TextView, val source: TextView, val indicator: TextView)
+    data class ViewHolder (val news: TextView, val source: TextView, val indicator: TextView)
 
     //show and prepare the interaction for each individual news item
     fun handleNewsListing(sortedNewsItems: List<RiverItemMeta>) {
@@ -80,12 +58,12 @@ public class RiverContentRenderer(val context: Activity, val language: String){
         var inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         var adapter = object : ArrayAdapter<RiverItemMeta>(context, R.layout.news_item, sortedNewsItems) {
-            public override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 var currentView = convertView
                 var holder: ViewHolder? = null
 
                 var currentNewsItem = sortedNewsItems[position]
-                var news = currentNewsItem.item.toString()?.trim()
+                var news = currentNewsItem.item.toString().trim()
 
                 if (news == null)
                     news = ""
@@ -111,34 +89,34 @@ public class RiverContentRenderer(val context: Activity, val language: String){
                     currentView = inflater.inflate(R.layout.news_item, parent, false)
 
                     holder = ViewHolder(currentView!!.findView<TextView>(R.id.news_item_text_tv),
-                            currentView!!.findView<TextView>(R.id.news_item_source_tv),
-                            currentView!!.findView<TextView>(R.id.news_item_indicator_tv))
+                            currentView.findView<TextView>(R.id.news_item_source_tv),
+                            currentView.findView<TextView>(R.id.news_item_indicator_tv))
 
-                    handleForeignTextStyle(this@RiverContentRenderer.context, language, holder!!.news, textSize.toFloat())
-                    handleForeignTextStyle(this@RiverContentRenderer.context, language, holder!!.source, 11f)
+                    handleForeignTextStyle(this@RiverContentRenderer.context, language, holder.news, textSize.toFloat())
+                    handleForeignTextStyle(this@RiverContentRenderer.context, language, holder.source, 11f)
 
-                    currentView!!.setTag(holder)
+                    currentView!!.tag = holder
                 }else{
-                    holder = currentView?.getTag() as ViewHolder
+                    holder = currentView.tag as ViewHolder
                     Log.d(TAG, "List View reused")
                 }
 
-                handleForeignText(language, holder!!.news, news!!)
-                handleForeignText(language, holder!!.source, currentNewsItem.source.title!!)
+                handleForeignText(language, holder.news, news)
+                handleForeignText(language, holder.source, currentNewsItem.source.title!!)
 
                 showIndicator()
 
                 if (news.isNullOrEmpty()){
-                    currentView?.setVisibility(View.GONE)
+                    currentView?.visibility = View.GONE
                 }   else{
-                    currentView?.setVisibility(View.VISIBLE)
+                    currentView?.visibility = View.VISIBLE
                 }
-                return currentView!!
+                return currentView
             }
         }
 
-        list.setOnItemClickListener(object : OnItemClickListener{
-            public override fun onItemClick(p0: AdapterView<out Adapter?>, p1: View, p2: Int, p3: Long) {
+        list.onItemClickListener = object : OnItemClickListener{
+            override fun onItemClick(p0: AdapterView<out Adapter?>, p1: View, p2: Int, p3: Long) {
                 val currentNews = sortedNewsItems.get(p2);
 
                 var dlg: View = inflater.inflate(R.layout.news_details, null)!!
@@ -158,7 +136,7 @@ public class RiverContentRenderer(val context: Activity, val language: String){
 
 
                 var body = dlg.findView<TextView>(R.id.news_details_text_tv)
-                body.setMovementMethod(ScrollingMovementMethod())
+                body.movementMethod = ScrollingMovementMethod()
 
                 handleForeignText(language, body, msg)
                 handleForeignTextStyle(context, language, body, textSize.toFloat())
@@ -210,7 +188,7 @@ public class RiverContentRenderer(val context: Activity, val language: String){
                     else {
                         buttons.add(DialogBtn(context.getString(R.string.podcast), { dlg ->
                             var messenger = Messenger(object : Handler(){
-                                public override fun handleMessage(msg: Message) {
+                                override fun handleMessage(msg: Message) {
                                     val path = msg.obj as String
 
                                     if (msg.arg1 == android.app.Activity.RESULT_OK && !path.isNullOrBlank()){
@@ -282,10 +260,10 @@ public class RiverContentRenderer(val context: Activity, val language: String){
 
                 createdDialog = createFlexibleContentDialog(context = context, content = dlg,
                         dismissOnTouch = true, buttons =  buttons.toArray(arrayOf<DialogBtn>()))
-                createdDialog!!.show()
+                createdDialog.show()
             }
-        })
+        }
 
-        list.setAdapter(adapter)
+        list.adapter = adapter
     }
 }

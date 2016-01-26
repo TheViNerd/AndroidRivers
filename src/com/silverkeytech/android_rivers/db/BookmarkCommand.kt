@@ -22,7 +22,7 @@ import com.j256.ormlite.dao.Dao
 import com.silverkeytech.android_rivers.None
 import com.silverkeytech.android_rivers.Result
 
-public class BookmarkCommand(private val dao: Dao<Bookmark, out Int?>){
+class BookmarkCommand(private val dao: Dao<Bookmark, out Int?>){
     fun deleteByUrl (url: String): Result<None> {
         try{
             var condition = dao.deleteBuilder()!!

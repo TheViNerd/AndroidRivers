@@ -23,57 +23,31 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.AdapterView
+import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.ListView
-import android.widget.PopupWindow
-import android.widget.TextView
 import com.actionbarsherlock.view.Menu
 import com.actionbarsherlock.view.MenuInflater
 import com.actionbarsherlock.view.MenuItem
-import com.silverkeytech.android_rivers.db.BookmarkKind
-import com.silverkeytech.android_rivers.db.DatabaseManager
-import com.silverkeytech.android_rivers.db.SortingOrder
-import com.silverkeytech.android_rivers.db.getBookmarksFromDbAsOpml
-import com.silverkeytech.android_rivers.db.saveBookmarkToDb
-import com.silverkeytech.android_rivers.db.saveOpmlAsBookmarks
+import com.silverkeytech.android_rivers.*
+import com.silverkeytech.android_rivers.activities.Duration
+import com.silverkeytech.android_rivers.activities.getLocationOnScreen
+import com.silverkeytech.android_rivers.activities.getMain
+import com.silverkeytech.android_rivers.activities.toastee
+import com.silverkeytech.android_rivers.asyncs.DownloadBookmarksAsync
+import com.silverkeytech.android_rivers.asyncs.DownloadRiverContentAsync
+import com.silverkeytech.android_rivers.db.*
 import com.silverkeytech.news_engine.outlines.Opml
 import com.silverkeytech.news_engine.outlines.Outline
 import com.silverkeytech.news_engine.outlines.sortOutlineAsc
 import com.silverkeytech.news_engine.outlines.sortOutlineDesc
-import java.util.ArrayList
+import com.silverkeytech.news_engine.riverjs.getSortedNewsItems
 import org.holoeverywhere.LayoutInflater
 import org.holoeverywhere.app.Activity
-import com.silverkeytech.news_engine.riverjs.getSortedNewsItems
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.currentTextViewItem
-import com.silverkeytech.android_rivers.getVisualPref
-import com.silverkeytech.android_rivers.handleFontResize
-import com.silverkeytech.android_rivers.activities.Duration
-import com.silverkeytech.android_rivers.activities.toastee
-import com.silverkeytech.android_rivers.activities.getLocationOnScreen
-import com.silverkeytech.android_rivers.asyncs.DownloadBookmarksAsync
-import com.silverkeytech.android_rivers.PreferenceValue
-import com.silverkeytech.android_rivers.asyncs.DownloadRiverContentAsync
-import com.silverkeytech.android_rivers.createSingleInputDialog
-import com.silverkeytech.android_rivers.tryGetUriFromClipboard
-import com.silverkeytech.android_rivers.activities.getMain
-import com.silverkeytech.android_rivers.getContentPref
-import com.silverkeytech.android_rivers.getSetupPref
-import com.silverkeytech.android_rivers.startRiverActivity
-import com.silverkeytech.android_rivers.safeUrlConvert
-import com.silverkeytech.android_rivers.isLocalUrl
-import com.silverkeytech.android_rivers.extractIdFromLocalUrl
-import com.silverkeytech.android_rivers.startDownloadAllRiverService
-import com.silverkeytech.android_rivers.createConfirmationDialog
-import com.silverkeytech.android_rivers.findView
+import java.util.*
 
-public class RiverListFragment(): MainListFragment() {
+class RiverListFragment(): MainListFragment() {
     companion object {
-        public val TAG: String = RiverListFragment::class.java.getSimpleName()
+        val TAG: String = RiverListFragment::class.java.simpleName
     }
 
     val DEFAULT_SUBSCRIPTION_LIST = "http://hobieu.apphb.com/api/1/default/riverssubscription"
@@ -82,36 +56,36 @@ public class RiverListFragment(): MainListFragment() {
 
     var isFirstLoad: Boolean = true
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
-        super<MainListFragment>.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
     }
 
-    public override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val vw = inflater!!.inflate(R.layout.river_list_fragment, container, false)
 
         return vw
     }
 
-    public override fun onStart() {
-        super<MainListFragment>.onStart()
+    override fun onStart() {
+        super.onStart()
 
         val downloadIf = true//parent.getSetupPref().getDownloadDefaultRiversIfNecessary()
         displayRiverBookmarks(downloadIf)
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         Log.d(TAG, "OnResume")
 
-        if (getUserVisibleHint()){
+        if (userVisibleHint){
             Log.d(TAG, "OnResume - RiverListFragment visible")
             displayRiverBookmarks(false)
         }
 
-        super<MainListFragment>.onResume()
+        super.onResume()
     }
 
-    public override fun onHiddenChanged(hidden: Boolean) {
+    override fun onHiddenChanged(hidden: Boolean) {
         Log.d(TAG, "OnHiddenChanged $hidden")
 
         if (!hidden && !isFirstLoad){
@@ -119,10 +93,10 @@ public class RiverListFragment(): MainListFragment() {
         }
 
         isFirstLoad = false
-        super<MainListFragment>.onHiddenChanged(hidden)
+        super.onHiddenChanged(hidden)
     }
 
-    public override fun onPrepareOptionsMenu(menu: Menu?) {
+    override fun onPrepareOptionsMenu(menu: Menu?) {
         if (menu != null){
             val sort: MenuItem = menu.findItem(R.id.river_list_fragment_menu_sort)!!
             val nextSort = nextSortCycle()
@@ -130,21 +104,21 @@ public class RiverListFragment(): MainListFragment() {
             setSortButtonText(sort, nextSort)
 
             val refresh = menu.findItem(R.id.river_list_fragment_menu_refresh)!!
-            val list = getView()!!.findView<ListView>(android.R.id.list)
+            val list = view!!.findView<ListView>(android.R.id.list)
 
-            if (list.getCount() != 0)
-                refresh.setVisible(false)
+            if (list.count != 0)
+                refresh.isVisible = false
         }
-        super<MainListFragment>.onPrepareOptionsMenu(menu)
+        super.onPrepareOptionsMenu(menu)
     }
 
-    public override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater!!.inflate(R.menu.river_list_fragment_menu, menu)
-        super<MainListFragment>.onCreateOptionsMenu(menu, inflater)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
-    public override fun onOptionsItemSelected(item: com.actionbarsherlock.view.MenuItem?): Boolean {
-        when(item!!.getItemId()) {
+    override fun onOptionsItemSelected(item: com.actionbarsherlock.view.MenuItem?): Boolean {
+        when(item!!.itemId) {
             R.id.river_list_fragment_menu_download_all_rivers -> {
                 val subscriptionList = parent.getMain().getRiverBookmarksCache()
 
@@ -180,29 +154,29 @@ public class RiverListFragment(): MainListFragment() {
         }
     }
 
-    public override fun onPause() {
+    override fun onPause() {
         Log.d(TAG, "OnPause")
-        super<MainListFragment>.onPause()
+        super.onPause()
     }
 
     fun showMessage(msg: String) {
-        val txt = getView()!!.findViewById(R.id.river_list_fragment_message_tv) as TextView
+        val txt = view!!.findViewById(R.id.river_list_fragment_message_tv) as TextView
         if (msg.isNullOrBlank()){
-            txt.setVisibility(View.INVISIBLE)
-            txt.setText("")
+            txt.visibility = View.INVISIBLE
+            txt.text = ""
         }
         else{
             val textSize = parent.getVisualPref().listTextSize
-            txt.setVisibility(View.VISIBLE)
+            txt.visibility = View.VISIBLE
             handleFontResize(txt, msg, textSize.toFloat())
         }
     }
 
     fun setSortButtonText(item: MenuItem?, sort: Int) {
         when (sort){
-            PreferenceValue.SORT_ASC -> item?.setTitle(this.getString(R.string.sort_asc))
-            PreferenceValue.SORT_DESC -> item?.setTitle(this.getString(R.string.sort_desc))
-            PreferenceValue.SORT_NONE -> item?.setTitle(this.getString(R.string.sort_cancel))
+            PreferenceValue.SORT_ASC -> item?.title = this.getString(R.string.sort_asc)
+            PreferenceValue.SORT_DESC -> item?.title = this.getString(R.string.sort_desc)
+            PreferenceValue.SORT_NONE -> item?.title = this.getString(R.string.sort_cancel)
             else -> {
 
             }
@@ -342,36 +316,32 @@ public class RiverListFragment(): MainListFragment() {
         val textSize = parent.getVisualPref().listTextSize
 
         val adapter = object : ArrayAdapter<Outline>(parent, android.R.layout.simple_list_item_1, android.R.id.text1, outlines){
-            public override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val text = outlines[position].toString()
-                return currentTextViewItem(text!!, convertView, parent, textSize.toFloat(), false, this@RiverListFragment.getLayoutInflater()!!)
+                return currentTextViewItem(text, convertView, parent, textSize.toFloat(), false, this@RiverListFragment.layoutInflater!!)
             }
         }
 
-        val list = getView()!!.findViewById(android.R.id.list) as ListView
-        list.setAdapter(adapter)
+        val list = view!!.findViewById(android.R.id.list) as ListView
+        list.adapter = adapter
 
-        list.setOnItemClickListener(object : OnItemClickListener{
-            public override fun onItemClick(p0: AdapterView<out Adapter?>, p1: View, p2: Int, p3: Long) {
-                val currentOutline = outlines.get(p2)
+        list.onItemClickListener = OnItemClickListener { p0, p1, p2, p3 ->
+            val currentOutline = outlines.get(p2)
 
-                var lang =
-                        if (!currentOutline.language.isNullOrEmpty())
-                            currentOutline.language!!
-                        else
-                            "en"
+            var lang =
+                    if (!currentOutline.language.isNullOrEmpty())
+                        currentOutline.language!!
+                    else
+                        "en"
 
-                startRiverActivity(parent, currentOutline.url!!, currentOutline.text!!, lang)
-            }
-        })
+            startRiverActivity(parent, currentOutline.url!!, currentOutline.text!!, lang)
+        }
 
-        list.setOnItemLongClickListener(object : AdapterView.OnItemLongClickListener{
-            public override fun onItemLongClick(p0: AdapterView<out Adapter?>?, p1: View?, p2: Int, p3: Long): Boolean {
-                val currentOutline = outlines.get(p2)
-                showRiverBookmarksQuickActionPopup(parent, currentOutline, p1!!, list)
-                return true
-            }
-        })
+        list.onItemLongClickListener = AdapterView.OnItemLongClickListener { p0, p1, p2, p3 ->
+            val currentOutline = outlines.get(p2)
+            showRiverBookmarksQuickActionPopup(parent, currentOutline, p1!!, list)
+            true
+        }
     }
 
     fun refreshRiverBookmarks(retrieveRiversFromInternetIfNoneExisted: Boolean)
@@ -382,10 +352,10 @@ public class RiverListFragment(): MainListFragment() {
 
     fun showRiverBookmarksQuickActionPopup(context: Activity, currentOutline: Outline, item: View, list: View) {
         //overlay popup at top of clicked overview position
-        val popupWidth = item.getWidth()
-        val popupHeight = item.getHeight()
+        val popupWidth = item.width
+        val popupHeight = item.height
 
-        val x = this.getLayoutInflater()!!.inflate(R.layout.main_river_quick_actions, null, false)!!
+        val x = this.layoutInflater!!.inflate(R.layout.main_river_quick_actions, null, false)!!
         val pp = PopupWindow(x, popupWidth, popupHeight, true)
 
         x.setBackgroundColor(android.graphics.Color.LTGRAY)
@@ -441,12 +411,12 @@ public class RiverListFragment(): MainListFragment() {
 
                                     if (collectionRecord.exists){
                                         collectionRecord.value!!.title = title
-                                        DatabaseManager.bookmarkCollection!!.update(collectionRecord.value!!)
+                                        DatabaseManager.bookmarkCollection!!.update(collectionRecord.value)
                                     }
                                 }
                             }
 
-                            DatabaseManager.bookmark!!.update(record.value!!)
+                            DatabaseManager.bookmark!!.update(record.value)
                             context.toastee("Bookmark title is successfully modified")
                             refreshRiverBookmarks(false)
                             pp.dismiss()

@@ -22,39 +22,33 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Messenger
-import com.silverkeytech.news_engine.outliner.OutlineContent
-import java.util.ArrayList
-import com.silverkeytech.android_rivers.meta_weblog.BlogPostService
-import java.util.HashMap
+import com.silverkeytech.android_rivers.activities.*
+import com.silverkeytech.android_rivers.creators.CraigslistListingActivity
 import com.silverkeytech.android_rivers.creators.GoogleNewsSearchActivity
 import com.silverkeytech.android_rivers.creators.KayakFlightDealsActivity
-import com.silverkeytech.android_rivers.creators.CraigslistListingActivity
-import com.silverkeytech.android_rivers.activities.RiverSourcesActivity
-import com.silverkeytech.android_rivers.activities.FeedActivity
-import com.silverkeytech.android_rivers.activities.RiverActivity
-import com.silverkeytech.android_rivers.activities.OutlinerActivity
-import com.silverkeytech.android_rivers.activities.TryOutActivity
-import com.silverkeytech.android_rivers.activities.BookmarkCollectionActivity
+import com.silverkeytech.android_rivers.meta_weblog.BlogPostService
+import com.silverkeytech.android_rivers.services.DownloadAllRiversService
 import com.silverkeytech.android_rivers.services.DownloadService
 import com.silverkeytech.android_rivers.services.ImportOpmlSubscriptionListService
-import com.silverkeytech.android_rivers.services.DownloadAllRiversService
+import com.silverkeytech.news_engine.outliner.OutlineContent
+import java.util.*
 
-public fun startCraigslistListingActivity(context: Context) {
+fun startCraigslistListingActivity(context: Context) {
     val i = Intent(context, CraigslistListingActivity::class.java)
     context.startActivity(i)
 }
 
-public fun startKayakFlightDealsActivity(context: Context) {
+fun startKayakFlightDealsActivity(context: Context) {
     val i = Intent(context, KayakFlightDealsActivity::class.java)
     context.startActivity(i)
 }
 
-public fun startGoogleNewsSearchActivity(context: Context) {
+fun startGoogleNewsSearchActivity(context: Context) {
     val i = Intent(context, GoogleNewsSearchActivity::class.java)
     context.startActivity(i)
 }
 
-public fun startRiverSourcesActivity(context: Context, riverTitle: String, riverUri: String, sourcesTitles: ArrayList<String>, sourcesUris: ArrayList<String>) {
+fun startRiverSourcesActivity(context: Context, riverTitle: String, riverUri: String, sourcesTitles: ArrayList<String>, sourcesUris: ArrayList<String>) {
     val i = Intent(context, RiverSourcesActivity::class.java)
 
     i.putExtra(Params.RIVER_SOURCES_RIVER_TITLE, riverTitle)
@@ -65,14 +59,14 @@ public fun startRiverSourcesActivity(context: Context, riverTitle: String, river
     context.startActivity(i)
 }
 
-public fun startBlogPostingService(context: Context, config: HashMap<String, String>, post: HashMap<String, String>) {
+fun startBlogPostingService(context: Context, config: HashMap<String, String>, post: HashMap<String, String>) {
     val i = Intent(context, BlogPostService::class.java)
     i.putExtra(Params.BLOG_CONFIGURATION, config)
     i.putExtra(Params.BLOG_PAYLOAD, post)
     context.startService(i)
 }
 
-public fun startDownloadService(context: Context, title: String, url: String, sourceTitle: String, sourceUrl: String, description: String, messenger: Messenger) {
+fun startDownloadService(context: Context, title: String, url: String, sourceTitle: String, sourceUrl: String, description: String, messenger: Messenger) {
     val i = Intent(context, DownloadService::class.java)
     i.putExtra(Params.DOWNLOAD_TITLE, title)
     i.putExtra(Params.DOWNLOAD_URL, url)
@@ -83,13 +77,13 @@ public fun startDownloadService(context: Context, title: String, url: String, so
     context.startService(i)
 }
 
-public fun startImportOpmlSubscriptionService(context: Context, url: String) {
+fun startImportOpmlSubscriptionService(context: Context, url: String) {
     val i = Intent(context, ImportOpmlSubscriptionListService::class.java)
     i.putExtra(Params.OPML_SUBSCRIPTION_LIST_URI, url)
     context.startService(i)
 }
 
-public fun startFeedActivity(context: Context, url: String, text: String, lang: String) {
+fun startFeedActivity(context: Context, url: String, text: String, lang: String) {
     val i = Intent(context, FeedActivity::class.java)
     i.putExtra(Params.FEED_URL, url)
     i.putExtra(Params.FEED_NAME, text)
@@ -98,12 +92,12 @@ public fun startFeedActivity(context: Context, url: String, text: String, lang: 
     context.startActivity(i)
 }
 
-public fun startTryoutActivity(context: Context) {
+fun startTryoutActivity(context: Context) {
     val i = Intent(context, TryOutActivity::class.java)
     context.startActivity(i)
 }
 
-public fun startRiverActivity(context: Context, url: String, text: String, lang: String) {
+fun startRiverActivity(context: Context, url: String, text: String, lang: String) {
     val i = Intent(context, RiverActivity::class.java)
     i.putExtra(Params.RIVER_URL, url)
     i.putExtra(Params.RIVER_NAME, text)
@@ -112,7 +106,7 @@ public fun startRiverActivity(context: Context, url: String, text: String, lang:
     context.startActivity(i)
 }
 
-public fun startDownloadAllRiverService(context: Context, titleList: ArrayList<String>, urlList: ArrayList<String>) {
+fun startDownloadAllRiverService(context: Context, titleList: ArrayList<String>, urlList: ArrayList<String>) {
     val i = Intent(context, DownloadAllRiversService::class.java)
 
     i.putStringArrayListExtra(Params.RIVERS_DOWNLOAD_TITLE, titleList)
@@ -121,7 +115,7 @@ public fun startDownloadAllRiverService(context: Context, titleList: ArrayList<S
     context.startService(i)
 }
 
-public fun startCollectionActivity(context: Context, id: Int, title: String) {
+fun startCollectionActivity(context: Context, id: Int, title: String) {
     val i = Intent(context, BookmarkCollectionActivity::class.java)
     i.putExtra(Params.COLLECTION_ID, id)
     i.putExtra(Params.COLLECTION_TITLE, title)
@@ -143,14 +137,14 @@ fun startOutlinerActivity(context: Context, outlines: ArrayList<OutlineContent>,
            http://stackoverflow.com/questions/3935009/how-to-open-gmail-compose-when-a-button-is-clicked-in-android-app
 */
 
-public fun shareActionIntent(title: String, url: String): Intent {
+fun shareActionIntent(title: String, url: String): Intent {
     var i = Intent(Intent.ACTION_SEND)
-    i.setType("text/plain")
+    i.type = "text/plain"
     i.putExtra(Intent.EXTRA_TEXT, "${title.limitText(PreferenceDefaults.LINK_SHARE_TITLE_MAX_LENGTH)} $url")
     return i
 }
 
-public fun startOpenBrowserActivity(context: Context, url: String) {
+fun startOpenBrowserActivity(context: Context, url: String) {
     val i = Intent("android.intent.action.VIEW", Uri.parse(url))
     context.startActivity(i)
 
@@ -162,10 +156,10 @@ public fun startOpenBrowserActivity(context: Context, url: String) {
     */
 }
 
-public fun startOpenEmailActivity(context: Context, email: String, subject: String, body: String) {
+fun startOpenEmailActivity(context: Context, email: String, subject: String, body: String) {
     val i = Intent(Intent.ACTION_SEND)
 
-    i.setType("message/rfc822")
+    i.type = "message/rfc822"
     i.putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf(email))
     i.putExtra(android.content.Intent.EXTRA_SUBJECT, subject)
     i.putExtra(android.content.Intent.EXTRA_TEXT, body)

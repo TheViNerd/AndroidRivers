@@ -7,7 +7,7 @@ import com.silverkeytech.news_engine.DateHelper
 import com.silverkeytech.news_engine.log
 import com.silverkeytech.news_engine.syndications.rss_rdf.Rdf
 
-public enum class ParsedDateFormat{
+enum class ParsedDateFormat{
     RFC822,
     UNKNOWN,
     MISSING,
@@ -16,12 +16,12 @@ public enum class ParsedDateFormat{
     ISO8601_NOMS_NO_TZ
 }
 
-public data class RssDate(public val status: ParsedDateFormat, public val date: Date?){
-    public val isValid: Boolean
+data class RssDate(val status: ParsedDateFormat, val date: Date?){
+    val isValid: Boolean
         get() = status != ParsedDateFormat.UNKNOWN && status != ParsedDateFormat.MISSING
 }
 
-public fun parseDate(date: String?): RssDate {
+fun parseDate(date: String?): RssDate {
     if (date == null)
         return RssDate(ParsedDateFormat.MISSING, null)
 
@@ -73,7 +73,7 @@ public fun parseDate(date: String?): RssDate {
 
 }
 
-public fun getDateInFormat(status: ParsedDateFormat, date: String): Date? {
+fun getDateInFormat(status: ParsedDateFormat, date: String): Date? {
     try
     {
         if (status == ParsedDateFormat.RFC822)
@@ -100,7 +100,7 @@ public fun getDateInFormat(status: ParsedDateFormat, date: String): Date? {
 }
 
 //verify that this rss feed ate are parseable. Thsi is necessary for merging syndication date
-public fun verifyRssFeedForDateFitness(r: Rss): Pair<Boolean, ParsedDateFormat?> {
+fun verifyRssFeedForDateFitness(r: Rss): Pair<Boolean, ParsedDateFormat?> {
     try
     {
         if (r.channel?.item == null || r.channel!!.item!!.size == 0)
@@ -120,7 +120,7 @@ public fun verifyRssFeedForDateFitness(r: Rss): Pair<Boolean, ParsedDateFormat?>
     }
 }
 
-public fun verifyRdfFeedForDateFitness(r: Rdf): Pair<Boolean, ParsedDateFormat?> {
+fun verifyRdfFeedForDateFitness(r: Rdf): Pair<Boolean, ParsedDateFormat?> {
     try{
         if (r.item.size == 0)
             return Pair(false, null)
@@ -139,7 +139,7 @@ public fun verifyRdfFeedForDateFitness(r: Rdf): Pair<Boolean, ParsedDateFormat?>
 }
 
 //verify that this atom feed date are parseable. This is necessary for merging syndication date
-public fun verifyAtomFeedForDateFitness(f: Feed): Boolean {
+fun verifyAtomFeedForDateFitness(f: Feed): Boolean {
     try
     {
         if (f.getUpdated() == null)

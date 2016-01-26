@@ -18,30 +18,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 package com.silverkeytech.android_rivers.activities
 
 import android.os.Bundle
+import android.util.Log
 import com.actionbarsherlock.view.Menu
 import com.actionbarsherlock.view.MenuItem
 import com.pl.polidea.treeview.InMemoryTreeStateManager
 import com.pl.polidea.treeview.TreeBuilder
 import com.pl.polidea.treeview.TreeViewList
-import com.silverkeytech.news_engine.outliner.OutlineContent
-import com.silverkeytech.android_rivers.outliner.SimpleAdapter
-import java.util.ArrayList
-import org.holoeverywhere.app.Activity
-import com.silverkeytech.android_rivers.db.checkIfUrlAlreadyBookmarked
-import com.silverkeytech.android_rivers.db.BookmarkKind
-import com.silverkeytech.android_rivers.db.saveBookmarkToDb
-import android.util.Log
-import com.silverkeytech.android_rivers.R
 import com.silverkeytech.android_rivers.Params
-import com.silverkeytech.android_rivers.getVisualPref
 import com.silverkeytech.android_rivers.PreferenceDefaults
+import com.silverkeytech.android_rivers.R
 import com.silverkeytech.android_rivers.asyncs.DownloadOpmlAsync
 import com.silverkeytech.android_rivers.asyncs.downloadOpmlAsync
+import com.silverkeytech.android_rivers.db.BookmarkKind
+import com.silverkeytech.android_rivers.db.checkIfUrlAlreadyBookmarked
+import com.silverkeytech.android_rivers.db.saveBookmarkToDb
+import com.silverkeytech.android_rivers.getVisualPref
+import com.silverkeytech.android_rivers.outliner.SimpleAdapter
+import com.silverkeytech.news_engine.outliner.OutlineContent
+import org.holoeverywhere.app.Activity
+import java.util.*
 
-public class OutlinerActivity(): Activity()
+class OutlinerActivity(): Activity()
 {
     companion object {
-        public val TAG: String = OutlinerActivity::class.java.getSimpleName()
+        val TAG: String = OutlinerActivity::class.java.simpleName
     }
 
     val LEVEL_NUMBER: Int = 12
@@ -59,15 +59,15 @@ public class OutlinerActivity(): Activity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.outliner)
 
-        var actionBar = getSupportActionBar()!!
+        var actionBar = supportActionBar!!
         actionBar.setDisplayShowHomeEnabled(false) //hide the app icon.
 
-        val extras = getIntent()?.getExtras()
+        val extras = intent?.extras
 
         if (extras != null){
             outlinesTitle = extras.getString(Params.OUTLINES_TITLE)
             if (outlinesTitle != null)
-                setTitle(outlinesTitle)
+                title = outlinesTitle
 
             outlinesUrl = extras.getString(Params.OUTLINES_URL)
 
@@ -96,7 +96,7 @@ public class OutlinerActivity(): Activity()
         val textSize = getVisualPref().listTextSize
 
         var simpleAdapter = SimpleAdapter(this, treeManager, LEVEL_NUMBER, outlines, textSize)
-        treeView.setAdapter(simpleAdapter)
+        treeView.adapter = simpleAdapter
     }
 
     fun collapseOutlines(manager: InMemoryTreeStateManager<Long?>, outlines: ArrayList<OutlineContent>) {
@@ -121,8 +121,8 @@ public class OutlinerActivity(): Activity()
 
     val REFRESH: Int = 1
 
-    public override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = getSupportMenuInflater()!!
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = supportMenuInflater!!
         inflater.inflate(R.menu.outliner_menu, menu)
 
         if (outlinesUrl != null){
@@ -134,12 +134,12 @@ public class OutlinerActivity(): Activity()
         return true
     }
 
-    public override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         Log.d(TAG, "Title $outlinesTitle and Url $outlinesUrl")
         val showBookmark = outlinesUrl != null && outlinesTitle != null && !checkIfUrlAlreadyBookmarked(outlinesUrl!!)
 
         val bookmarkMenu = menu?.findItem(R.id.outliner_menu_bookmark)!!
-        bookmarkMenu.setVisible(showBookmark)
+        bookmarkMenu.isVisible = showBookmark
         return true
     }
 
@@ -149,7 +149,7 @@ public class OutlinerActivity(): Activity()
             res ->
             if (res.isTrue()){
                 displayOutlines(treeManager, res.value!!, expandAll)
-                this.getMain().setOpmlCache(url, res.value!!)
+                this.getMain().setOpmlCache(url, res.value)
             }
             else{
                 toastee("Downloading url fails because of ${res.exception?.message}", Duration.LONG)
@@ -158,8 +158,8 @@ public class OutlinerActivity(): Activity()
                 .execute(url)
     }
 
-    public override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item!!.getItemId()){
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item!!.itemId){
             R.id.outliner_menu_help -> {
                 downloadOpmlAsync(this, PreferenceDefaults.CONTENT_OUTLINE_HELP_SOURCE, getString(R.string.help))
                 return true
@@ -194,8 +194,8 @@ public class OutlinerActivity(): Activity()
         }
     }
 
-    public override fun onBackPressed() {
-        super<Activity>.onBackPressed()
+    override fun onBackPressed() {
+        super.onBackPressed()
         finish()
     }
 }

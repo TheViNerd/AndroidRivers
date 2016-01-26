@@ -23,34 +23,31 @@ import android.content.DialogInterface
 import android.os.AsyncTask
 import android.util.Log
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException
-import com.silverkeytech.news_engine.transformXmlToOpml
-import com.silverkeytech.news_engine.outlines.Opml
-import org.holoeverywhere.app.Activity
-import com.silverkeytech.android_rivers.activities.getMain
-import com.silverkeytech.android_rivers.activities.ConnectivityErrorMessage
-import com.silverkeytech.android_rivers.activities.toastee
-import com.silverkeytech.android_rivers.activities.Duration
-import com.silverkeytech.android_rivers.activities.handleConnectivityError
-import com.silverkeytech.android_rivers.Result
 import com.silverkeytech.android_rivers.R
+import com.silverkeytech.android_rivers.Result
+import com.silverkeytech.android_rivers.activities.ConnectivityErrorMessage
+import com.silverkeytech.android_rivers.activities.getMain
+import com.silverkeytech.android_rivers.activities.handleConnectivityError
 import com.silverkeytech.android_rivers.httpGet
+import com.silverkeytech.news_engine.outlines.Opml
+import com.silverkeytech.news_engine.transformXmlToOpml
+import org.holoeverywhere.app.Activity
 
-@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-public class DownloadBookmarksAsync(it: Context, ignoreCache: Boolean): AsyncTask<String, Int, Result<Opml>>(){
+@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") class DownloadBookmarksAsync(it: Context, ignoreCache: Boolean): AsyncTask<String, Int, Result<Opml>>(){
     companion object {
-        public val TAG: String = DownloadBookmarksAsync::class.java.getSimpleName()
+        val TAG: String = DownloadBookmarksAsync::class.java.simpleName
     }
 
     var dialog: ProgressDialog = ProgressDialog(it)
     var context: Activity = it as Activity
     val ignoreCache: Boolean = ignoreCache
 
-    protected override fun onPreExecute() {
+    override fun onPreExecute() {
         dialog.setMessage(context.getString(R.string.please_wait_while_downloading_news_rivers_list))
-        dialog.setIndeterminate(true)
+        dialog.isIndeterminate = true
         dialog.setCancelable(false)
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.cancel), object : DialogInterface.OnClickListener{
-            public override fun onClick(p0: DialogInterface, p1: Int) {
+            override fun onClick(p0: DialogInterface, p1: Int) {
                 p0.dismiss()
                 this@DownloadBookmarksAsync.cancel(true)
             }
@@ -58,7 +55,7 @@ public class DownloadBookmarksAsync(it: Context, ignoreCache: Boolean): AsyncTas
         dialog.show()
     }
 
-    protected override fun doInBackground(vararg url: String?): Result<Opml>? {
+    override fun doInBackground(vararg url: String?): Result<Opml>? {
         try{
             val cache = context.getMain().getRiverBookmarksCache()
 
@@ -93,12 +90,12 @@ public class DownloadBookmarksAsync(it: Context, ignoreCache: Boolean): AsyncTas
 
     var rawCallback: ((Result<Opml>) -> Unit)? = null
 
-    public fun executeOnComplete(callback: (Result<Opml>) -> Unit): DownloadBookmarksAsync {
+    fun executeOnComplete(callback: (Result<Opml>) -> Unit): DownloadBookmarksAsync {
         rawCallback = callback
         return this
     }
 
-    protected override fun onPostExecute(result: Result<Opml>) {
+    override fun onPostExecute(result: Result<Opml>) {
         dialog.dismiss()
 
         if (result.isFalse()){

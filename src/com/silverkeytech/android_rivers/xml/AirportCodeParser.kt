@@ -22,8 +22,8 @@ import com.silverkeytech.android_rivers.creators.AirportCodeBuilder
 import com.thebuzzmedia.sjxp.XMLParser
 import java.io.InputStream
 
-public class AirportCodeParser{
-    public fun parse(input: InputStream, airportCodes: AirportCodeBuilder) {
+class AirportCodeParser{
+    fun parse(input: InputStream, airportCodes: AirportCodeBuilder) {
         var parser = XMLParser<AirportCodeBuilder>(airportTag, airportName, airportCode)
         parser.parse(input, airportCodes)
     }

@@ -25,23 +25,23 @@ import com.silverkeytech.news_engine.syndications.rss.Rss
 import com.silverkeytech.news_engine.syndications.rss_rdf.Rdf
 import java.util.*
 
-public data class SyndicationFeed(public val rss: Rss?, public val atom: Feed?, public val rdf: Rdf?, val filter: SyndicationFilter? = null){
+data class SyndicationFeed(val rss: Rss?, val atom: Feed?, val rdf: Rdf?, val filter: SyndicationFilter? = null){
     companion object{
-        public val TAG: String = SyndicationFeed::class.java.getSimpleName()
+        val TAG: String = SyndicationFeed::class.java.simpleName
     }
 
-    public var title: String = ""
-    public var language: String = ""
-    public var link: String = ""
-    public var feedType: SyndicationFeedType = SyndicationFeedType.NONE
-    public var items: ArrayList<SyndicationFeedItem> = ArrayList()
-    public var isDateParseable: Boolean = false
+    var title: String = ""
+    var language: String = ""
+    var link: String = ""
+    var feedType: SyndicationFeedType = SyndicationFeedType.NONE
+    var items: ArrayList<SyndicationFeedItem> = ArrayList()
+    var isDateParseable: Boolean = false
 
-    public fun hasLink(): Boolean {
+    fun hasLink(): Boolean {
         return !link.isNullOrBlank()
     }
 
-    public fun transform() {
+    fun transform() {
         transformRss()
         transformAtom()
         transformRdf()
@@ -194,7 +194,7 @@ public data class SyndicationFeed(public val rss: Rss?, public val atom: Feed?, 
         }
     }
 
-    public fun transformRdf() {
+    fun transformRdf() {
         if (rdf != null){
             val (parseable, dateFormat) = verifyRdfFeedForDateFitness(rdf)
             isDateParseable = parseable

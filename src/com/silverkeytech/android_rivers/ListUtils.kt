@@ -18,13 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.android_rivers
 
-import android.widget.TextView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.LayoutInflater
+import android.widget.TextView
 
 //A view holder for UI list with one element called name of type TextView
-public data class TextViewHolder (public var name: TextView)
+data class TextViewHolder (var name: TextView)
 
 fun currentTextViewItem(text: String,
                         convertView: View?,
@@ -39,15 +39,15 @@ fun currentTextViewItem(text: String,
     if (vw == null){
         vw = inflater.inflate(android.R.layout.simple_list_item_1, parent, false)
         holder = TextViewHolder(vw!!.findView<TextView>(android.R.id.text1))
-        vw!!.setTag(holder)
+        vw!!.tag = holder
     }else{
-        holder = vw!!.getTag() as TextViewHolder
+        holder = vw.tag as TextViewHolder
     }
 
     if (inCollection)
-        handleFontResize(holder!!.name, "$text \u2248", textSize)
+        handleFontResize(holder.name, "$text \u2248", textSize)
     else
-        handleFontResize(holder!!.name, text, textSize)
+        handleFontResize(holder.name, text, textSize)
 
-    return vw!!
+    return vw
 }

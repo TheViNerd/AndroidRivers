@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.android_rivers.activities
 
+import android.app.Activity
 import android.app.Service
 import android.os.Build
 import android.support.v4.app.Fragment
@@ -26,22 +27,21 @@ import android.support.v4.app.FragmentTransaction
 import android.view.Gravity
 import android.view.View
 import android.widget.Toast
+import com.silverkeytech.android_rivers.MainApplication
+import com.silverkeytech.android_rivers.R
+import org.apache.http.conn.ConnectTimeoutException
 import java.net.SocketException
 import java.net.UnknownHostException
-import org.apache.http.conn.ConnectTimeoutException
-import android.app.Activity
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.MainApplication
 
 fun Service?.getMain(): MainApplication {
-    return this!!.getApplication() as MainApplication
+    return this!!.application as MainApplication
 }
 
 fun Activity?.getMain(): MainApplication {
-    return this!!.getApplication() as MainApplication
+    return this!!.application as MainApplication
 }
 
-public fun Activity.getStandardDialogBackgroundColor(): Int {
+fun Activity.getStandardDialogBackgroundColor(): Int {
     return android.graphics.Color.WHITE
     /*
     val theme = this.getVisualPref().getTheme()
@@ -54,41 +54,41 @@ public fun Activity.getStandardDialogBackgroundColor(): Int {
         */
 }
 
-public fun <T: View> Activity?.findView(id: Int): T {
+fun <T: View> Activity?.findView(id: Int): T {
     if (this == null)
         throw Exception("Activity cannot be null");
 
     return (this.findViewById(id) as T)
 }
 
-public fun Activity.isModernTablet(): Boolean {
+fun Activity.isModernTablet(): Boolean {
     val beyondHoneycomb = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH
-    return this.getResources()!!.getBoolean(R.bool.is_tablet) || beyondHoneycomb
+    return this.resources!!.getBoolean(R.bool.is_tablet) || beyondHoneycomb
 }
 
-public fun Activity.restart() {
-    var intent = this.getIntent()
+fun Activity.restart() {
+    var intent = this.intent
     this.finish()
     this.startActivity(intent!!)
 }
 
-public fun Activity.toastee(text: String, duration: Duration = Duration.QUICK, grav: Int = Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL) {
+fun Activity.toastee(text: String, duration: Duration = Duration.QUICK, grav: Int = Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL) {
     var t = Toast.makeText(this, text, duration.toInt())
     t.setGravity(grav, 0, 0);
     t.show()
 }
 
 fun org.holoeverywhere.app.Activity.findFragmentById(id: Int): Fragment {
-    return this.getSupportFragmentManager()!!.findFragmentById(id)!!
+    return this.supportFragmentManager!!.findFragmentById(id)!!
 }
 
 fun org.holoeverywhere.app.Activity.beginFragmentTransaction(): FragmentTransaction {
-    return this.getSupportFragmentManager()!!.beginTransaction()!!
+    return this.supportFragmentManager!!.beginTransaction()!!
 }
 
-public data class ConnectivityErrorMessage(val timeoutException: String, val socketException: String, val otherException: String)
+data class ConnectivityErrorMessage(val timeoutException: String, val socketException: String, val otherException: String)
 
-public fun Activity.handleConnectivityError(e: Exception?, message: ConnectivityErrorMessage) {
+fun Activity.handleConnectivityError(e: Exception?, message: ConnectivityErrorMessage) {
     if (e is ConnectTimeoutException)
         this.toastee(message.timeoutException, Duration.AVERAGE)
     else if (e is UnknownHostException || e is SocketException)
@@ -97,11 +97,11 @@ public fun Activity.handleConnectivityError(e: Exception?, message: Connectivity
         this.toastee(message.otherException, Duration.AVERAGE)
 }
 
-public enum class Duration {
+enum class Duration {
     QUICK,
     AVERAGE,
     LONG;
-    public fun toInt(): Int = when(this) {
+    fun toInt(): Int = when(this) {
         QUICK -> 3000
         AVERAGE -> 10000
         LONG -> 30000

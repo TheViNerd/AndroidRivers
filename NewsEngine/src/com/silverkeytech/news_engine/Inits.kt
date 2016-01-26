@@ -17,5 +17,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 package com.silverkeytech.news_engine
 
-public var log: ((String, String) -> Unit) = { x, y -> }
-public var scrubHtml: ( (String?) -> String) = { x -> "" }
+var log: ((String, String) -> Unit) = { x, y -> }
+var scrubHtml: ( (String?) -> String) = { x -> "" }

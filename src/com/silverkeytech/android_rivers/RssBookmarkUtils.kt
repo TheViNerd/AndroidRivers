@@ -21,14 +21,10 @@ package com.silverkeytech.android_rivers
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.util.Log
-import com.silverkeytech.android_rivers.db.BookmarkCollection
-import com.silverkeytech.android_rivers.db.BookmarkKind
-import com.silverkeytech.android_rivers.db.SortingOrder
-import com.silverkeytech.android_rivers.db.getBookmarkCollectionFromDb
-import com.silverkeytech.android_rivers.db.saveBookmarkToDb
-import org.holoeverywhere.app.Activity
-import com.silverkeytech.android_rivers.activities.toastee
 import com.silverkeytech.android_rivers.activities.Duration
+import com.silverkeytech.android_rivers.activities.toastee
+import com.silverkeytech.android_rivers.db.*
+import org.holoeverywhere.app.Activity
 
 //Note: This is a duplication with FeedActivity
 fun saveBookmark(context: Activity, feedName: String, feedUrl: String, feedLanguage: String, collection: BookmarkCollection?) {
@@ -62,7 +58,7 @@ fun addBookmarkOption(context: Activity, feedDateIsParseable: Boolean, bookmark:
             val withInstruction = arrayListOf(context.getString(R.string.skip_collection), *collectionTitles).toTypedArray()
 
             dialog.setItems(withInstruction, object : DialogInterface.OnClickListener{
-                public override fun onClick(p0: DialogInterface, p1: Int) {
+                override fun onClick(p0: DialogInterface, p1: Int) {
                     if (p1 == 0) {
                         //skip adding bookmark to collection. Just add to RSS bookmark
                         bookmark(null)

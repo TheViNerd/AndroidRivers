@@ -22,7 +22,6 @@ import android.app.AlertDialog
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -36,38 +35,26 @@ import android.widget.Button
 import android.widget.RemoteViews
 import com.github.kevinsawicki.http.HttpRequest
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException
+import com.silverkeytech.android_rivers.*
+import com.silverkeytech.android_rivers.asyncs.DownloadImageAsync
+import com.silverkeytech.android_rivers.asyncs.DownloadOpmlAsync
 import com.silverkeytech.android_rivers.creators.getAirportCodes
-import com.silverkeytech.android_rivers.db.Bookmark
-import com.silverkeytech.android_rivers.db.BookmarkCollection
-import com.silverkeytech.android_rivers.db.BookmarkCollectionKind
-import com.silverkeytech.android_rivers.db.BookmarkKind
-import com.silverkeytech.android_rivers.db.DatabaseManager
-import com.silverkeytech.android_rivers.db.SortingOrder
-import com.silverkeytech.android_rivers.db.savePodcastToDb
-import com.silverkeytech.news_engine.transformXmlToOpml
-import com.silverkeytech.android_rivers.traverse
-import java.util.ArrayList
-import java.util.Random
-import org.holoeverywhere.app.Activity
-import org.xmlrpc.android.XMLRPCClient
+import com.silverkeytech.android_rivers.creators.getCraigsListCategories
+import com.silverkeytech.android_rivers.creators.getCraigsListCities
+import com.silverkeytech.android_rivers.db.*
 import com.silverkeytech.android_rivers.meta_weblog.Blog
 import com.silverkeytech.android_rivers.meta_weblog.linkPost
-import org.holoeverywhere.widget.TextView
-import com.silverkeytech.android_rivers.creators.getCraigsListCities
-import com.silverkeytech.android_rivers.creators.getCraigsListCategories
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.Params
-import com.silverkeytech.android_rivers.DialogBtn
-import com.silverkeytech.android_rivers.asyncs.DownloadImageAsync
-import com.silverkeytech.android_rivers.getVisualPref
-import com.silverkeytech.android_rivers.createFlexibleContentDialog
 import com.silverkeytech.android_rivers.services.DownloadService
-import com.silverkeytech.android_rivers.asyncs.DownloadOpmlAsync
+import com.silverkeytech.news_engine.transformXmlToOpml
+import org.holoeverywhere.app.Activity
+import org.holoeverywhere.widget.TextView
+import org.xmlrpc.android.XMLRPCClient
+import java.util.*
 
-public class TryOutActivity(): Activity()
+class TryOutActivity(): Activity()
 {
     companion object {
-        public val TAG: String = TryOutActivity::class.java.getSimpleName()
+        val TAG: String = TryOutActivity::class.java.simpleName
     }
 
     public override fun onCreate(savedInstanceState: Bundle?): Unit {
@@ -128,14 +115,14 @@ public class TryOutActivity(): Activity()
 
         btn.setOnClickListener {
 
-            val cnt = this.getLayoutInflater().inflate(R.layout.news_details, null)!!
+            val cnt = this.layoutInflater.inflate(R.layout.news_details, null)!!
             //take care of color
-            cnt.setDrawingCacheBackgroundColor(this.getStandardDialogBackgroundColor())
+            cnt.drawingCacheBackgroundColor = this.getStandardDialogBackgroundColor()
 
             val main = cnt.findViewById(R.id.news_details_text_tv) as TextView
-            main.setText(msg)
+            main.text = msg
             val src = cnt.findViewById(R.id.news_details_source_tv) as TextView
-            src.setText("CNN>COM")
+            src.text = "CNN>COM"
 
             val dlg = createFlexibleContentDialog(context = this, content = cnt, dismissOnTouch = true, buttons = arrayOf(
                     DialogBtn("Go", { d -> d.dismiss() }),
@@ -247,20 +234,18 @@ public class TryOutActivity(): Activity()
 
         btn.setOnClickListener {
             val dialog = AlertDialog.Builder(this)
-            dialog.setItems(names, object : DialogInterface.OnClickListener{
-                public override fun onClick(p0: DialogInterface, p1: Int) {
-                    val url = list.get(p1).second
+            dialog.setItems(names) { p0, p1 ->
+                val url = list.get(p1).second
 
-                    Log.d(TAG, "Opening $url")
+                Log.d(TAG, "Opening $url")
 
-                    val ix = Intent(this@TryOutActivity, FeedActivity::class.java)
-                    ix.putExtra(Params.FEED_URL, url)
-                    ix.putExtra(Params.FEED_NAME, "Display ATOM Feeds")
-                    ix.putExtra(Params.FEED_LANGUAGE, "en")
+                val ix = Intent(this@TryOutActivity, FeedActivity::class.java)
+                ix.putExtra(Params.FEED_URL, url)
+                ix.putExtra(Params.FEED_NAME, "Display ATOM Feeds")
+                ix.putExtra(Params.FEED_LANGUAGE, "en")
 
-                    startActivity(ix)
-                }
-            })
+                startActivity(ix)
+            }
 
             dialog.create().show()
         }
@@ -284,20 +269,18 @@ public class TryOutActivity(): Activity()
 
         btn.setOnClickListener {
             val dialog = AlertDialog.Builder(this)
-            dialog.setItems(names, object : DialogInterface.OnClickListener{
-                public override fun onClick(p0: DialogInterface, p1: Int) {
-                    val url = list.get(p1).second
+            dialog.setItems(names) { p0, p1 ->
+                val url = list.get(p1).second
 
-                    Log.d(TAG, "Opening $url")
+                Log.d(TAG, "Opening $url")
 
-                    val ix = Intent(this@TryOutActivity, FeedActivity::class.java)
-                    ix.putExtra(Params.FEED_URL, url)
-                    ix.putExtra(Params.FEED_NAME, "Display RSS Feed")
-                    ix.putExtra(Params.FEED_LANGUAGE, "en")
+                val ix = Intent(this@TryOutActivity, FeedActivity::class.java)
+                ix.putExtra(Params.FEED_URL, url)
+                ix.putExtra(Params.FEED_NAME, "Display RSS Feed")
+                ix.putExtra(Params.FEED_LANGUAGE, "en")
 
-                    startActivity(ix)
-                }
-            })
+                startActivity(ix)
+            }
 
             dialog.create().show()
         }
@@ -333,7 +316,7 @@ public class TryOutActivity(): Activity()
             Log.d(TAG, "Start downloading file")
 
             val messenger = Messenger(object : Handler(){
-                public override fun handleMessage(msg: Message) {
+                override fun handleMessage(msg: Message) {
                     var path = msg.obj as String
 
                     if (msg.arg1 == android.app.Activity.RESULT_OK && !path.isNullOrBlank()){
@@ -354,16 +337,14 @@ public class TryOutActivity(): Activity()
     fun handleCreateBookmarkTable() {
         val btn = findView<Button>(R.id.tryout_setup_bookmark_table_btn)
 
-        btn.setOnClickListener(object : OnClickListener{
-            public override fun onClick(p0: View) {
-                val total = DatabaseManager.query().bookmark().byKind(BookmarkKind.RIVER, SortingOrder.NONE)
+        btn.setOnClickListener {
+            val total = DatabaseManager.query().bookmark().byKind(BookmarkKind.RIVER, SortingOrder.NONE)
 
-                if (total.exist)
-                    toastee("all ${total.values?.count()}", Duration.LONG)
-                else
-                    toastee("There is no record", Duration.LONG)
-            }
-        })
+            if (total.exist)
+                toastee("all ${total.values?.count()}", Duration.LONG)
+            else
+                toastee("There is no record", Duration.LONG)
+        }
     }
 
     fun handleInsertToBookmarkTable() {
@@ -385,7 +366,7 @@ public class TryOutActivity(): Activity()
         btn.setOnClickListener {
 
             var notificationIntent = Intent(Intent.ACTION_MAIN)
-            notificationIntent.setClass(getApplicationContext()!!, MainWithFragmentsActivity::class.java)
+            notificationIntent.setClass(applicationContext!!, MainWithFragmentsActivity::class.java)
             notificationIntent.putExtra(Params.DOWNLOAD_LOCATION_PATH, "Location PATH")
 
             var contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_ONE_SHOT)
@@ -403,19 +384,19 @@ public class TryOutActivity(): Activity()
             ?.setContentIntent(contentIntent)
             ?.build()
 
-            notification!!.contentView = RemoteViews(getApplicationContext()!!.getPackageName(), R.layout.notification_download_progress)
+            notification!!.contentView = RemoteViews(applicationContext!!.packageName, R.layout.notification_download_progress)
 
-            notification!!.contentView!!.setImageViewResource(R.id.notification_download_progress_status_icon, android.R.drawable.btn_star);
-            notification!!.contentView!!.setProgressBar(R.id.notification_download_progress_status_progress, 100, 10, false)
-            notification!!.contentView!!.setTextViewText(R.id.notification_download_progress_status_text, "Download in progress")
+            notification.contentView!!.setImageViewResource(R.id.notification_download_progress_status_icon, android.R.drawable.btn_star);
+            notification.contentView!!.setProgressBar(R.id.notification_download_progress_status_progress, 100, 10, false)
+            notification.contentView!!.setTextViewText(R.id.notification_download_progress_status_text, "Download in progress")
 
             var nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            nm.notify(counter, notification!!)
+            nm.notify(counter, notification)
 
             var thread = Thread(Runnable {
                 for(i in 11..100){
-                    notification!!.contentView!!.setProgressBar(R.id.notification_download_progress_status_progress, 100, i, false)
-                    nm.notify(counter, notification!!)
+                    notification.contentView!!.setProgressBar(R.id.notification_download_progress_status_progress, 100, i, false)
+                    nm.notify(counter, notification)
 
                     Log.d(TAG, "We are progressing $i / 100")
                     try{
@@ -432,7 +413,7 @@ public class TryOutActivity(): Activity()
         }
     }
 
-    public fun handleOutliner() {
+    fun handleOutliner() {
         var btn = findView<Button>(R.id.tryout_show_outline_btn)
         btn.setOnClickListener {
 
@@ -443,7 +424,7 @@ public class TryOutActivity(): Activity()
                 res ->
                 if (res.isTrue()){
                     var intent = Intent(Intent.ACTION_MAIN)
-                    intent.setClass(getApplicationContext()!!, OutlinerActivity::class.java)
+                    intent.setClass(applicationContext!!, OutlinerActivity::class.java)
                     intent.putExtra(Params.OUTLINES_DATA, res.value!!)
 
                     startActivity(intent)
@@ -459,11 +440,11 @@ public class TryOutActivity(): Activity()
         }
     }
 
-    public fun handleRiverJsWithOpmlSource() {
+    fun handleRiverJsWithOpmlSource() {
         var btn = findView<Button>(R.id.tryout_download_riverjs_with_opml_btn)
 
         btn.setOnClickListener(object: OnClickListener{
-            public override fun onClick(p0: View) {
+            override fun onClick(p0: View) {
                 val url = "http://hobieu.apphb.com/api/1/samples/riverjswithopml"
 
                 var i = Intent(this@TryOutActivity, RiverActivity::class.java)
@@ -476,11 +457,11 @@ public class TryOutActivity(): Activity()
         })
     }
 
-    public fun handleDownloadRecursiveOpml() {
+    fun handleDownloadRecursiveOpml() {
         var btn = findView<Button>(R.id.tryout_download_recursive_opml_btn)
 
         btn.setOnClickListener(object: OnClickListener{
-            public override fun onClick(p0: View) {
+            override fun onClick(p0: View) {
                 var req: String? = ""
                 val url = "http://opmlviewer.com/Content/Directories.opml"
 
@@ -507,8 +488,8 @@ public class TryOutActivity(): Activity()
         })
     }
 
-    public override fun onBackPressed() {
-        super<Activity>.onBackPressed()
+    override fun onBackPressed() {
+        super.onBackPressed()
         finish()
     }
 }

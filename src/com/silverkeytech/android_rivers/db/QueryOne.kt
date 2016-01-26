@@ -19,8 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 package com.silverkeytech.android_rivers.db
 
 //hold one value
-public class QueryOne<T: Any>(private val item: T?, private val e: Exception? = null){
-    public val exists: Boolean = item != null && e == null
-    public val value: T? = item
-    public val exception: Exception? = e
+class QueryOne<T: Any>(private val item: T?, private val e: Exception? = null){
+    val exists: Boolean = item != null && e == null
+    val value: T? = item
+    val exception: Exception? = e
 }

@@ -22,7 +22,7 @@ import com.j256.ormlite.dao.Dao
 import com.silverkeytech.android_rivers.None
 import com.silverkeytech.android_rivers.Result
 
-public class PodcastCommand(private val dao: Dao<Podcast, out Int?>){
+class PodcastCommand(private val dao: Dao<Podcast, out Int?>){
     fun deleteById (id: Int): Result<None> {
         try{
             var condition = dao.deleteBuilder()!!

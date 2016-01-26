@@ -24,8 +24,8 @@ import com.silverkeytech.news_engine.xml.textRule
 import com.silverkeytech.news_engine.xml.attributeRule
 import com.silverkeytech.news_engine.xml.tagRule
 
-public class RssParser{
-    public fun parse(input: InputStream, rss: RssBuilder) {
+class RssParser{
+    fun parse(input: InputStream, rss: RssBuilder) {
         var parser = XMLParser<RssBuilder>(channelTitle, channelLink, channelDescription, channelLanguage, channelPubDate,
                 channelLastBuildDate, channelDocs, channelGenerator, channelManagingEditor, channelWebMaster,
                 channelTtl, channelCloud,

@@ -18,16 +18,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.android_rivers
 
-import android.view.View.OnTouchListener
-import android.view.View
 import android.view.MotionEvent
+import android.view.View
+import android.view.View.OnTouchListener
 
 /*
 This is a utility class to handle user scroll/swipe movement and to differentiate a click with a swipe motion
  */
-public class ScrollMotionDetector (scrollTreshold : Float = 10f){
+class ScrollMotionDetector (scrollTreshold : Float = 10f){
     companion object {
-        public val TAG: String = ScrollMotionDetector::class.java.getSimpleName()
+        val TAG: String = ScrollMotionDetector::class.java.simpleName
     }
 
     var movementHorizontal: Float = 0f
@@ -39,12 +39,12 @@ public class ScrollMotionDetector (scrollTreshold : Float = 10f){
 
     fun attach(onClickEvent : (() -> Unit)?, onMoveEvent : ((x : Float, y : Float) -> Unit)?) : OnTouchListener{
         val listener = object : OnTouchListener {
-            public override fun onTouch(p0: View?, p1: MotionEvent): Boolean {
-                val mov = p1.getAction()
+            override fun onTouch(p0: View?, p1: MotionEvent): Boolean {
+                val mov = p1.action
                 when (mov){
                     MotionEvent.ACTION_DOWN -> {
-                        movementHorizontal = p1.getX()
-                        movementVertical = p1.getY()
+                        movementHorizontal = p1.x
+                        movementVertical = p1.y
                         onClick = true
                     }
                     MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP ->{
@@ -59,8 +59,8 @@ public class ScrollMotionDetector (scrollTreshold : Float = 10f){
 
                     }
                     MotionEvent.ACTION_MOVE -> {
-                        deltaHorizontal = Math.abs(movementHorizontal - p1.getX())
-                        deltaVertical = Math.abs(movementVertical - p1.getY())
+                        deltaHorizontal = Math.abs(movementHorizontal - p1.x)
+                        deltaVertical = Math.abs(movementVertical - p1.y)
                         val sideway =  deltaHorizontal > SCROLL_TRESHOLD
                         val upDown =  deltaVertical > SCROLL_TRESHOLD
                         if (onClick && sideway || upDown){

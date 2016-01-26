@@ -19,9 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 package com.silverkeytech.news_engine.outliner
 
 import java.io.Serializable
-import java.util.HashMap
+import java.util.*
 
-public enum class OutlineType{
+enum class OutlineType{
     NONE,
     INCLUDE,
     LINK,
@@ -30,25 +30,25 @@ public enum class OutlineType{
     RSS
 }
 
-public data class OutlineContent (var level: Int, var text: String): Serializable
+data class OutlineContent (var level: Int, var text: String): Serializable
 {
     private var bag: HashMap<String, String> = hashMapOf()
 
-    public fun putAttribute(key: String, obj: String) {
+    fun putAttribute(key: String, obj: String) {
         bag.put(key, obj)
     }
 
-    public fun getAttribute(key: String): String? = bag.get(key)
+    fun getAttribute(key: String): String? = bag.get(key)
 
-    public fun containsKey(key: String): Boolean {
+    fun containsKey(key: String): Boolean {
         return bag.containsKey(key)
     }
 
-    public fun copyAttributes(outline: OutlineContent) {
+    fun copyAttributes(outline: OutlineContent) {
         bag = outline.bag
     }
 
-    public fun getType(): OutlineType {
+    fun getType(): OutlineType {
         if (containsKey("type")){
             val tp = getAttribute("type")
             return when(tp){

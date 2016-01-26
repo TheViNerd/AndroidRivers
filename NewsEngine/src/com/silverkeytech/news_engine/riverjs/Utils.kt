@@ -53,7 +53,7 @@ fun accumulateList(list: Vector<RiverItemMeta>, feed: SyndicationFeed) {
 
 fun sortRiverItemMeta(newsItems: List<RiverItemMeta>): List<RiverItemMeta> {
     var sortedNewsItems = newsItems.filter { x -> x.item.isPublicationDate!! }.sortedWith(
-            comparator { p1: RiverItemMeta, p2: RiverItemMeta ->
+            Comparator { p1: RiverItemMeta, p2: RiverItemMeta ->
                 val date1 = p1.item.publicationDate
                 val date2 = p2.item.publicationDate
 

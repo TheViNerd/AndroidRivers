@@ -6,9 +6,8 @@ import org.junit.Assert
 import org.junit.Test
 import java.util.*
 
-public class OpmlParserTests {
-    @Test
-    public fun testHeadParsing(){
+class OpmlParserTests {
+    @Test fun testHeadParsing(){
         com.silverkeytech.news_engine.log = { t, s -> println("$t => $s") }
 
         val rawXml = downloadRawFeed("http://hobieu.apphb.com/api/1/opml/root")

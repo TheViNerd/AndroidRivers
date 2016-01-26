@@ -20,26 +20,21 @@ package com.silverkeytech.android_rivers.creators
 
 import android.os.Bundle
 import android.util.Log
-import com.silverkeytech.android_rivers.asyncs.DownloadFeedAsync
+import com.silverkeytech.android_rivers.*
 import com.silverkeytech.android_rivers.activities.Duration
 import com.silverkeytech.android_rivers.activities.FeedContentRenderer
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.getVisualPref
-import com.silverkeytech.android_rivers.setOnClickListener
 import com.silverkeytech.android_rivers.activities.toastee
+import com.silverkeytech.android_rivers.asyncs.DownloadFeedAsync
+import com.silverkeytech.android_rivers.db.checkIfUrlAlreadyBookmarked
 import org.holoeverywhere.ArrayAdapter
 import org.holoeverywhere.app.Activity
 import org.holoeverywhere.widget.Button
 import org.holoeverywhere.widget.EditText
 import org.holoeverywhere.widget.Spinner
-import com.silverkeytech.android_rivers.db.checkIfUrlAlreadyBookmarked
-import com.silverkeytech.android_rivers.getStoredPref
-import com.silverkeytech.android_rivers.addBookmarkOption
-import com.silverkeytech.android_rivers.saveBookmark
 
-public class GoogleNewsSearchActivity (): Activity(){
+class GoogleNewsSearchActivity (): Activity(){
     companion object {
-        public val TAG: String = GoogleNewsSearchActivity::class.java.getSimpleName()
+        val TAG: String = GoogleNewsSearchActivity::class.java.simpleName
     }
 
     var feedUrl: String = ""
@@ -49,18 +44,18 @@ public class GoogleNewsSearchActivity (): Activity(){
 
     public override fun onCreate(savedInstanceState: Bundle?): Unit {
         setTheme(this.getVisualPref().theme)
-        super<Activity>.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.google_news_search)
 
-        var actionBar = getSupportActionBar()!!
+        var actionBar = supportActionBar!!
         actionBar.setDisplayShowHomeEnabled(false) //hide the app icon.
 
-        setTitle(this.getString(R.string.title_google_news))
+        title = this.getString(R.string.title_google_news)
 
         //handle UI
 
         val searchTerm = findViewById(R.id.google_news_search_term)!! as EditText
-        searchTerm.setHint(this.getString(R.string.optional_search_term))
+        searchTerm.hint = this.getString(R.string.optional_search_term)
 
         val regionList = findViewById(R.id.google_news_search_region)!! as Spinner
 
@@ -69,7 +64,7 @@ public class GoogleNewsSearchActivity (): Activity(){
 
         val adapter = ArrayAdapter<String>(this, org.holoeverywhere.R.layout.simple_spinner_item, countryEditions);
         adapter.setDropDownViewResource(org.holoeverywhere.R.layout.simple_spinner_dropdown_item);
-        regionList.setAdapter(adapter);
+        regionList.adapter = adapter;
 
         val country = this.getStoredPref().googleNewsCountry
         Log.d(TAG, "Stored country $country")
@@ -87,22 +82,22 @@ public class GoogleNewsSearchActivity (): Activity(){
         }
 
         val bookmark = findViewById(R.id.google_news_search_bookmark_btn)!! as Button
-        bookmark.setEnabled(false)
+        bookmark.isEnabled = false
         bookmark.setOnClickListener{
             addBookmarkOption(this, feedDateIsParseable) {
                 collection ->
                 saveBookmark(this, feedName, feedUrl, feedLanguage, collection)
-                bookmark.setEnabled(false)
+                bookmark.isEnabled = false
             }
         }
 
         val go = findViewById(R.id.google_news_search_go_btn)!! as Button
         go.setOnClickListener {
-            val position = regionList.getSelectedItemPosition()
+            val position = regionList.selectedItemPosition
             val key = countryEditions.get(position)
             val info = editionsAndLanguages[key]!!
             feedUrl = "https://news.google.com/news/feeds?cf=all&ned=${info.edition}&hl=${info.lang}&output=rss&num=50"
-            val search = searchTerm.getText()?.toString()
+            val search = searchTerm.text?.toString()
             if (!search.isNullOrEmpty()){
                 feedUrl += "&q=${java.net.URLEncoder.encode(search!!, "UTF-8")}"
             }
@@ -126,9 +121,9 @@ public class GoogleNewsSearchActivity (): Activity(){
                     }
 
                     if (feed.items.size > 0 && !checkIfUrlAlreadyBookmarked(feedUrl))
-                        bookmark.setEnabled(true)
+                        bookmark.isEnabled = true
                     else
-                        bookmark.setEnabled(false)
+                        bookmark.isEnabled = false
 
                     FeedContentRenderer(this, feedLanguage)
                             .handleNewsListing(R.id.google_news_search_results_lv, feedName, feedUrl, feed.items)

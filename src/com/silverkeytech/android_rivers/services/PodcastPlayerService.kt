@@ -43,11 +43,11 @@ import com.silverkeytech.android_rivers.with
 import java.util.*
 
 @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListener, OnAudioFocusChangeListener {
+open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListener, OnAudioFocusChangeListener {
     companion object {
-        public val TAG: String = PodcastPlayerService::class.java.getSimpleName()
-        public val CURRENT_POSITION: String = "CURRENT_POSITION"
-        public val TOTAL_DURATION: String = "TOTAL_DURATION"
+        val TAG: String = PodcastPlayerService::class.java.simpleName
+        val CURRENT_POSITION: String = "CURRENT_POSITION"
+        val TOTAL_DURATION: String = "TOTAL_DURATION"
     }
 
     private val binder: IBinder = ServiceBinder()
@@ -60,13 +60,13 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
         }
     }
 
-    public override fun onBind(p0: Intent): IBinder {
+    override fun onBind(p0: Intent): IBinder {
         return binder
     }
 
     fun prepareNotification(): Notification {
         val notificationIntent = Intent(Intent.ACTION_MAIN)
-        notificationIntent.setClass(getApplicationContext()!!, MainWithFragmentsActivity::class.java)
+        notificationIntent.setClass(applicationContext!!, MainWithFragmentsActivity::class.java)
 
         val contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
@@ -79,7 +79,7 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
 
         notification!!.icon = android.R.drawable.star_big_on
 
-        val remote = RemoteViews(getApplicationContext()!!.getPackageName(), R.layout.notification_podcast_player).with {
+        val remote = RemoteViews(applicationContext!!.packageName, R.layout.notification_podcast_player).with {
             this.setImageViewResource(R.id.notification_podcast_player_status_icon, android.R.drawable.btn_star)
             this.setTextViewText(R.id.notification_podcast_player_status_text, getString(R.string.download_starts))
         }
@@ -98,7 +98,7 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
     private val notificationId = Random().nextLong().toInt()
     private var notification: Notification? = null
     private var notificationManager: NotificationManager? = null
-    public var podcastTitle: String? = null
+    var podcastTitle: String? = null
         get () = field
         private set (value: String?) {
             field = value
@@ -114,10 +114,10 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
     var audioManager: AudioManager? = null
 
     //http://developer.android.com/training/managing-audio/audio-focus.html
-    public override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         Log.d(TAG, "Starting Podcast Player Service")
-        podcastTitle = intent?.getStringExtra(Params.PODCAST_TITLE)
-        podcastPath = intent?.getStringExtra(Params.PODCAST_PATH)
+        podcastTitle = intent.getStringExtra(Params.PODCAST_TITLE)
+        podcastPath = intent.getStringExtra(Params.PODCAST_PATH)
         notification = prepareNotification()
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -131,12 +131,12 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
 
                 mediaPlayer = MediaPlayer.create(this, Uri.parse(podcastPath!!))
                 mediaPlayer?.setOnErrorListener(this)
-                mediaPlayer?.setLooping(false)
+                mediaPlayer?.isLooping = false
                 //mediaPlayer?.setVolume(100.0, 100.0)
                 mediaPlayer?.start()
 
                 mediaPlayer!!.setOnCompletionListener(object: MediaPlayer.OnCompletionListener {
-                    public override fun onCompletion(p0: MediaPlayer?) {
+                    override fun onCompletion(p0: MediaPlayer?) {
                         updateText("Podcast completed")
                     }
                 })
@@ -149,38 +149,36 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
             Log.d(TAG, "Exception in starting PodcastPlayerService ${e.message}")
         }
 
-        return super<Service>.onStartCommand(intent, flags, startId)
+        return super.onStartCommand(intent, flags, startId)
     }
 
-    private val progress: Runnable = object : Runnable {
-        public override fun run() {
-            try {
-                Log.d(TAG, "Music progress update trying to start with isPlaying ${isPlaying()}")
-                while (isPlaying()) {
-                    Thread.sleep(500)
+    private val progress: Runnable = Runnable {
+        try {
+            Log.d(TAG, "Music progress update trying to start with isPlaying ${isPlaying()}")
+            while (isPlaying()) {
+                Thread.sleep(500)
 
-                    if (progressHandler != null) {
-                        val msg = Message()
-                        val bundle = Bundle()
-                        bundle.putInt(PodcastPlayerService.CURRENT_POSITION, mediaPlayer!!.getCurrentPosition())
-                        bundle.putInt(PodcastPlayerService.TOTAL_DURATION, mediaPlayer!!.getDuration())
-                        msg.setData(bundle)
-                        progressHandler!!.sendMessage(msg)
-                    }
+                if (progressHandler != null) {
+                    val msg = Message()
+                    val bundle = Bundle()
+                    bundle.putInt(PodcastPlayerService.CURRENT_POSITION, mediaPlayer!!.currentPosition)
+                    bundle.putInt(PodcastPlayerService.TOTAL_DURATION, mediaPlayer!!.duration)
+                    msg.data = bundle
+                    progressHandler!!.sendMessage(msg)
                 }
-                Log.d(TAG, "Music progress update stops")
-            } catch(e: Exception) {
-                Log.d(TAG, "Exception in progress thread ${e.message}")
             }
+            Log.d(TAG, "Music progress update stops")
+        } catch(e: Exception) {
+            Log.d(TAG, "Exception in progress thread ${e.message}")
         }
     }
 
-    public var progressHandler: Handler? = null
+    var progressHandler: Handler? = null
     private var progressThread: Thread? = null
 
     private var isPausedDueToAudioFocusLoss = false
 
-    public override fun onAudioFocusChange(p0: Int) {
+    override fun onAudioFocusChange(p0: Int) {
         if (p0 == AUDIOFOCUS_LOSS_TRANSIENT) {
             if (isPlaying()) {
                 this.pauseMusic()
@@ -197,25 +195,25 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
         }
     }
 
-    public fun isPlaying(): Boolean {
+    fun isPlaying(): Boolean {
         if (mediaPlayer != null)
-            return mediaPlayer!!.isPlaying()
+            return mediaPlayer!!.isPlaying
         else
             return false
     }
 
-    public fun isPaused(): Boolean {
+    fun isPaused(): Boolean {
         if (mediaPlayer != null)
-            return !mediaPlayer!!.isPlaying() && mediaPlayer!!.getCurrentPosition() != 0
+            return !mediaPlayer!!.isPlaying && mediaPlayer!!.currentPosition != 0
         else
             return false
     }
 
-    public fun pauseMusic(): Unit {
+    fun pauseMusic(): Unit {
         try {
-            if (mediaPlayer!!.isPlaying()) {
+            if (mediaPlayer!!.isPlaying) {
                 mediaPlayer!!.pause()
-                lastPlayPosition = mediaPlayer!!.getCurrentPosition()
+                lastPlayPosition = mediaPlayer!!.currentPosition
                 updateText("$podcastTitle is paused")
                 Log.d(TAG, "$podcastTitle is paused")
                 stopProgressThread()
@@ -225,9 +223,9 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
         }
     }
 
-    public fun resumeMusic(): Unit {
+    fun resumeMusic(): Unit {
         try {
-            if (!mediaPlayer!!.isPlaying()) {
+            if (!mediaPlayer!!.isPlaying) {
                 mediaPlayer?.seekTo(lastPlayPosition)
                 mediaPlayer?.start()
                 updateText("Playing $podcastTitle")
@@ -257,7 +255,7 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
         }
     }
 
-    public fun stopMusic(): Unit {
+    fun stopMusic(): Unit {
         try {
             mediaPlayer?.stop()
             mediaPlayer?.release()
@@ -271,20 +269,20 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
         }
     }
 
-    public fun getCurrentPosition(): Int? {
-        return mediaPlayer?.getCurrentPosition()
+    fun getCurrentPosition(): Int? {
+        return mediaPlayer?.currentPosition
     }
 
-    public fun getPodcastLength(): Int? {
-        return mediaPlayer?.getDuration()
+    fun getPodcastLength(): Int? {
+        return mediaPlayer?.duration
     }
 
-    public fun seekToPosition(pos: Int) {
+    fun seekToPosition(pos: Int) {
         lastPlayPosition = pos
     }
 
-    public override fun onDestroy(): Unit {
-        super<Service>.onDestroy()
+    override fun onDestroy(): Unit {
+        super.onDestroy()
         if (mediaPlayer != null) {
             try {
                 mediaPlayer!!.stop()
@@ -295,7 +293,7 @@ public open class PodcastPlayerService() : Service(), MediaPlayer.OnErrorListene
         }
     }
 
-    public override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
+    override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
         Toast.makeText(this, "Music player failed", Toast.LENGTH_SHORT).show()
         if (mediaPlayer != null) {
             try {

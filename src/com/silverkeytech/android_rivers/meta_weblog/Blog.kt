@@ -5,12 +5,12 @@ import org.xmlrpc.android.XMLRPCClient
 
 //reference implementation
 //http://codex.wordpress.org/XML-RPC_MetaWeblog_API
-public class Blog(val blogId: Int?, val server: String, val username: String, val password: String){
+class Blog(val blogId: Int?, val server: String, val username: String, val password: String){
     companion object {
-        public val TAG: String = Blog::class.java.getSimpleName()
+        val TAG: String = Blog::class.java.simpleName
     }
 
-    public fun newPost(payload: PostPayload) {
+    fun newPost(payload: PostPayload) {
         val rpc = XMLRPCClient(server, "", "")
 
         val res = rpc.call("metaWeblog.newPost", "blogid", username, password, payload.toMap(), true)
@@ -18,23 +18,23 @@ public class Blog(val blogId: Int?, val server: String, val username: String, va
 
     }
 
-    public fun editPost(postId: Int) {
+    fun editPost(postId: Int) {
 
     }
 
-    public fun getPost(postId: Int) {
+    fun getPost(postId: Int) {
 
     }
 
-    public fun newMediaObject() {
+    fun newMediaObject() {
 
     }
 
-    public fun getCategories() {
+    fun getCategories() {
 
     }
 
-    public fun getRecentPosts() {
+    fun getRecentPosts() {
 
     }
 }

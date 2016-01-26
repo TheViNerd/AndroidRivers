@@ -22,21 +22,17 @@ import com.j256.ormlite.field.DataType
 import com.j256.ormlite.field.DatabaseField
 import com.j256.ormlite.table.DatabaseTable
 
-public val BOOKMARK_COLLECTION_ID: String = "id"
-public val BOOKMARK_COLLECTION_TITLE: String = "title"
-public val BOOKMARK_COLLECTION_KIND: String = "kind"
+val BOOKMARK_COLLECTION_ID: String = "id"
+val BOOKMARK_COLLECTION_TITLE: String = "title"
+val BOOKMARK_COLLECTION_KIND: String = "kind"
 
-@DatabaseTable(tableName = "bookmark_collection")
-public class BookmarkCollection(){
+@DatabaseTable(tableName = "bookmark_collection") class BookmarkCollection(){
 
-    @DatabaseField(generatedId = true, columnName = "id")
-    public var id: Int = 0
+    @DatabaseField(generatedId = true, columnName = "id") var id: Int = 0
 
-    @DatabaseField(canBeNull = false, columnName = "title", width = 255, dataType = DataType.STRING)
-    public var title: String = ""
+    @DatabaseField(canBeNull = false, columnName = "title", width = 255, dataType = DataType.STRING) var title: String = ""
 
-    @DatabaseField(canBeNull = false, columnName = "kind")
-    public var kind: String = ""
+    @DatabaseField(canBeNull = false, columnName = "kind") var kind: String = ""
 
     override fun toString(): String {
         return title

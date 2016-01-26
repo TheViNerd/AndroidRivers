@@ -46,10 +46,10 @@ import com.silverkeytech.android_rivers.extractIdFromLocalUrl
 import com.silverkeytech.news_engine.riverjs.getSortedNewsItems
 
 //Responsible of downloading, caching and viewing a news river content
-public class RiverActivity(): ListActivity(), WithVisualModificationPanel
+class RiverActivity(): ListActivity(), WithVisualModificationPanel
 {
     companion object {
-        public val TAG: String = RiverActivity::class.java.getSimpleName()
+        val TAG: String = RiverActivity::class.java.simpleName
     }
 
     var riverUrl: String = ""
@@ -65,24 +65,24 @@ public class RiverActivity(): ListActivity(), WithVisualModificationPanel
         isOnCreate = true
         setTheme(currentTheme!!)
 
-        super<ListActivity>.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.river)
 
-        val actionBar = getSupportActionBar()!!
+        val actionBar = supportActionBar!!
         actionBar.setDisplayShowHomeEnabled(false) //hide the app icon.
 
-        val i = getIntent()!!
+        val i = intent!!
         riverUrl = i.getStringExtra(Params.RIVER_URL)!!
         riverName = i.getStringExtra(Params.RIVER_NAME)!!
         riverLanguage = i.getStringExtra(Params.RIVER_LANGUAGE)!!
 
-        setTitle(riverName)
+        title = riverName
 
         downloadRiver(riverUrl, false)
     }
 
-    protected override fun onResume() {
-        super<ListActivity>.onResume()
+    override fun onResume() {
+        super.onResume()
         //skip if this event comes after onCreate
         if (!isOnCreate){
             Log.d(TAG, "RESUMING Current Theme $currentTheme vs ${this.getVisualPref().theme}")
@@ -105,9 +105,9 @@ public class RiverActivity(): ListActivity(), WithVisualModificationPanel
         var cache = getMain().getRiverCache(riverUrl)
 
         if (cache != null && !ignoreCache){
-            sortedNewsItems = cache!!
+            sortedNewsItems = cache
             Log.d(TAG, "Cache is hit for url $riverUrl")
-            RiverContentRenderer(this, riverLanguage).handleNewsListing(cache!!)
+            RiverContentRenderer(this, riverLanguage).handleNewsListing(cache)
         }
         else{
             if (isLocalUrl(riverUrl)){
@@ -147,7 +147,7 @@ public class RiverActivity(): ListActivity(), WithVisualModificationPanel
         }
     }
 
-    public override fun onBackPressed() {
+    override fun onBackPressed() {
         Log.d(TAG, "Exit River News Listing")
         finish()
     }
@@ -156,7 +156,7 @@ public class RiverActivity(): ListActivity(), WithVisualModificationPanel
     val RESIZE_TEXT: Int = 2
 
 
-    public override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
         menu?.add(0, RESIZE_TEXT, 0, "Resize Text")
         ?.setIcon(android.R.drawable.ic_menu_preferences)
@@ -166,25 +166,25 @@ public class RiverActivity(): ListActivity(), WithVisualModificationPanel
         ?.setIcon(R.drawable.ic_menu_refresh)
         ?.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
 
-        var inflater = getSupportMenuInflater()!!
+        var inflater = supportMenuInflater!!
         inflater.inflate(R.menu.river_menu, menu)
 
         return true
     }
 
-    public override fun refreshContent() {
+    override fun refreshContent() {
         downloadRiver(riverUrl, false)
     }
 
-    public override fun getActivity(): Activity {
+    override fun getActivity(): Activity {
         return this
     }
 
-    public override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val riverBookmarked = checkIfUrlAlreadyBookmarked(riverUrl)
 
         val bookmarkMenu = menu?.findItem(R.id.river_menu_bookmark)!!
-        bookmarkMenu.setVisible(!riverBookmarked)
+        bookmarkMenu.isVisible = !riverBookmarked
         return true
     }
 
@@ -214,8 +214,8 @@ public class RiverActivity(): ListActivity(), WithVisualModificationPanel
         }
     }
 
-    public override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item!!.getItemId()){
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item!!.itemId){
             R.id.river_menu_sources -> {
                 collectRiverSources()
                 return false
@@ -246,7 +246,7 @@ public class RiverActivity(): ListActivity(), WithVisualModificationPanel
                 }
             }
             else ->
-                return super<ListActivity>.onOptionsItemSelected(item)
+                return super.onOptionsItemSelected(item)
         }
     }
 }

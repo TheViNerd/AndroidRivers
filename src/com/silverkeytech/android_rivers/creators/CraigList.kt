@@ -1,9 +1,9 @@
 package com.silverkeytech.android_rivers.creators
 
-import java.io.InputStream
-import java.util.ArrayList
 import java.io.BufferedReader
+import java.io.InputStream
 import java.io.InputStreamReader
+import java.util.*
 
 /*
 Android Rivers is an app to read and discover news using RiverJs, RSS and OPML format.
@@ -22,27 +22,27 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-public data class CraigsListCity(
-        public val code: String,
-        public val areaId: String,
-        public val url: String,
-        public val location: String,
-        public val grouping: String
+data class CraigsListCity(
+        val code: String,
+        val areaId: String,
+        val url: String,
+        val location: String,
+        val grouping: String
 ){
     override fun toString(): String {
         return "$code,$areaId,$url,$location,$grouping"
     }
 }
 
-public abstract class LineParser<T>{
-    public fun parse(input: InputStream): ArrayList<T> {
+abstract class LineParser<T>{
+    fun parse(input: InputStream): ArrayList<T> {
         val r = BufferedReader(InputStreamReader(input))
         var x = r.readLine()
 
         val list = ArrayList<T>()
 
         while (x != null) {
-            val city = parseLine(x!!)
+            val city = parseLine(x)
             list.add(city)
             x = r.readLine()
         }
@@ -53,8 +53,8 @@ public abstract class LineParser<T>{
     protected abstract fun parseLine(text: String): T
 }
 
-public class CraigsListCityParser: LineParser<CraigsListCity>(){
-    protected override fun parseLine(text: String): CraigsListCity {
+class CraigsListCityParser: LineParser<CraigsListCity>(){
+    override fun parseLine(text: String): CraigsListCity {
         val sections = text.split(",")
         val code = sections[0].trim()
         val areaId = sections[1].trim()
@@ -71,18 +71,18 @@ public class CraigsListCityParser: LineParser<CraigsListCity>(){
     }
 }
 
-public data class CraigsListCategory(
-        public val code: String,
-        public val name: String
+data class CraigsListCategory(
+        val code: String,
+        val name: String
 ){
     override fun toString(): String {
         return "$code - $name"
     }
 }
 
-public class CraigsListCategoryParser: LineParser<CraigsListCategory>(){
+class CraigsListCategoryParser: LineParser<CraigsListCategory>(){
 
-    protected override fun parseLine(text: String): CraigsListCategory {
+    override fun parseLine(text: String): CraigsListCategory {
         val sections = text.split(",")
         val code = sections[0].trim()
         var name = ""

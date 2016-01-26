@@ -20,23 +20,18 @@ package com.silverkeytech.android_rivers.creators
 
 import android.os.Bundle
 import android.util.Log
-import com.silverkeytech.android_rivers.asyncs.DownloadFeedAsync
+import com.silverkeytech.android_rivers.*
 import com.silverkeytech.android_rivers.activities.Duration
 import com.silverkeytech.android_rivers.activities.FeedContentRenderer
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.getVisualPref
-import com.silverkeytech.android_rivers.setOnClickListener
 import com.silverkeytech.android_rivers.activities.toastee
+import com.silverkeytech.android_rivers.asyncs.DownloadFeedAsync
+import com.silverkeytech.android_rivers.db.checkIfUrlAlreadyBookmarked
 import org.holoeverywhere.app.Activity
 import org.holoeverywhere.widget.Button
-import com.silverkeytech.android_rivers.addBookmarkOption
-import com.silverkeytech.android_rivers.saveBookmark
-import com.silverkeytech.android_rivers.db.checkIfUrlAlreadyBookmarked
-import com.silverkeytech.android_rivers.getStoredPref
 
-public class KayakFlightDealsActivity (): Activity(){
+class KayakFlightDealsActivity (): Activity(){
     companion object {
-        public val TAG: String = KayakFlightDealsActivity::class.java.getSimpleName()
+        val TAG: String = KayakFlightDealsActivity::class.java.simpleName
     }
 
     var feedUrl: String = ""
@@ -46,13 +41,13 @@ public class KayakFlightDealsActivity (): Activity(){
 
     public override fun onCreate(savedInstanceState: Bundle?): Unit {
         setTheme(this.getVisualPref().theme)
-        super<Activity>.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.kayak_flight_deals)
 
-        var actionBar = getSupportActionBar()!!
+        var actionBar = supportActionBar!!
         actionBar.setDisplayShowHomeEnabled(false) //hide the app icon.
 
-        setTitle(this.getString(R.string.title_kayak_flight_deals))
+        title = this.getString(R.string.title_kayak_flight_deals)
 
         //handle UI
         val airportCodes = getAirportCodes(this)
@@ -66,18 +61,18 @@ public class KayakFlightDealsActivity (): Activity(){
             completion.setText(cityPref)
 
         val bookmark = findViewById(R.id.kayak_flight_deals_bookmark_btn)!! as Button
-        bookmark.setEnabled(false)
+        bookmark.isEnabled = false
         bookmark.setOnClickListener{
             addBookmarkOption(this, feedDateIsParseable) {
                 collection ->
                 saveBookmark(this, feedName, feedUrl, feedLanguage, collection)
-                bookmark.setEnabled(false)
+                bookmark.isEnabled = false
             }
         }
 
         val go = findViewById(R.id.kayak_flight_deals_go_btn)!! as Button
         go.setOnClickListener {
-            val input = completion.getText().toString()
+            val input = completion.text.toString()
 
             if (input.isNullOrEmpty()){
                 toastee("Please enter a city location")
@@ -107,9 +102,9 @@ public class KayakFlightDealsActivity (): Activity(){
                             this@KayakFlightDealsActivity.getStoredPref().kayakCity = input.trim()
 
                         if (feed.items.size > 0 && !checkIfUrlAlreadyBookmarked(feedUrl))
-                            bookmark.setEnabled(true)
+                            bookmark.isEnabled = true
                         else
-                            bookmark.setEnabled(false)
+                            bookmark.isEnabled = false
 
                         FeedContentRenderer(this, feedLanguage)
                                 .handleNewsListing(R.id.kayak_flight_deals_results_lv, feedName, feedUrl, feed.items)

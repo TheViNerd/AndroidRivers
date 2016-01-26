@@ -18,32 +18,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.android_rivers.creators
 
-import java.util.ArrayList
+import java.util.*
 
-public data class AirportCode (public var code: String, public var name: String)
+data class AirportCode (var code: String, var name: String)
 
-public class AirportCodeBuilder(){
+class AirportCodeBuilder(){
     val list: ArrayList<AirportCode> = ArrayList<AirportCode>()
 
     var item: AirportCode? = null
 
-    public fun build(): ArrayList<AirportCode> {
+    fun build(): ArrayList<AirportCode> {
         return list
     }
 
-    public fun setCode(code: String) {
+    fun setCode(code: String) {
         item!!.code = code
     }
 
-    public fun setName(airportName: String) {
+    fun setName(airportName: String) {
         item!!.name = airportName
     }
 
-    public fun startItem() {
+    fun startItem() {
         item = AirportCode("", "")
     }
 
-    public fun endItem() {
+    fun endItem() {
         list.add(item!!)
     }
 }

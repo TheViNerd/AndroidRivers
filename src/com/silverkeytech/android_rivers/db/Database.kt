@@ -25,18 +25,18 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper
 import com.j256.ormlite.dao.Dao
 import com.j256.ormlite.support.ConnectionSource
 
-public class Database (context: Context): OrmLiteSqliteOpenHelper(context, Database.DATABASE_NAME, null, Database.DATABASE_VERSION) {
+class Database (context: Context): OrmLiteSqliteOpenHelper(context, Database.DATABASE_NAME, null, Database.DATABASE_VERSION) {
     companion object {
-        val TAG: String = Database::class.java.getSimpleName()
-        public val DATABASE_VERSION: Int = 3
-        public val DATABASE_NAME: String = "AndroidRivers.sqlite"
+        val TAG: String = Database::class.java.simpleName
+        val DATABASE_VERSION: Int = 3
+        val DATABASE_NAME: String = "AndroidRivers.sqlite"
     }
 
-    public override fun onCreate(p0: SQLiteDatabase?, p1: ConnectionSource?) {
+    override fun onCreate(p0: SQLiteDatabase?, p1: ConnectionSource?) {
         SchemaCreation(p0!!).create(3)
     }
 
-    public override fun onUpgrade(p0: SQLiteDatabase?, p1: ConnectionSource?, p2: Int, p3: Int) {
+    override fun onUpgrade(p0: SQLiteDatabase?, p1: ConnectionSource?, p2: Int, p3: Int) {
         val oldVersion = p2
         val newVersion = p3
 
@@ -57,7 +57,7 @@ public class Database (context: Context): OrmLiteSqliteOpenHelper(context, Datab
 
     fun getBookmarkDao(): Any {
         if (bookmarkDao == null){
-            bookmarkDao = super<OrmLiteSqliteOpenHelper>.getDao(Bookmark::class.java)
+            bookmarkDao = super.getDao(Bookmark::class.java)
         }
         return bookmarkDao!!
     }
@@ -66,15 +66,15 @@ public class Database (context: Context): OrmLiteSqliteOpenHelper(context, Datab
 
     fun getBookmarkCollectionDao(): Any {
         if (bookmarkCollectionDao == null){
-            bookmarkCollectionDao = super<OrmLiteSqliteOpenHelper>.getDao(BookmarkCollection::class.java)
+            bookmarkCollectionDao = super.getDao(BookmarkCollection::class.java)
         }
         return bookmarkCollectionDao!!
     }
 
     var podcastDao: Dao<Podcast, out Int?>? = null
-    public fun getPodcastDao(): Any {
+    fun getPodcastDao(): Any {
         if (podcastDao == null){
-            podcastDao = super<OrmLiteSqliteOpenHelper>.getDao(Podcast::class.java)
+            podcastDao = super.getDao(Podcast::class.java)
         }
         return podcastDao!!
     }

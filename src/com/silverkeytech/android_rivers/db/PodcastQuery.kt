@@ -20,7 +20,7 @@ package com.silverkeytech.android_rivers.db
 
 import com.j256.ormlite.dao.Dao
 
-public class PodcastQuery(private val dao: Dao<Podcast, out Int?>){
+class PodcastQuery(private val dao: Dao<Podcast, out Int?>){
     fun all(sortByDateCreated: SortingOrder): QueryMany<Podcast> {
         try{
             var q = dao.queryBuilder()!!

@@ -18,22 +18,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.android_rivers
 
+import android.app.Activity
+import android.app.Dialog
+import android.content.Context
 import android.net.ConnectivityManager
+import android.os.Build
+import android.support.v4.app.Fragment
+import android.text.ClipboardManager
 import android.view.View
 import android.view.View.OnClickListener
+import android.webkit.URLUtil
 import com.actionbarsherlock.view.MenuItem
 import com.github.kevinsawicki.http.HttpRequest
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import android.os.Build
-import android.content.Context
-import android.text.ClipboardManager
-import android.support.v4.app.Fragment
-import android.app.Activity
-import android.webkit.URLUtil
-import android.app.Dialog
 import de.greenrobot.event.EventBus
+import java.text.SimpleDateFormat
+import java.util.*
 
 object Bus {
     fun register(obj : Any){
@@ -58,14 +57,14 @@ fun isLanguageRTL(language: String): Boolean {
 }
 
 fun Fragment.tryGetUriFromClipboard(): Pair<Boolean, String?> {
-    val res = this.getActivity()!!.tryGetUriFromClipboard()
+    val res = this.activity!!.tryGetUriFromClipboard()
     return res
 }
 
 fun Activity.tryGetUriFromClipboard(): Pair<Boolean, String?> {
     val clipboard = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     if (clipboard.hasText()){
-        val text = clipboard.getText().toString()
+        val text = clipboard.text.toString()
         if (URLUtil.isValidUrl(text))
             return Pair(true, text.toString())
     }
@@ -73,24 +72,24 @@ fun Activity.tryGetUriFromClipboard(): Pair<Boolean, String?> {
 }
 
 
-public fun MenuItem?.andHide(): MenuItem {
-    this!!.setVisible(false)
+fun MenuItem?.andHide(): MenuItem {
+    this!!.isVisible = false
     return this
 }
 
-public fun onClickListener(action: (View) -> Unit): OnClickListener {
+fun onClickListener(action: (View) -> Unit): OnClickListener {
     return object : OnClickListener {
-        public override fun onClick(p0: View) {
+        override fun onClick(p0: View) {
             action(p0)
         }
     }
 }
 
-public fun View.setOnClickListener(action: (View?) -> Unit): Unit {
+fun View.setOnClickListener(action: (View?) -> Unit): Unit {
     setOnClickListener(onClickListener(action))
 }
 
-public fun parseRFC3339DateFormat(dt: String): java.util.Date? {
+fun parseRFC3339DateFormat(dt: String): java.util.Date? {
     try {
         val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
         val dts = dt.replace("([\\+\\-]\\d\\d):(\\d\\d)".toRegex(), "$1$2")
@@ -125,20 +124,20 @@ fun inMegaByte(mb: Int): Int = mb * 1024 * 1024
 
 fun Int.toHoursInMinutes() = this * 60
 
-public fun hoursBeforeNow(hours: Int): Date {
+fun hoursBeforeNow(hours: Int): Date {
     val now = Calendar.getInstance()
     now.add(Calendar.HOUR, -hours)
-    return now.getTime()
+    return now.time
 }
 
-public fun daysBeforeNow(days: Int): Date {
+fun daysBeforeNow(days: Int): Date {
     val hours = days * 24
     val now = Calendar.getInstance()
     now.add(Calendar.HOUR, -hours)
-    return now.getTime()
+    return now.time
 }
 
-public fun <T>T.with(operations: T.() -> Unit): T {
+fun <T>T.with(operations: T.() -> Unit): T {
     this.operations()
     return this
 }
@@ -158,7 +157,7 @@ fun httpGet(url: String): HttpRequest {
 
 fun isNetworkAvailable(context: Context): Boolean {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val activeNetworkInfo = connectivityManager.getActiveNetworkInfo()
+    val activeNetworkInfo = connectivityManager.activeNetworkInfo
     return activeNetworkInfo != null
 }
 

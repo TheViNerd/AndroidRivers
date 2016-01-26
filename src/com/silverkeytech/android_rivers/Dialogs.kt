@@ -19,55 +19,54 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 package com.silverkeytech.android_rivers
 
 import android.content.DialogInterface
+import android.text.Editable
+import android.text.InputType
+import android.text.TextWatcher
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.EditText
+import android.widget.LinearLayout
+import com.silverkeytech.android_rivers.activities.getStandardDialogBackgroundColor
 import org.holoeverywhere.app.Activity
 import org.holoeverywhere.app.AlertDialog
 import org.holoeverywhere.app.Dialog
 import org.holoeverywhere.widget.Button
-import android.view.Window
-import android.widget.LinearLayout
-import android.view.ViewGroup
-import android.widget.LinearLayout.LayoutParams
-import android.util.TypedValue
-import java.util.ArrayList
-import android.text.TextWatcher
-import android.text.Editable
-import android.text.InputType
-import android.view.Gravity
-import com.silverkeytech.android_rivers.activities.getStandardDialogBackgroundColor
+import java.util.*
 
-public val PASSWORD_INPUT: Int = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-public val NORMAL_INPUT: Int = InputType.TYPE_TEXT_VARIATION_NORMAL
-public val MULTI_LINE_INPUT: Int = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE
+val PASSWORD_INPUT: Int = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+val NORMAL_INPUT: Int = InputType.TYPE_TEXT_VARIATION_NORMAL
+val MULTI_LINE_INPUT: Int = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE
 
-public fun textValidator(action: (String?) -> Unit): TextWatcher {
+fun textValidator(action: (String?) -> Unit): TextWatcher {
     return object :  TextWatcher {
-        public override fun afterTextChanged(p0: Editable?) {
+        override fun afterTextChanged(p0: Editable?) {
             action(p0.toString())
         }
 
-        public override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         }
 
-        public override fun onTextChanged(p0: CharSequence, p1: Int, p2: Int, p3: Int) {
+        override fun onTextChanged(p0: CharSequence, p1: Int, p2: Int, p3: Int) {
         }
     }
 }
 
-public fun dlgClickListener(action: (dlg: DialogInterface?, idx: Int) -> Unit): DialogInterface.OnClickListener {
+fun dlgClickListener(action: (dlg: DialogInterface?, idx: Int) -> Unit): DialogInterface.OnClickListener {
     return object: DialogInterface.OnClickListener {
-        public override fun onClick(p0: DialogInterface, p1: Int) {
+        override fun onClick(p0: DialogInterface, p1: Int) {
             action(p0, p1)
         }
     }
 }
 
-public data class DialogBtn(public val text: String, public val action: (Dialog) -> Unit)
+data class DialogBtn(val text: String, val action: (Dialog) -> Unit)
 
-public fun createFlexibleContentDialog(context: Activity, content: View, dismissOnTouch : Boolean, buttons: Array<DialogBtn>): Dialog {
+fun createFlexibleContentDialog(context: Activity, content: View, dismissOnTouch : Boolean, buttons: Array<DialogBtn>): Dialog {
 
-    val dlg: View = context.getLayoutInflater().inflate(R.layout.dialog_flex_content, null)!!
+    val dlg: View = context.layoutInflater.inflate(R.layout.dialog_flex_content, null)!!
     val contentParam = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f)
 
     val dialog = Dialog(context)
@@ -87,7 +86,7 @@ public fun createFlexibleContentDialog(context: Activity, content: View, dismiss
     val buttonLayout = dlg.findView<LinearLayout>(R.id.dialog_flex_content_buttons)
     for(e:DialogBtn in buttons.iterator()){
         val b = Button(context)
-        b.setText(e.text)
+        b.text = e.text
         b.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
         b.setOnClickListener {
             e.action(dialog)
@@ -102,12 +101,12 @@ public fun createFlexibleContentDialog(context: Activity, content: View, dismiss
 
 
 //This is a holder for AlertDialog with support for a neutral button that does not dismiss automatically
-public class AlertDialogWithNeutralButton (val dlg: AlertDialog, val btnTitle: String, val resetAction: (() -> Unit)) {
-    public fun show() {
+class AlertDialogWithNeutralButton (val dlg: AlertDialog, val btnTitle: String, val resetAction: (() -> Unit)) {
+    fun show() {
         dlg.show()
 
         val neutral = dlg.getButton(DialogInterface.BUTTON_NEUTRAL)!!
-        neutral.setText(btnTitle)
+        neutral.text = btnTitle
         neutral.setOnClickListener(onClickListener {
             resetAction()
         })
@@ -115,18 +114,18 @@ public class AlertDialogWithNeutralButton (val dlg: AlertDialog, val btnTitle: S
 }
 
 //Create a popup dialog with one text for url submission. Then provide the given url via a callback called 'action'
-public fun createSingleInputDialog(context: Activity, title: String, defaultInput: String?, inputHint: String, action: (DialogInterface?, String?) -> Unit): AlertDialogWithNeutralButton {
-    val dlg: View = context.getLayoutInflater().inflate(R.layout.dialog_single_input, null)!!
+fun createSingleInputDialog(context: Activity, title: String, defaultInput: String?, inputHint: String, action: (DialogInterface?, String?) -> Unit): AlertDialogWithNeutralButton {
+    val dlg: View = context.layoutInflater.inflate(R.layout.dialog_single_input, null)!!
 
     //take care of color
-    dlg.setDrawingCacheBackgroundColor(context.getStandardDialogBackgroundColor())
+    dlg.drawingCacheBackgroundColor = context.getStandardDialogBackgroundColor()
 
     val dialog = AlertDialog.Builder(context)
     dialog.setView(dlg)
     dialog.setTitle(title)
 
     var inputUrl = dlg.findView<EditText>(R.id.dialog_input)
-    inputUrl.setHint(inputHint)
+    inputUrl.hint = inputHint
 
     var default = defaultInput
     if (default == null)
@@ -136,7 +135,7 @@ public fun createSingleInputDialog(context: Activity, title: String, defaultInpu
 
     dialog.setPositiveButton(context.getString(R.string.ok), dlgClickListener {
         dlg, idx ->
-        action(dlg, inputUrl.getText()?.toString())
+        action(dlg, inputUrl.text?.toString())
     })
 
     dialog.setNegativeButton(context.getString(R.string.cancel), dlgClickListener {
@@ -156,8 +155,8 @@ public fun createSingleInputDialog(context: Activity, title: String, defaultInpu
     return createdDialog
 }
 
-public fun createFlexibleInputDialog(context: Activity, title: String, inputs: Array<DialogInput>, action: (DialogInterface?, Array<DialogInput>) -> Unit): AlertDialog {
-    val dlg: View = context.getLayoutInflater().inflate(R.layout.dialog_flex_input, null)!!
+fun createFlexibleInputDialog(context: Activity, title: String, inputs: Array<DialogInput>, action: (DialogInterface?, Array<DialogInput>) -> Unit): AlertDialog {
+    val dlg: View = context.layoutInflater.inflate(R.layout.dialog_flex_input, null)!!
 
     val dialog = AlertDialog.Builder(context)
     dialog.setView(dlg)
@@ -170,8 +169,8 @@ public fun createFlexibleInputDialog(context: Activity, title: String, inputs: A
 
     for(i in inputs){
         val t = EditText(context)
-        t.setInputType(i.inputType)
-        t.setHint(i.hint)
+        t.inputType = i.inputType
+        t.hint = i.hint
         if (!i.defaultInput.isNullOrBlank())
             t.setText(i.defaultInput)
 
@@ -179,10 +178,10 @@ public fun createFlexibleInputDialog(context: Activity, title: String, inputs: A
             t.addTextChangedListener(i.validator)
 
         if (i.inputType == MULTI_LINE_INPUT){
-            t.setMinLines(8)
-            t.setMaxLines(10)
+            t.minLines = 8
+            t.maxLines = 10
             t.setSingleLine(false)
-            t.setGravity(Gravity.TOP or Gravity.LEFT)
+            t.gravity = Gravity.TOP or Gravity.LEFT
         }
 
         edits.add(t)
@@ -197,7 +196,7 @@ public fun createFlexibleInputDialog(context: Activity, title: String, inputs: A
         var i = 0
         for (inp in inputs){
             val t = edits.get(i)
-            inp.value = t.getText().toString()
+            inp.value = t.text.toString()
             i++
         }
 
@@ -212,14 +211,14 @@ public fun createFlexibleInputDialog(context: Activity, title: String, inputs: A
     return dialog.create()!!
 }
 
-public data class DialogInput(val inputType: Int, val hint: String, val defaultInput: String?, val validator: TextWatcher?){
-    public var value: String? = null
+data class DialogInput(val inputType: Int, val hint: String, val defaultInput: String?, val validator: TextWatcher?){
+    var value: String? = null
 }
 
 
 //Create a simple confirmation dialog for dangerous operation such as removal/delete operation. It handles both positive and negative choice.
 //The dialog box is automatically closed in either situation
-public fun createConfirmationDialog(context: Activity, message: String, positive: () -> Unit, negative: () -> Unit): AlertDialog {
+fun createConfirmationDialog(context: Activity, message: String, positive: () -> Unit, negative: () -> Unit): AlertDialog {
     val dialog = AlertDialog.Builder(context)
     dialog.setTitle(context.getString(R.string.confirmation_dialog_title))
     dialog.setMessage(message)

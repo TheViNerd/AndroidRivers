@@ -38,16 +38,16 @@ import com.silverkeytech.news_engine.outlines.Outline
 import com.silverkeytech.news_engine.transformXmlToOpml
 import java.util.*
 
-public class ImportOpmlSubscriptionListService: IntentService("ImportOpmlSubscriptionListService"){
+class ImportOpmlSubscriptionListService: IntentService("ImportOpmlSubscriptionListService"){
     companion object{
-        public val TAG: String = ImportOpmlSubscriptionListService::class.java.getSimpleName()
+        val TAG: String = ImportOpmlSubscriptionListService::class.java.simpleName
     }
 
     var targetUrl: String ? = null
 
     fun prepareNotification(): Notification {
         val notificationIntent = Intent(Intent.ACTION_MAIN)
-        notificationIntent.setClass(getApplicationContext()!!, MainWithFragmentsActivity::class.java)
+        notificationIntent.setClass(applicationContext!!, MainWithFragmentsActivity::class.java)
 
         val contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
@@ -59,7 +59,7 @@ public class ImportOpmlSubscriptionListService: IntentService("ImportOpmlSubscri
 
         notification!!.icon = android.R.drawable.stat_sys_download
 
-        val remote = RemoteViews(getApplicationContext()!!.getPackageName(), R.layout.notification_download_progress).with {
+        val remote = RemoteViews(applicationContext!!.packageName, R.layout.notification_download_progress).with {
             this.setImageViewResource(R.id.notification_download_progress_status_icon, android.R.drawable.stat_sys_download_done)
             this.setProgressBar(R.id.notification_download_progress_status_progress, 100, 0, false)
             this.setTextViewText(R.id.notification_download_progress_status_text, getString(R.string.download_starts))
@@ -76,7 +76,7 @@ public class ImportOpmlSubscriptionListService: IntentService("ImportOpmlSubscri
         return notification
     }
 
-    protected override fun onHandleIntent(p0: Intent?) {
+    override fun onHandleIntent(p0: Intent?) {
         targetUrl = p0?.getStringExtra(Params.OPML_SUBSCRIPTION_LIST_URI)
 
         val notificationId = Random().nextLong().toInt()
@@ -157,7 +157,7 @@ public class ImportOpmlSubscriptionListService: IntentService("ImportOpmlSubscri
                     val res = downloadSingleFeed(url)
                     if (res.isTrue()){
                         val title = res.value!!.title
-                        val language = if (res.value!!.language.isNullOrBlank()) "en" else res.value!!.language
+                        val language = if (res.value.language.isNullOrBlank()) "en" else res.value.language
 
                         saveBookmarkToDb(title, url, BookmarkKind.RSS, language, null)
                     }

@@ -20,7 +20,7 @@ package com.silverkeytech.android_rivers.db
 
 import com.j256.ormlite.dao.Dao
 
-public class BookmarkQuery(private val dao: Dao<Bookmark, out Int?>){
+class BookmarkQuery(private val dao: Dao<Bookmark, out Int?>){
     fun byKind(kind: BookmarkKind, sortByTitleOrder: SortingOrder): QueryMany<Bookmark> {
         try{
             var q = dao.queryBuilder()!!

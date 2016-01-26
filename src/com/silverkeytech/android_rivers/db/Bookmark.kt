@@ -22,33 +22,26 @@ import com.j256.ormlite.field.DataType
 import com.j256.ormlite.field.DatabaseField
 import com.j256.ormlite.table.DatabaseTable
 
-public val BOOKMARK_ID: String = "id"
-public val BOOKMARK_TITLE: String = "title"
-public val BOOKMARK_URL: String = "url"
-public val BOOKMARK_LANGUAGE: String = "language"
-public val BOOKMARK_KIND: String = "kind"
-public val BOOKMARK_COLLECTION: String = "bookmark_collection_id"
+val BOOKMARK_ID: String = "id"
+val BOOKMARK_TITLE: String = "title"
+val BOOKMARK_URL: String = "url"
+val BOOKMARK_LANGUAGE: String = "language"
+val BOOKMARK_KIND: String = "kind"
+val BOOKMARK_COLLECTION: String = "bookmark_collection_id"
 
-@DatabaseTable
-public class Bookmark(){
+@DatabaseTable class Bookmark(){
 
-    @DatabaseField(generatedId = true, columnName = "id")
-    public var id: Int = 0
+    @DatabaseField(generatedId = true, columnName = "id") var id: Int = 0
 
-    @DatabaseField(canBeNull = false, columnName = "title", width = 255, dataType = DataType.STRING)
-    public var title: String = ""
+    @DatabaseField(canBeNull = false, columnName = "title", width = 255, dataType = DataType.STRING) var title: String = ""
 
-    @DatabaseField(canBeNull = false, uniqueIndex = true, columnName = "url", width = 550, dataType = DataType.LONG_STRING)
-    public var url: String = ""
+    @DatabaseField(canBeNull = false, uniqueIndex = true, columnName = "url", width = 550, dataType = DataType.LONG_STRING) var url: String = ""
 
-    @DatabaseField(canBeNull = false, columnName = "language", width = 8, dataType = DataType.STRING)
-    public var language: String = "en"
+    @DatabaseField(canBeNull = false, columnName = "language", width = 8, dataType = DataType.STRING) var language: String = "en"
 
-    @DatabaseField(canBeNull = false, columnName = "kind")
-    public var kind: String = ""
+    @DatabaseField(canBeNull = false, columnName = "kind") var kind: String = ""
 
-    @DatabaseField(canBeNull = true, foreign = true, columnName = "bookmark_collection_id")
-    public var collection: BookmarkCollection? = null
+    @DatabaseField(canBeNull = true, foreign = true, columnName = "bookmark_collection_id") var collection: BookmarkCollection? = null
 
     override fun toString(): String {
         return title

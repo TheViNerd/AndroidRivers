@@ -20,24 +20,24 @@ package com.silverkeytech.android_rivers.creators
 
 import android.content.Context
 import com.silverkeytech.android_rivers.xml.AirportCodeParser
-import java.util.ArrayList
+import java.util.*
 
-public fun getCraigsListCities(context: Context): ArrayList<CraigsListCity> {
-    val csv = context.getAssets()!!.open("craigslist_cities")
+fun getCraigsListCities(context: Context): ArrayList<CraigsListCity> {
+    val csv = context.assets!!.open("craigslist_cities")
     val cities = CraigsListCityParser().parse(csv)
     csv.close()
     return cities
 }
 
-public fun getCraigsListCategories(context: Context): ArrayList<CraigsListCategory> {
-    val csv = context.getAssets()!!.open("craigslist_categories")
+fun getCraigsListCategories(context: Context): ArrayList<CraigsListCategory> {
+    val csv = context.assets!!.open("craigslist_categories")
     val categories = CraigsListCategoryParser().parse(csv)
     csv.close()
     return categories
 }
 
-public fun getAirportCodes(context: Context): ArrayList<AirportCode> {
-    val xml = context.getAssets()!!.open("airports.xml")
+fun getAirportCodes(context: Context): ArrayList<AirportCode> {
+    val xml = context.assets!!.open("airports.xml")
     val builder = AirportCodeBuilder()
     AirportCodeParser().parse(xml, builder)
     xml.close()
@@ -46,7 +46,7 @@ public fun getAirportCodes(context: Context): ArrayList<AirportCode> {
 }
 
 fun getStringFromAsset(context: Context, path: String): String {
-    val xmlFile = context.getAssets()!!.open(path)
+    val xmlFile = context.assets!!.open(path)
     val buffer = ByteArray(xmlFile.available())
     xmlFile.read(buffer)
     xmlFile.close()

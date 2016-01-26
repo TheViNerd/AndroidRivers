@@ -27,32 +27,26 @@ import android.util.Log
 import android.widget.ImageView
 import com.github.kevinsawicki.http.HttpRequest
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException
-import java.io.File
+import com.silverkeytech.android_rivers.*
+import com.silverkeytech.android_rivers.activities.ConnectivityErrorMessage
+import com.silverkeytech.android_rivers.activities.Duration
+import com.silverkeytech.android_rivers.activities.handleConnectivityError
+import com.silverkeytech.android_rivers.activities.toastee
 import org.holoeverywhere.app.Activity
 import org.holoeverywhere.app.AlertDialog
-import com.silverkeytech.android_rivers.activities.Duration
-import com.silverkeytech.android_rivers.activities.toastee
-import com.silverkeytech.android_rivers.activities.ConnectivityErrorMessage
-import com.silverkeytech.android_rivers.activities.handleConnectivityError
-import com.silverkeytech.android_rivers.Result
-import com.silverkeytech.android_rivers.InfinityProgressDialog
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.generateThrowawayName
-import com.silverkeytech.android_rivers.imageMimeTypeToFileExtension
-import com.silverkeytech.android_rivers.findView
+import java.io.File
 
-public data class DownloadedFile(val contentType: String, val filePath: String)
+data class DownloadedFile(val contentType: String, val filePath: String)
 
-@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-public class DownloadImageAsync(it: Context?): AsyncTask<String, Int, Result<DownloadedFile>>(){
+@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") class DownloadImageAsync(it: Context?): AsyncTask<String, Int, Result<DownloadedFile>>(){
     companion object {
-        public val TAG: String = DownloadImageAsync::class.java.getSimpleName()
+        val TAG: String = DownloadImageAsync::class.java.simpleName
     }
 
     var context: Activity = it!! as Activity
     var dialog: InfinityProgressDialog = InfinityProgressDialog(context, context.getString(R.string.please_wait_while_loading))
 
-    protected override fun onPreExecute() {
+    override fun onPreExecute() {
         dialog.onCancel {
             dlg ->
             dlg.dismiss()
@@ -61,11 +55,11 @@ public class DownloadImageAsync(it: Context?): AsyncTask<String, Int, Result<Dow
         dialog.show()
     }
 
-    protected override fun doInBackground(p0: Array<String?>): Result<DownloadedFile>? {
+    override fun doInBackground(p0: Array<String?>): Result<DownloadedFile>? {
         try{
             val req = HttpRequest.get(p0[0])
             val mimeType = req?.contentType()
-            val dir = context.getCacheDir()!!.getPath()
+            val dir = context.cacheDir!!.path
             val fileName = dir + "/" + generateThrowawayName() + imageMimeTypeToFileExtension(mimeType!!)
 
             Log.d(TAG, "File to be saved at ${fileName}")
@@ -79,14 +73,14 @@ public class DownloadImageAsync(it: Context?): AsyncTask<String, Int, Result<Dow
         }
     }
 
-    protected override fun onPostExecute(result: Result<DownloadedFile>) {
-        super<AsyncTask>.onPostExecute(result)
+    override fun onPostExecute(result: Result<DownloadedFile>) {
+        super.onPostExecute(result)
 
         dialog.dismiss()
 
         if (result.isTrue()){
             var dialog = AlertDialog.Builder(context)
-            var vw = context.getLayoutInflater().inflate(R.layout.image_view, null)!!
+            var vw = context.layoutInflater.inflate(R.layout.image_view, null)!!
 
             var img: File = File(result.value!!.filePath)
 
@@ -99,7 +93,7 @@ public class DownloadImageAsync(it: Context?): AsyncTask<String, Int, Result<Dow
 
             var bmp: Bitmap?
             try{
-                bmp = BitmapFactory.decodeFile(img.getAbsolutePath())
+                bmp = BitmapFactory.decodeFile(img.absolutePath)
                 image.setImageBitmap(bmp)
             }
             catch(e: Exception){
@@ -109,7 +103,7 @@ public class DownloadImageAsync(it: Context?): AsyncTask<String, Int, Result<Dow
 
             dialog.setView(vw)
             dialog.setNeutralButton(android.R.string.ok, object : DialogInterface.OnClickListener{
-                public override fun onClick(p0: DialogInterface, p1: Int) {
+                override fun onClick(p0: DialogInterface, p1: Int) {
                     if (bmp != null)  //toss the bitmap once it's not needed
                         bmp!!.recycle()
 

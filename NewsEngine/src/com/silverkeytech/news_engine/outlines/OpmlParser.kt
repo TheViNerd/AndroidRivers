@@ -18,20 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.news_engine.outlines
 
-import com.thebuzzmedia.sjxp.XMLParser
-import java.io.InputStream
-import com.silverkeytech.news_engine.xml.textRule
-import com.thebuzzmedia.sjxp.rule.DefaultRule
+import com.silverkeytech.news_engine.log
 import com.silverkeytech.news_engine.xml.attributeRule
 import com.silverkeytech.news_engine.xml.tagRule
-import com.silverkeytech.news_engine.log
+import com.silverkeytech.news_engine.xml.textRule
+import com.thebuzzmedia.sjxp.XMLParser
+import com.thebuzzmedia.sjxp.rule.DefaultRule
+import java.io.InputStream
 
-public class OpmlParser {
+class OpmlParser {
     companion object {
-        public val TAG: String = OpmlParser::class.java.simpleName
+        val TAG: String = OpmlParser::class.java.simpleName
     }
 
-    public fun parse(input: InputStream, rss: OpmlBuilder) {
+    fun parse(input: InputStream, rss: OpmlBuilder) {
         var items = arrayListOf(headTitle, headDateCreated, headDateModified, headOwnerName, headOwnerEmail)
         for (i in 0..15) {
             items.add(outlineTag(i))

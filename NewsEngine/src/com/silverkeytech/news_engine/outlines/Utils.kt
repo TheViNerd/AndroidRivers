@@ -18,10 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.news_engine.outlines
 
+import java.util.*
+
 
 fun sortOutlineDesc(outlines: List<Outline>): List<Outline> {
     var sortedOutlines = outlines.sortedWith(
-            comparator { p1: Outline, p2: Outline ->
+            Comparator { p1: Outline, p2: Outline ->
                 val text1 = p1.text
                 val text2 = p2.text
 
@@ -42,7 +44,7 @@ fun sortOutlineDesc(outlines: List<Outline>): List<Outline> {
 
 fun sortOutlineAsc(outlines: List<Outline>): List<Outline> {
     var sortedOutlines = outlines.sortedWith(
-            comparator { p1: Outline, p2: Outline ->
+            Comparator { p1: Outline, p2: Outline ->
                 val text1 = p1.text
                 val text2 = p2.text
 

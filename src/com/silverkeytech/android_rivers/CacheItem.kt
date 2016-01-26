@@ -18,17 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.android_rivers
 
-public data class CacheItem<T: Any>(val item: T){
-    public var expireIn: Long = futureTimeFromNowInMilies(60 * 10)
+data class CacheItem<T: Any>(val item: T){
+    var expireIn: Long = futureTimeFromNowInMilies(60 * 10)
 
-    public fun setExpireInSecondsFromNow(seconds: Int) {
+    fun setExpireInSecondsFromNow(seconds: Int) {
         expireIn = futureTimeFromNowInMilies(seconds)
     }
 
-    public fun setExpireInMinutesFromNow(minutes: Int) {
+    fun setExpireInMinutesFromNow(minutes: Int) {
         setExpireInSecondsFromNow(minutes * 60)
     }
 
-    public val isExpired: Boolean
+    val isExpired: Boolean
         get() = System.currentTimeMillis() > expireIn
 }

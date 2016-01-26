@@ -21,10 +21,10 @@ package com.silverkeytech.android_rivers
 import com.github.kevinsawicki.http.HttpRequest
 import com.google.gson.Gson
 
-public fun googleShorten(url: String): Result<String>
+fun googleShorten(url: String): Result<String>
 {
-    class shortenData (public val longUrl: String)
-    class shortenDataReply(public val kind: String, public val id: String, longUrl: String)
+    class shortenData (val longUrl: String)
+    class shortenDataReply(val kind: String, val id: String, longUrl: String)
 
     try
     {

@@ -21,31 +21,24 @@ package com.silverkeytech.android_rivers.asyncs
 import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
+import com.silverkeytech.android_rivers.*
+import com.silverkeytech.android_rivers.activities.ConnectivityErrorMessage
+import com.silverkeytech.android_rivers.activities.getMain
+import com.silverkeytech.android_rivers.activities.handleConnectivityError
 import com.silverkeytech.news_engine.syndications.SyndicationFeed
 import com.silverkeytech.news_engine.syndications.SyndicationFilter
-import com.silverkeytech.android_rivers.downloadSingleFeed
 import org.holoeverywhere.app.Activity
-import com.silverkeytech.android_rivers.activities.getMain
-import com.silverkeytech.android_rivers.activities.toastee
-import com.silverkeytech.android_rivers.activities.Duration
-import com.silverkeytech.android_rivers.activities.ConnectivityErrorMessage
-import com.silverkeytech.android_rivers.activities.handleConnectivityError
-import com.silverkeytech.android_rivers.Result
-import com.silverkeytech.android_rivers.InfinityProgressDialog
-import com.silverkeytech.android_rivers.daysBeforeNow
-import com.silverkeytech.android_rivers.PreferenceDefaults
 
-@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-public class DownloadFeedAsync(it: Context?, ignoreCache: Boolean): AsyncTask<String, Int, Result<SyndicationFeed>>(){
+@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") class DownloadFeedAsync(it: Context?, ignoreCache: Boolean): AsyncTask<String, Int, Result<SyndicationFeed>>(){
     companion object {
-        public val TAG: String = DownloadFeedAsync::class.java.getSimpleName()
+        val TAG: String = DownloadFeedAsync::class.java.simpleName
     }
 
     var context: Activity = it!! as Activity
     var dialog: InfinityProgressDialog = InfinityProgressDialog(context, "Downloading RSS feed")
     val ignoreCache: Boolean = ignoreCache
 
-    protected override fun onPreExecute() {
+    override fun onPreExecute() {
         dialog.onCancel {
             dlg ->
             dlg.dismiss()
@@ -55,7 +48,7 @@ public class DownloadFeedAsync(it: Context?, ignoreCache: Boolean): AsyncTask<St
         dialog.show()
     }
 
-    protected override fun doInBackground(p0: Array<String?>): Result<SyndicationFeed>? {
+    override fun doInBackground(p0: Array<String?>): Result<SyndicationFeed>? {
         try{
             val url = p0[0]!!
             Log.d(TAG, "Downloading url $url")
@@ -83,12 +76,12 @@ public class DownloadFeedAsync(it: Context?, ignoreCache: Boolean): AsyncTask<St
 
     var rawCallback: ((Result<SyndicationFeed>) -> Unit)? = null
 
-    public fun executeOnComplete(callback: (Result<SyndicationFeed>) -> Unit): DownloadFeedAsync {
+    fun executeOnComplete(callback: (Result<SyndicationFeed>) -> Unit): DownloadFeedAsync {
         rawCallback = callback
         return this
     }
 
-    protected override fun onPostExecute(result: Result<SyndicationFeed>) {
+    override fun onPostExecute(result: Result<SyndicationFeed>) {
         dialog.dismiss()
 
         if (result.isFalse()){

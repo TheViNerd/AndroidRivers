@@ -18,29 +18,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.android_rivers.asyncs
 
-import android.os.AsyncTask
-import org.holoeverywhere.app.Activity
 import android.content.Context
+import android.os.AsyncTask
 import android.util.Log
-import java.io.File
-import com.silverkeytech.android_rivers.db.removePodcast
-import com.silverkeytech.android_rivers.db.SortingOrder
-import com.silverkeytech.android_rivers.db.getPodcastsFromDb
-import com.silverkeytech.android_rivers.Result
 import com.silverkeytech.android_rivers.InfinityProgressDialog
 import com.silverkeytech.android_rivers.R
+import com.silverkeytech.android_rivers.Result
+import com.silverkeytech.android_rivers.db.SortingOrder
+import com.silverkeytech.android_rivers.db.getPodcastsFromDb
+import com.silverkeytech.android_rivers.db.removePodcast
+import org.holoeverywhere.app.Activity
+import java.io.File
 
-@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-public class DeleteAllPodcastsAsync(it: Context?): AsyncTask<String, Int, Result<Int>>(){
+@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") class DeleteAllPodcastsAsync(it: Context?): AsyncTask<String, Int, Result<Int>>(){
     companion object {
-        public val TAG: String = DeleteAllPodcastsAsync::class.java.getSimpleName()
+        val TAG: String = DeleteAllPodcastsAsync::class.java.simpleName
     }
 
     val context: Activity = it!! as Activity
     val dialog: InfinityProgressDialog = InfinityProgressDialog(context, context.getString(R.string.deleting_all_podcasts))
 
     //Prepare stuff before execution
-    protected override fun onPreExecute() {
+    override fun onPreExecute() {
         dialog.onCancel{
             dlg ->
             dlg.dismiss()
@@ -52,13 +51,13 @@ public class DeleteAllPodcastsAsync(it: Context?): AsyncTask<String, Int, Result
 
     var rawCallback: ((Result<Int>) -> Unit)? = null
 
-    public fun executeOnComplete(callback: (Result<Int>) -> Unit): DeleteAllPodcastsAsync {
+    fun executeOnComplete(callback: (Result<Int>) -> Unit): DeleteAllPodcastsAsync {
         rawCallback = callback
         return this
     }
 
     //Download river data in a thread
-    protected override fun doInBackground(vararg p0: String?): Result<Int>? {
+    override fun doInBackground(vararg p0: String?): Result<Int>? {
         var deletedPodcasts = 0
         //get all active podcasts
         val podcasts = getPodcastsFromDb(SortingOrder.DESC)
@@ -89,7 +88,7 @@ public class DeleteAllPodcastsAsync(it: Context?): AsyncTask<String, Int, Result
         }
     }
 
-    protected override fun onPostExecute(result: Result<Int>) {
+    override fun onPostExecute(result: Result<Int>) {
         dialog.dismiss()
 
         if (rawCallback != null)

@@ -29,12 +29,12 @@ import com.silverkeytech.news_engine.outliner.OutlineContent
 import com.silverkeytech.news_engine.outlines.Opml
 import com.silverkeytech.news_engine.riverjs.RiverItemMeta
 import com.silverkeytech.news_engine.syndications.SyndicationFeed
-import java.util.ArrayList
+import java.util.*
 
-public class MainApplication(): Application()
+class MainApplication(): Application()
 {
     companion object {
-        public val TAG: String = MainApplication::class.java.getSimpleName()
+        val TAG: String = MainApplication::class.java.simpleName
     }
 
     var riverCache = LruCache<String, CacheItem<List<RiverItemMeta>>>(inMegaByte(4))
@@ -43,15 +43,15 @@ public class MainApplication(): Application()
 
     var riverBookmarksCache: CacheItem<Opml>? = null
 
-    public override fun onCreate() {
+    override fun onCreate() {
         Log.d(TAG, "Main Application is started")
-        super<Application>.onCreate()
+        super.onCreate()
 
         //initialize newsengine module logging system
         com.silverkeytech.news_engine.log = { tag, log -> Log.d(tag, log) }
         com.silverkeytech.news_engine.scrubHtml = { str -> scrubHtml(str) }
 
-        val path = this.getApplicationContext()!!.getDatabasePath(Database.DATABASE_NAME)!!
+        val path = this.applicationContext!!.getDatabasePath(Database.DATABASE_NAME)!!
         Log.d(TAG, "My location ${path.canonicalPath}")
 
         //if (path.exists())
@@ -66,10 +66,10 @@ public class MainApplication(): Application()
             Log.d(TAG, "DB already exists")
         }
 
-        DatabaseManager.init(this.getApplicationContext()!!)
+        DatabaseManager.init(this.applicationContext!!)
     }
 
-    public fun getRiverBookmarksCache(): Opml? {
+    fun getRiverBookmarksCache(): Opml? {
         if (riverBookmarksCache == null)
             return null
         else{
@@ -82,16 +82,16 @@ public class MainApplication(): Application()
         }
     }
 
-    public fun clearRiverBookmarksCache() {
+    fun clearRiverBookmarksCache() {
         riverBookmarksCache = null
     }
 
-    public fun setRiverBookmarksCache(opml: Opml) {
+    fun setRiverBookmarksCache(opml: Opml) {
         riverBookmarksCache = CacheItem(opml)
         riverBookmarksCache?.setExpireInMinutesFromNow(10.toHoursInMinutes())
     }
 
-    public fun getSyndicationCache(uri: String): SyndicationFeed? {
+    fun getSyndicationCache(uri: String): SyndicationFeed? {
         val synd = syndicationCache.get(uri)
 
         if (synd == null)
@@ -106,13 +106,13 @@ public class MainApplication(): Application()
         }
     }
 
-    public fun setSyndicationCache(uri: String, feed: SyndicationFeed, expirationInMinutes: Int = 30) {
+    fun setSyndicationCache(uri: String, feed: SyndicationFeed, expirationInMinutes: Int = 30) {
         val item = CacheItem(feed)
         item.setExpireInMinutesFromNow(expirationInMinutes)
         syndicationCache.put(uri, item)
     }
 
-    public fun getOpmlCache(uri: String): ArrayList<OutlineContent>? {
+    fun getOpmlCache(uri: String): ArrayList<OutlineContent>? {
         val content = opmlCache.get(uri)
 
         if (content == null)
@@ -127,13 +127,13 @@ public class MainApplication(): Application()
         }
     }
 
-    public fun setOpmlCache(uri: String, opml: ArrayList<OutlineContent>, expirationInMinutes: Int = 30) {
+    fun setOpmlCache(uri: String, opml: ArrayList<OutlineContent>, expirationInMinutes: Int = 30) {
         var item = CacheItem(opml)
         item.setExpireInMinutesFromNow(expirationInMinutes)
         opmlCache.put(uri, item)
     }
 
-    public fun getRiverCache (uri: String): List<RiverItemMeta>? {
+    fun getRiverCache (uri: String): List<RiverItemMeta>? {
         val content = riverCache.get(uri)
 
         if (content == null)
@@ -148,13 +148,13 @@ public class MainApplication(): Application()
         }
     }
 
-    public fun setRiverCache(uri: String, river: List<RiverItemMeta>, expirationInMinutes: Int = 30) {
+    fun setRiverCache(uri: String, river: List<RiverItemMeta>, expirationInMinutes: Int = 30) {
         var item = CacheItem(river)
         item.setExpireInMinutesFromNow(expirationInMinutes)
         riverCache.put(uri, item)
     }
 
-    public override fun onLowMemory() {
+    override fun onLowMemory() {
         riverCache.evictAll();
         opmlCache.evictAll()
     }

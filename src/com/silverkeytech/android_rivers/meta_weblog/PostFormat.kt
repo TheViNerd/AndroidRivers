@@ -2,7 +2,7 @@ package com.silverkeytech.android_rivers.meta_weblog
 
 //based on wordpress PostFormat http://codex.wordpress.org/Post_Formats
 
-public enum class PostFormat {
+enum class PostFormat {
     ASIDE,
     LINK,
     IMAGE,

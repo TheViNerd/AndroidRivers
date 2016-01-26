@@ -8,9 +8,9 @@ import com.actionbarsherlock.view.Window
 import com.silverkeytech.android_rivers.Params
 import org.holoeverywhere.app.Activity
 
-public class WebViewActivity: Activity() {
+class WebViewActivity: Activity() {
     companion object {
-        public val TAG: String = WebViewActivity::class.java.getSimpleName()
+        val TAG: String = WebViewActivity::class.java.simpleName
     }
 
     var uri: String? = null
@@ -18,16 +18,16 @@ public class WebViewActivity: Activity() {
     public override fun onCreate(savedInstanceState: Bundle?): Unit {
         //setTheme(this.getVisualPref().getTheme())
 
-        web = WebView(getApplicationContext()!!)
+        web = WebView(applicationContext!!)
         requestWindowFeature(Window.FEATURE_PROGRESS)
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         setSupportProgressBarVisibility(true)
         setSupportProgressBarIndeterminateVisibility(true)
 
-        web!!.getSettings()!!.setJavaScriptEnabled(true)
+        web!!.settings!!.javaScriptEnabled = true
 
         web!!.setWebChromeClient(object: WebChromeClient(){
-            public override fun onProgressChanged(view: WebView?, newProgress: Int) {
+            override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 this@WebViewActivity.setSupportProgress(newProgress * 100)
                 if (newProgress == 100){
                     setSupportProgressBarIndeterminateVisibility(false)
@@ -37,19 +37,19 @@ public class WebViewActivity: Activity() {
         })
 
         web!!.setWebViewClient(object : WebViewClient(){
-            public override fun onReceivedError(view: WebView?, errorCode: Int, description: String?, failingUrl: String?) {
+            override fun onReceivedError(view: WebView?, errorCode: Int, description: String?, failingUrl: String?) {
                 this@WebViewActivity.toastee("Sorry, I have problem loading this web page")
             }
         })
 
-        super<Activity>.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
         setContentView(web!!)
 
-        val actionBar = getSupportActionBar()!!
+        val actionBar = supportActionBar!!
         actionBar.setDisplayShowHomeEnabled(false) //hide the app icon.
 
 
-        val i = getIntent()!!
+        val i = intent!!
         uri = i.getStringExtra(Params.BUILT_IN_BROWSER_URI)!!
         web!!.loadUrl(uri!!)
     }
@@ -64,7 +64,7 @@ public class WebViewActivity: Activity() {
             pause.invoke(web)
             web!!.pauseTimers()
         }
-        super<Activity>.onPause()
+        super.onPause()
     }
 
     public override fun onResume() {
@@ -74,6 +74,6 @@ public class WebViewActivity: Activity() {
             web!!.resumeTimers()
             isPaused = false
         }
-        super<Activity>.onResume()
+        super.onResume()
     }
 }

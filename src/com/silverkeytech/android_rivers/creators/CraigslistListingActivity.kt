@@ -1,27 +1,22 @@
 package com.silverkeytech.android_rivers.creators
 
 import android.os.Bundle
-import com.silverkeytech.android_rivers.asyncs.DownloadFeedAsync
+import android.util.Log
+import android.widget.EditText
+import com.silverkeytech.android_rivers.*
 import com.silverkeytech.android_rivers.activities.Duration
 import com.silverkeytech.android_rivers.activities.FeedContentRenderer
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.getVisualPref
-import com.silverkeytech.android_rivers.setOnClickListener
 import com.silverkeytech.android_rivers.activities.toastee
+import com.silverkeytech.android_rivers.asyncs.DownloadFeedAsync
+import com.silverkeytech.android_rivers.db.checkIfUrlAlreadyBookmarked
 import org.holoeverywhere.ArrayAdapter
 import org.holoeverywhere.app.Activity
 import org.holoeverywhere.widget.Button
 import org.holoeverywhere.widget.Spinner
-import com.silverkeytech.android_rivers.addBookmarkOption
-import com.silverkeytech.android_rivers.saveBookmark
-import com.silverkeytech.android_rivers.getStoredPref
-import com.silverkeytech.android_rivers.db.checkIfUrlAlreadyBookmarked
-import android.widget.EditText
-import android.util.Log
 
-public class CraigslistListingActivity (): Activity(){
+class CraigslistListingActivity (): Activity(){
     companion object {
-        public val TAG: String = CraigslistListingActivity::class.java.getSimpleName()
+        val TAG: String = CraigslistListingActivity::class.java.simpleName
     }
 
     var feedUrl: String = ""
@@ -31,13 +26,13 @@ public class CraigslistListingActivity (): Activity(){
 
     public override fun onCreate(savedInstanceState: Bundle?): Unit {
         setTheme(this.getVisualPref().theme)
-        super<Activity>.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.craigslist_listing)
 
-        var actionBar = getSupportActionBar()!!
+        var actionBar = supportActionBar!!
         actionBar.setDisplayShowHomeEnabled(false) //hide the app icon.
 
-        setTitle(this.getString(R.string.title_craigslist))
+        title = this.getString(R.string.title_craigslist)
 
         //handle UI
 
@@ -58,26 +53,26 @@ public class CraigslistListingActivity (): Activity(){
         adapter.setDropDownViewResource(org.holoeverywhere.R.layout.simple_spinner_dropdown_item)
 
         val categoryList = findViewById(R.id.craigslist_listing_category)!! as Spinner
-        categoryList.setAdapter(adapter)
+        categoryList.adapter = adapter
 
         val search = findViewById(R.id.craigslist_listing_keywords)!! as EditText
-        search.setHint(this.getString(R.string.optional_search_term))
+        search.hint = this.getString(R.string.optional_search_term)
 
         val bookmark = findViewById(R.id.craigslist_listing_bookmark_btn)!! as Button
-        bookmark.setEnabled(false)
+        bookmark.isEnabled = false
 
         bookmark.setOnClickListener{
             addBookmarkOption(this, feedDateIsParseable) {
                 collection ->
                 saveBookmark(this, feedName, feedUrl, feedLanguage, collection)
-                bookmark.setEnabled(false)
+                bookmark.isEnabled = false
             }
         }
 
         val go = findViewById(R.id.craigslist_listing_go_btn)!! as Button
         go.setOnClickListener {
 
-            val input = completion.getText().toString()
+            val input = completion.text.toString()
 
             if (input.isNullOrEmpty()){
                 toastee("Please enter a city location")
@@ -86,10 +81,10 @@ public class CraigslistListingActivity (): Activity(){
                 val cityUrl = if (chosenCityUrl != null) chosenCityUrl else ""
 
                 //get selected categories
-                val catPosition = categoryList.getSelectedItemPosition()
+                val catPosition = categoryList.selectedItemPosition
                 val categoryCode = categories.get(catPosition).code
 
-                val term = search.getText().toString()
+                val term = search.text.toString()
 
                 if (term.isNullOrEmpty())
                     feedUrl = "$cityUrl/$categoryCode/index.rss"
@@ -114,9 +109,9 @@ public class CraigslistListingActivity (): Activity(){
                             this@CraigslistListingActivity.getStoredPref().craigsListCity = input.trim()
 
                         if (feed.items.size > 0 && !checkIfUrlAlreadyBookmarked(feedUrl))
-                            bookmark.setEnabled(true)
+                            bookmark.isEnabled = true
                         else
-                            bookmark.setEnabled(false)
+                            bookmark.isEnabled = false
 
                         FeedContentRenderer(this, feedLanguage)
                                 .handleNewsListing(R.id.craigslist_listing_results_lv, feedName, feedUrl, feed.items)

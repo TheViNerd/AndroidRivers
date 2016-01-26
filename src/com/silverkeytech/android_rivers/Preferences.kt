@@ -19,66 +19,66 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 package com.silverkeytech.android_rivers
 
 import android.content.Context
+import android.util.Log
 import org.holoeverywhere.app.Activity
 import org.holoeverywhere.preference.SharedPreferences
-import android.util.Log
 
-public class Preferences{
+class Preferences{
     companion object{
-        public val CONTENT: String = "CONTENT"
-        public val CONTENT_RIVER_BOOKMARKS_SORTING: String = "CONTENT_RIVER_BOOKMARKS_SORTING"
+        val CONTENT: String = "CONTENT"
+        val CONTENT_RIVER_BOOKMARKS_SORTING: String = "CONTENT_RIVER_BOOKMARKS_SORTING"
 
-        public val SETUP: String = "SETUP"
-        public val SETUP_DOWNLOAD_DEFAULT_RIVERS: String = "SETUP_DOWNLOAD_DEFAULT_RIVERS"
+        val SETUP: String = "SETUP"
+        val SETUP_DOWNLOAD_DEFAULT_RIVERS: String = "SETUP_DOWNLOAD_DEFAULT_RIVERS"
 
-        public val VISUAL: String = "PREFERENCE_VISUAL"
-        public val VISUAL_LIST_TEXT_SIZE: String = "PREFERENCE_VISUAL_LIST_TEXT_SIZE"
-        public val VISUAL_THEME: String = "PREFERENCE_VISUAL_THEME"
+        val VISUAL: String = "PREFERENCE_VISUAL"
+        val VISUAL_LIST_TEXT_SIZE: String = "PREFERENCE_VISUAL_LIST_TEXT_SIZE"
+        val VISUAL_THEME: String = "PREFERENCE_VISUAL_THEME"
 
-        public val STORED: String = "STORED"
-        public val STORED_KAYAK_CITY: String = "STORED_KAYAK_CITY"
-        public val STORED_GOOGLE_NEWS_COUNTRY: String = "STORED_GOOGLE_NEWS_COUNTRY"
-        public val STORED_CRAIGS_LIST_CITY: String = "STORED_CRAIGS_LIST_CITY"
+        val STORED: String = "STORED"
+        val STORED_KAYAK_CITY: String = "STORED_KAYAK_CITY"
+        val STORED_GOOGLE_NEWS_COUNTRY: String = "STORED_GOOGLE_NEWS_COUNTRY"
+        val STORED_CRAIGS_LIST_CITY: String = "STORED_CRAIGS_LIST_CITY"
     }
 }
 
-public class PreferenceValue{
+class PreferenceValue{
     companion object {
-        public val SORT_DESC: Int = 100
-        public val SORT_NONE: Int = 101
-        public val SORT_ASC: Int = 102
+        val SORT_DESC: Int = 100
+        val SORT_NONE: Int = 101
+        val SORT_ASC: Int = 102
     }
 }
 
-public class PreferenceDefaults{
+class PreferenceDefaults{
     companion object {
-        public val CONTENT_RIVER_BOOKMARKS_SORTING: Int = PreferenceValue.SORT_NONE
-        public val CONTENT_BOOKMARK_COLLECTION_LATEST_DATE_FILTER_IN_DAYS: Int = 30
-        public val CONTENT_BOOKMARK_COLLECTION_MAX_ITEMS_FILTER: Int = 12
+        val CONTENT_RIVER_BOOKMARKS_SORTING: Int = PreferenceValue.SORT_NONE
+        val CONTENT_BOOKMARK_COLLECTION_LATEST_DATE_FILTER_IN_DAYS: Int = 30
+        val CONTENT_BOOKMARK_COLLECTION_MAX_ITEMS_FILTER: Int = 12
 
-        public val CONTENT_OUTLINE_HELP_SOURCE: String = "http://hobieu.apphb.com/api/1/opml/androidrivershelp"
-        public val CONTENT_OUTLINE_MORE_NEWS_SOURCE: String = "http://hobieu.apphb.com/api/1/opml/root"
+        val CONTENT_OUTLINE_HELP_SOURCE: String = "http://hobieu.apphb.com/api/1/opml/androidrivershelp"
+        val CONTENT_OUTLINE_MORE_NEWS_SOURCE: String = "http://hobieu.apphb.com/api/1/opml/root"
 
-        public val CONTENT_BODY_MAX_LENGTH: Int = 280
-        public val CONTENT_BODY_ARABIC_MAX_LENGTH: Int = 220
+        val CONTENT_BODY_MAX_LENGTH: Int = 280
+        val CONTENT_BODY_ARABIC_MAX_LENGTH: Int = 220
 
-        public val RSS_LATEST_DATE_FILTER_IN_DAYS: Int = 30
-        public val RSS_MAX_ITEMS_FILTER: Int = 20
+        val RSS_LATEST_DATE_FILTER_IN_DAYS: Int = 30
+        val RSS_MAX_ITEMS_FILTER: Int = 20
 
-        public val SETUP_DOWNLOAD_DEFAULT_RIVERS: Boolean = true
+        val SETUP_DOWNLOAD_DEFAULT_RIVERS: Boolean = true
 
-        public val VISUAL_LIST_TEXT_SIZE: Int = 20
-        public val VISUAL_THEME: Int = R.style.Holo_Theme
+        val VISUAL_LIST_TEXT_SIZE: Int = 20
+        val VISUAL_THEME: Int = R.style.Holo_Theme
 
-        public val LINK_SHARE_TITLE_MAX_LENGTH: Int = 80
+        val LINK_SHARE_TITLE_MAX_LENGTH: Int = 80
 
-        public val OPML_NEWS_SOURCES_LISTING_CACHE_IN_MINUTES: Int = 60 * 24
+        val OPML_NEWS_SOURCES_LISTING_CACHE_IN_MINUTES: Int = 60 * 24
 
 
-        public val STANDARD_NEWS_COLOR: Int = android.graphics.Color.GRAY
-        public val STANDARD_NEWS_IMAGE: Int = android.graphics.Color.CYAN
-        public val STANDARD_NEWS_PODCAST: Int = android.graphics.Color.MAGENTA
-        public val STANDARD_NEWS_SOURCE: Int = android.graphics.Color.BLUE
+        val STANDARD_NEWS_COLOR: Int = android.graphics.Color.GRAY
+        val STANDARD_NEWS_IMAGE: Int = android.graphics.Color.CYAN
+        val STANDARD_NEWS_PODCAST: Int = android.graphics.Color.MAGENTA
+        val STANDARD_NEWS_SOURCE: Int = android.graphics.Color.BLUE
     }
 }
 
@@ -94,12 +94,12 @@ fun Activity.getVisualPref(): VisualPreference =
 fun Activity.getStoredPref(): StoredPreference =
         StoredPreference(this.getSharedPreferences(Preferences.STORED, Context.MODE_PRIVATE))
 
-public class StoredPreference(public val pref: SharedPreferences){
+class StoredPreference(val pref: SharedPreferences){
     companion object {
-        public val TAG: String = StoredPreference::class.java.getSimpleName()
+        val TAG: String = StoredPreference::class.java.simpleName
     }
 
-    public var kayakCity: String
+    var kayakCity: String
         get() = pref.getString(Preferences.STORED_KAYAK_CITY, "")!!
         set(city: String) {
             if (city.length == 0)
@@ -111,7 +111,7 @@ public class StoredPreference(public val pref: SharedPreferences){
         }
 
 
-    public var craigsListCity: String
+    var craigsListCity: String
         get() = pref.getString(Preferences.STORED_CRAIGS_LIST_CITY, "")!!
         set(city: String) {
             if (city.length == 0)
@@ -122,7 +122,7 @@ public class StoredPreference(public val pref: SharedPreferences){
             Log.d(TAG, "Saving craigslist city $city")
         }
 
-    public var googleNewsCountry: String
+    var googleNewsCountry: String
         get() = pref.getString(Preferences.STORED_GOOGLE_NEWS_COUNTRY, "")!!
         set(country: String) {
             if (country.length == 0)
@@ -134,12 +134,12 @@ public class StoredPreference(public val pref: SharedPreferences){
         }
 }
 
-public class ContentPreference(public val pref: SharedPreferences){
+class ContentPreference(val pref: SharedPreferences){
     companion object {
-        public val TAG: String = ContentPreference::class.java.getSimpleName()
+        val TAG: String = ContentPreference::class.java.simpleName
     }
 
-    public var riverBookmarksSorting: Int
+    var riverBookmarksSorting: Int
         get() = pref.getInt(Preferences.CONTENT_RIVER_BOOKMARKS_SORTING, PreferenceDefaults.CONTENT_RIVER_BOOKMARKS_SORTING)
         set(sort: Int) {
             var edit = pref.edit()
@@ -149,12 +149,12 @@ public class ContentPreference(public val pref: SharedPreferences){
         }
 }
 
-public class SetupPreference(public val pref: SharedPreferences){
+class SetupPreference(val pref: SharedPreferences){
     companion object {
-        public val TAG: String = SetupPreference::class.java.getSimpleName()
+        val TAG: String = SetupPreference::class.java.simpleName
     }
 
-    public var downloadDefaultRiversIfNecessary: Boolean
+    var downloadDefaultRiversIfNecessary: Boolean
         get() = pref.getBoolean(Preferences.SETUP_DOWNLOAD_DEFAULT_RIVERS, PreferenceDefaults.SETUP_DOWNLOAD_DEFAULT_RIVERS)
         set(yes: Boolean){
             val edit = pref.edit()
@@ -164,12 +164,12 @@ public class SetupPreference(public val pref: SharedPreferences){
         }
 }
 
-public class VisualPreference (public val pref: SharedPreferences){
+class VisualPreference (val pref: SharedPreferences){
     companion object {
-        public val TAG: String = VisualPreference::class.java.getSimpleName()
+        val TAG: String = VisualPreference::class.java.simpleName
     }
 
-    public var listTextSize: Int
+    var listTextSize: Int
         get() = pref.getInt(Preferences.VISUAL_LIST_TEXT_SIZE, PreferenceDefaults.VISUAL_LIST_TEXT_SIZE)
         set(size: Int) {
             if (size < 12 || size > 30) //http://developer.android.com/design/style/typography.html
@@ -181,7 +181,7 @@ public class VisualPreference (public val pref: SharedPreferences){
             Log.d(TAG, "Saving list text size $size")
         }
 
-    public val theme: Int
+    val theme: Int
         get(){
             val currentTheme = pref.getInt(Preferences.VISUAL_THEME, PreferenceDefaults.VISUAL_THEME)
 
@@ -193,7 +193,7 @@ public class VisualPreference (public val pref: SharedPreferences){
             }
         }
 
-    public fun switchTheme() {
+    fun switchTheme() {
         val currentTheme = theme
 
         var newTheme = when(currentTheme){

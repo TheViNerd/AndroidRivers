@@ -22,10 +22,10 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.util.Log
 
-public class MediaScannerWrapper (val context: Context, val filePath: String, val mimeType: String)
+class MediaScannerWrapper (val context: Context, val filePath: String, val mimeType: String)
 : MediaScannerConnection.MediaScannerConnectionClient{
     companion object {
-        public val TAG: String = MediaScannerWrapper::class.java.getSimpleName()
+        val TAG: String = MediaScannerWrapper::class.java.simpleName
 
         fun scanPodcasts(context: Context, filePath: String) {
             var scanner = MediaScannerWrapper(context, filePath, "audio/mpeg")
@@ -38,16 +38,16 @@ public class MediaScannerWrapper (val context: Context, val filePath: String, va
         connection = MediaScannerConnection(context, this)
     }
 
-    public fun scan() {
+    fun scan() {
         connection.connect()
     }
 
-    public override fun onMediaScannerConnected() {
+    override fun onMediaScannerConnected() {
         connection.scanFile(filePath, mimeType)
         Log.d(TAG, "Start scanning at ${filePath} for ${mimeType}")
     }
 
-    public override fun onScanCompleted(p0: String?, p1: Uri?) {
+    override fun onScanCompleted(p0: String?, p1: Uri?) {
         Log.d(TAG, "Done scanning at ${filePath} for ${mimeType}")
     }
 }

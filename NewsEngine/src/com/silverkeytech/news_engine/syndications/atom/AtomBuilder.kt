@@ -18,156 +18,156 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.news_engine.syndications.atom
 
-import java.util.ArrayList
+import java.util.*
 
-public class AtomBuilder (){
+class AtomBuilder (){
     val feed = Feed()
-    public var author : PersonElementBuilder = PersonElementBuilder(feed.author!!)
-    public var link : LinkElementBuilder = LinkElementBuilder(feed.link!!)
-    public val entry: EntryBuilder = EntryBuilder(feed)
+    var author : PersonElementBuilder = PersonElementBuilder(feed.author!!)
+    var link : LinkElementBuilder = LinkElementBuilder(feed.link!!)
+    val entry: EntryBuilder = EntryBuilder(feed)
 
-    public fun build() : Feed {
+    fun build() : Feed {
         return feed
     }
 
-    public fun setId(id : String){
+    fun setId(id : String){
         feed.id = id
     }
 
-    public fun setTitle(title : String){
+    fun setTitle(title : String){
         feed.title = title
     }
 
-    public fun setUpdated(updated : String){
+    fun setUpdated(updated : String){
         feed.updated = updated
     }
 
-    public fun setIcon(icon : String){
+    fun setIcon(icon : String){
         feed.icon = icon
     }
 
-    public fun setLogo(logo : String){
+    fun setLogo(logo : String){
         feed.logo = logo
     }
 
-    public fun setSubtitle(subTitle : String){
+    fun setSubtitle(subTitle : String){
         feed.subtitle = subTitle
     }
 
-    public class PersonElementBuilder(val author : ArrayList<PersonElement>){
+    class PersonElementBuilder(val author : ArrayList<PersonElement>){
         private var person : PersonElement = PersonElement()
 
-        public fun startItem(){
+        fun startItem(){
             person = PersonElement()
         }
 
-        public fun endItem(){
+        fun endItem(){
             author.add(person)
         }
 
-        public fun setName(name : String){
+        fun setName(name : String){
             person.name = name
         }
 
-        public fun setUri(uri : String){
+        fun setUri(uri : String){
             person.uri = uri
         }
 
-        public fun setEmail(email : String){
+        fun setEmail(email : String){
             person.email = email
         }
     }
 
-    public class ContentElementBuilder(val content : ContentElement){
-        public fun setValue (value : String){
+    class ContentElementBuilder(val content : ContentElement){
+        fun setValue (value : String){
             content.value = value
         }
 
-        public fun setType(contentType : String){
+        fun setType(contentType : String){
             content.`type` = contentType
         }
 
-        public fun setSource(uri : String){
+        fun setSource(uri : String){
             content.src = uri
         }
     }
 
-    public class LinkElementBuilder(val links : ArrayList<LinkElement>){
+    class LinkElementBuilder(val links : ArrayList<LinkElement>){
         var link : LinkElement = LinkElement()
 
-        public fun startItem(){
+        fun startItem(){
             link = LinkElement()
         }
 
-        public fun endItem(){
+        fun endItem(){
             links.add(link)
         }
 
-        public fun setHref(href : String) {
+        fun setHref(href : String) {
             link.href = href
         }
 
-        public fun setRel(rel : String){
+        fun setRel(rel : String){
             link.rel = rel
         }
 
-        public fun setType(linkType : String){
+        fun setType(linkType : String){
             link.`type` = linkType
         }
 
-        public fun setHrefLang(lang : String){
+        fun setHrefLang(lang : String){
             link.hreflang = lang
         }
 
-        public fun setTitle(title : String){
+        fun setTitle(title : String){
             link.title = title
         }
 
-        public fun setLength(length : Int){
+        fun setLength(length : Int){
             link.length = length
         }
     }
 
-    public class EntryBuilder(private val feed: Feed){
+    class EntryBuilder(private val feed: Feed){
         var entry : Entry = Entry()
-        public var author : PersonElementBuilder = PersonElementBuilder(entry.author!!)
-        public var link : LinkElementBuilder = LinkElementBuilder(entry.link!!)
-        public var content : ContentElementBuilder = ContentElementBuilder(ContentElement())
-        public var summary : ContentElementBuilder = ContentElementBuilder(ContentElement())
+        var author : PersonElementBuilder = PersonElementBuilder(entry.author!!)
+        var link : LinkElementBuilder = LinkElementBuilder(entry.link!!)
+        var content : ContentElementBuilder = ContentElementBuilder(ContentElement())
+        var summary : ContentElementBuilder = ContentElementBuilder(ContentElement())
 
-        public fun setId(id : String){
+        fun setId(id : String){
             entry.id = id
         }
 
-        public fun setTitle(title : String){
+        fun setTitle(title : String){
             entry.title = title
         }
 
-        public fun setUpdated(updated : String){
+        fun setUpdated(updated : String){
             entry.updated = updated
         }
 
-        public fun setPublished(published : String){
+        fun setPublished(published : String){
             entry.published = published
         }
 
-        public fun startContent(){
+        fun startContent(){
             entry.content = ContentElement()
             content = ContentElementBuilder(entry.content!!)
         }
 
-        public fun startSummary(){
+        fun startSummary(){
             entry.summary = ContentElement()
             summary = ContentElementBuilder(entry.summary!!)
         }
 
-        public fun startItem(){
+        fun startItem(){
             entry = Entry()
             author = PersonElementBuilder(entry.author!!)
             link = LinkElementBuilder(entry.link!!)
         }
 
-        public fun endItem(){
+        fun endItem(){
             feed.entry!!.add(entry)
         }
     }

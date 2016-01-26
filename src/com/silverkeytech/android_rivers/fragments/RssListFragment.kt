@@ -24,80 +24,56 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.AdapterView
+import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.ListView
-import android.widget.PopupWindow
-import android.widget.TextView
 import com.actionbarsherlock.view.Menu
 import com.actionbarsherlock.view.MenuInflater
 import com.actionbarsherlock.view.MenuItem
-import com.silverkeytech.android_rivers.db.Bookmark
-import com.silverkeytech.android_rivers.db.BookmarkCollection
-import com.silverkeytech.android_rivers.db.BookmarkKind
-import com.silverkeytech.android_rivers.db.DatabaseManager
-import com.silverkeytech.android_rivers.db.SortingOrder
-import com.silverkeytech.android_rivers.db.getBookmarkCollectionFromDb
-import com.silverkeytech.android_rivers.db.getBookmarksFromDb
-import com.silverkeytech.android_rivers.db.removeItemByUrlFromBookmarkDb
+import com.silverkeytech.android_rivers.*
+import com.silverkeytech.android_rivers.activities.Duration
+import com.silverkeytech.android_rivers.activities.getLocationOnScreen
+import com.silverkeytech.android_rivers.activities.toastee
+import com.silverkeytech.android_rivers.asyncs.DownloadFeedAsync
+import com.silverkeytech.android_rivers.db.*
 import org.holoeverywhere.LayoutInflater
 import org.holoeverywhere.app.Activity
-import com.silverkeytech.android_rivers.R
-import com.silverkeytech.android_rivers.currentTextViewItem
-import com.silverkeytech.android_rivers.getVisualPref
-import com.silverkeytech.android_rivers.handleFontResize
-import com.silverkeytech.android_rivers.activities.Duration
-import com.silverkeytech.android_rivers.asyncs.DownloadFeedAsync
-import com.silverkeytech.android_rivers.activities.toastee
-import com.silverkeytech.android_rivers.activities.getLocationOnScreen
-import com.silverkeytech.android_rivers.createSingleInputDialog
-import com.silverkeytech.android_rivers.safeUrlConvert
-import com.silverkeytech.android_rivers.tryGetUriFromClipboard
-import com.silverkeytech.android_rivers.startImportOpmlSubscriptionService
-import com.silverkeytech.android_rivers.db.saveBookmarkToDb
-import com.silverkeytech.android_rivers.startFeedActivity
-import com.silverkeytech.android_rivers.dlgClickListener
-import com.silverkeytech.android_rivers.createConfirmationDialog
 
-public class RssListFragment(): MainListFragment() {
+class RssListFragment(): MainListFragment() {
     companion object {
-        public val TAG: String = RssListFragment::class.java.getSimpleName()
+        val TAG: String = RssListFragment::class.java.simpleName
     }
 
     var lastEnteredUrl: String? = ""
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
-        super<MainListFragment>.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
     }
 
-    public override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val vw = inflater!!.inflate(R.layout.rss_list_fragment, container, false)
 
         return vw
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         Log.d(TAG, "OnResume")
 
-        if (getUserVisibleHint()){
+        if (userVisibleHint){
             Log.d(TAG, "OnResume - RssListFragment visible")
             displayRssBookmarks()
         }
 
-        super<MainListFragment>.onResume()
+        super.onResume()
     }
 
-    public override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater!!.inflate(R.menu.rss_list_fragment_menu, menu)
-        super<MainListFragment>.onCreateOptionsMenu(menu, inflater)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
-    public override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item!!.getItemId()){
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item!!.itemId){
             R.id.rss_list_fragment_menu_show_add_dialog -> {
                 displayAddNewRssDialog()
                 return false
@@ -110,12 +86,12 @@ public class RssListFragment(): MainListFragment() {
         }
     }
 
-    public override fun onHiddenChanged(hidden: Boolean) {
+    override fun onHiddenChanged(hidden: Boolean) {
         Log.d(TAG, "OnHiddenChanged $hidden")
         if (!hidden){
             displayRssBookmarks()
         }
-        super<MainListFragment>.onHiddenChanged(hidden)
+        super.onHiddenChanged(hidden)
     }
 
     fun displayImportOpmlDialog() {
@@ -203,14 +179,14 @@ public class RssListFragment(): MainListFragment() {
     }
 
     fun showMessage(msg: String) {
-        val txt = getView()!!.findViewById(R.id.rss_list_fragment_message_tv) as TextView
+        val txt = view!!.findViewById(R.id.rss_list_fragment_message_tv) as TextView
         if (msg.isNullOrBlank()){
-            txt.setVisibility(View.INVISIBLE)
-            txt.setText("")
+            txt.visibility = View.INVISIBLE
+            txt.text = ""
         }
         else{
             val textSize = parent.getVisualPref().listTextSize
-            txt.setVisibility(View.VISIBLE)
+            txt.visibility = View.VISIBLE
             handleFontResize(txt, msg, textSize.toFloat())
         }
     }
@@ -225,29 +201,25 @@ public class RssListFragment(): MainListFragment() {
         val textSize = parent.getVisualPref().listTextSize
 
         val adapter = object : ArrayAdapter<Bookmark>(parent, android.R.layout.simple_list_item_1, android.R.id.text1, bookmarks){
-            public override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val text = bookmarks[position].toString()
                 val inCollection = bookmarks[position].collection != null
-                return currentTextViewItem(text, convertView, parent, textSize.toFloat(), inCollection, this@RssListFragment.getLayoutInflater()!!)
+                return currentTextViewItem(text, convertView, parent, textSize.toFloat(), inCollection, this@RssListFragment.layoutInflater!!)
             }
         }
 
-        val list = getView()!!.findViewById(android.R.id.list) as ListView
-        list.setAdapter(adapter)
-        list.setOnItemClickListener(object : OnItemClickListener{
-            public override fun onItemClick(p0: AdapterView<out Adapter?>, p1: View, p2: Int, p3: Long) {
-                val bookmark = bookmarks.get(p2)
-                startFeedActivity(parent, bookmark.url, bookmark.title, bookmark.language)
-            }
-        })
+        val list = view!!.findViewById(android.R.id.list) as ListView
+        list.adapter = adapter
+        list.onItemClickListener = OnItemClickListener { p0, p1, p2, p3 ->
+            val bookmark = bookmarks.get(p2)
+            startFeedActivity(parent, bookmark.url, bookmark.title, bookmark.language)
+        }
 
-        list.setOnItemLongClickListener(object : AdapterView.OnItemLongClickListener{
-            public override fun onItemLongClick(p0: AdapterView<out Adapter?>?, p1: View?, p2: Int, p3: Long): Boolean {
-                val currentBookmark = bookmarks.get(p2)
-                showRssBookmarkQuickActionPopup(parent, currentBookmark, p1!!, list)
-                return true
-            }
-        })
+        list.onItemLongClickListener = AdapterView.OnItemLongClickListener { p0, p1, p2, p3 ->
+            val currentBookmark = bookmarks.get(p2)
+            showRssBookmarkQuickActionPopup(parent, currentBookmark, p1!!, list)
+            true
+        }
     }
 
     fun displayRssBookmarks() {
@@ -257,10 +229,10 @@ public class RssListFragment(): MainListFragment() {
 
     fun showRssBookmarkQuickActionPopup(context: Activity, currentBookmark: Bookmark, item: View, list: View) {
         //overlay popup at top of clicked overview position
-        val popupWidth = item.getWidth()
-        val popupHeight = item.getHeight()
+        val popupWidth = item.width
+        val popupHeight = item.height
 
-        val x = context.getLayoutInflater().inflate(R.layout.main_feed_quick_actions, null, false)!!
+        val x = context.layoutInflater.inflate(R.layout.main_feed_quick_actions, null, false)!!
         val pp = PopupWindow(x, popupWidth, popupHeight, true)
 
         x.setBackgroundColor(android.graphics.Color.LTGRAY)

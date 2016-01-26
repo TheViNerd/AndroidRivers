@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.silverkeytech.news_engine.syndications
 
-public data class SyndicationFeedEnclosure (
-        public val url: String,
-        public val length: Int,
-        public val mimeType: String)
+data class SyndicationFeedEnclosure (
+        val url: String,
+        val length: Int,
+        val mimeType: String)
