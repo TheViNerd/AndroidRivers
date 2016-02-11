@@ -101,11 +101,11 @@ class ImportOpmlSubscriptionListService: IntentService("ImportOpmlSubscriptionLi
         var progress = 0
 
         fun traverseOutline(outline: Outline?, process: (Outline?) -> Unit) {
-            if (outline != null){
+            if (outline != null) {
                 process(outline)
+                for(ln in outline.outline)
+                    traverseOutline(ln, process)
             }
-            for(ln in outline?.outline?.iterator())
-                traverseOutline(ln, process)
         }
 
         var totalOutlinesToBeProcessed = 0

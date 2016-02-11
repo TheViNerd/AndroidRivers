@@ -106,7 +106,7 @@ class DownloadAllRiversService(): IntentService("DownloadAllRiversService"){
             notificationManager.notify(notificationId, notification)
         }
 
-        for(url in targetUrls?.iterator()){
+        for(url in targetUrls!!){
             if (url != null){
                 var successful = false
 

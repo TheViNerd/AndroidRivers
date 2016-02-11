@@ -142,7 +142,7 @@ fun Opml.traverse (filter: ((Outline) -> Boolean)? = null, depthLimit: Int = 12)
     var list = ArrayList<OutlineContent>()
 
     var level = 0
-    for (o in this.body?.outline?.iterator())    {
+    for (o in body.outline)    {
         traverseOutline(level, o, list, filter, depthLimit)
     }
     return list
@@ -181,7 +181,7 @@ private fun traverseOutline(level: Int, outline: Outline?, list: ArrayList<Outli
             var lvl = level
             lvl++
 
-            for(ox in outline.outline?.iterator()){
+            for(ox in outline.outline){
                 traverseOutline(lvl, ox, list, filter, depthLimit)
             }
         }

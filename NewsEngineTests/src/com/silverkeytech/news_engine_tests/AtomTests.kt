@@ -14,20 +14,20 @@ class AtomTests(){
         plog("title ${feed.title}")
         plog("updated ${feed.updated}")
 
-        for (a in feed.author?.iterator()){
+        for (a in feed.author){
             plog("Author ${a.name} - ${a.uri} - ${a.email}")
         }
 
-        for (a in feed.link?.iterator()){
+        for (a in feed.link){
             plog("link ${a.href} - ${a.rel} - ${a.`type`}")
         }
 
-        for(x in feed.entry?.iterator()){
-            for (a in x.link?.iterator()){
+        for(x in feed.entry){
+            for (a in x.link){
                 plog("link ${a.href} - ${a.rel} - ${a.`type`}")
             }
 
-            for (a in x.author?.iterator()){
+            for (a in x.author){
                 plog("Author ${a.name} - ${a.uri} - ${a.email}")
             }
             plog("Head - ${x.id} - ${x.title} - ${x.updated} - ${x.published}")

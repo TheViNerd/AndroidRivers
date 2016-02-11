@@ -102,7 +102,7 @@ fun River.getSortedNewsItems(): List<RiverItemMeta> {
     val newsItems = ArrayList<RiverItemMeta>()
 
     val river = this
-    for(f : RiverSite? in river.updatedFeeds?.updatedFeed?.iterator()){
+    for(f : RiverSite? in river.updatedFeeds?.updatedFeed ?: emptyList<RiverSite?>()){
         if (f != null){
             f.item?.forEach{
                 newsItems.add(RiverItemMeta(it, RiverItemSource(f.feedTitle, f.feedUrl)))

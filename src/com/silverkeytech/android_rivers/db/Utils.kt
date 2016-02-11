@@ -186,7 +186,7 @@ fun getBookmarksFromDbAsOpml(kind: BookmarkKind, sortByTitleOrder: SortingOrder)
     var bookmarks = DatabaseManager.query().bookmark().byKind(kind, sortByTitleOrder)
 
     if (bookmarks.exist){
-        for(b in bookmarks.values?.iterator()){
+        for(b in bookmarks.values!!){
             var o = Outline()
             o.text = b.title
             o.url = b.url
